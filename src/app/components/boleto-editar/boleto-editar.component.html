@@ -1,0 +1,286 @@
+<div class="container-fluid animated fadeIn fast mt-2">
+    <div class="card mb-3 border-success">
+        <div class="card-header border-success">
+            <h4> {{boleto.nom_bol}} </h4>
+        </div>
+        <div class="card-body">
+            <div class="row h-100">
+                <div class="col-md-9">
+                    <h5>Descripción</h5>
+                    <p>{{boleto.descripcion_boleto}}</p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-3 text-center">
+                    <h5>Inventario Inicial</h5>
+                    <h6> {{boleto.stock_boleto}} </h6>
+                </div>
+                <div class="col-md-3 text-center">
+                    <h5>Inventario Actual</h5>
+                    <h6> {{boleto.stock_act_boleto}} </h6>
+                </div>
+                <div class="col-md-3 text-center">
+                    <h5>Inventario de Repartidores</h5>
+                    <h6> {{boleto.stock_repartidor}} </h6>
+                </div>
+                <div class="col-md-3 text-center">
+                    <h5>Precio por boleto.</h5>
+                    <h6> {{boleto.precio_bol | currency:'MXN':'symbol'}}</h6>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <h5 class="text-center">Promociones</h5>
+            <div class="row">
+                <div class="col-md-10 d-block mx-auto">
+                    <table class="table table-bordered">
+                        <thead class="text-center">
+                            <tr>
+                                <th scope="col" style="width: 20%;">Tipo</th>
+                                <th scope="col" style="width: 30%;">Parametros</th>
+                                <th scope="col" style="width: 15%;">Stock Inicial</th>
+                                <th scope="col" style="width: 15%;">Stock Actual</th>
+                                <th scope="col" style="width: 10%;">Precio</th>
+                                <th scope="col" style="width: 10%;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            <tr *ngFor="let promo of promosFechas">
+                                <td class="align-middle">Por Fechas</td>
+                                <td class="align-middle">({{ promo.fec_ini_pro }}) - ({{ promo.fec_fin_pro }})</td>
+                                <td class="align-middle"> {{promo.cantidad_fec}} </td>
+                                <td class="align-middle"> {{promo.cantidad_act_fec}} </td>
+                                <td class="align-middle">{{promo.precio_fec | currency:'MXN':'symbol'}}</td>
+                                <td class="align-middle">
+                                    <button type="button" class="btn btn-danger" (click)="eliminarPromoFechas( promo.id_promo_fec )">Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr *ngFor="let promo of promosReferencia">
+                                <td class=" align-middle">Por Evento Relacionado</td>
+                                <td class="align-middle">
+                                    <h6>Boleto de referencia:</h6>
+                                    {{promo.fk_boleto_ref}}
+                                </td>
+                                <td class="align-middle"> {{promo.cantidad_eve}} </td>
+                                <td class="align-middle"> {{promo.cantidad_act_eve}} </td>
+                                <td class="align-middle"> {{promo.precio_eve | currency:'MXN':'symbol'}}</td>
+                                <td class="align-middle">
+                                    <button type="button" class="btn btn-danger" (click)="eliminarPromoReferencia( promo.id_promo_eve )">Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr *ngFor="let promo of promosCodigo">
+                                <td class="align-middle">Por Codigo</td>
+                                <td class="align-middle">Código: {{promo.codigo}}</td>
+                                <td class="align-middle"> {{promo.cantidad_cod}} </td>
+                                <td class="align-middle"> {{promo.cantidad_act_cod}} </td>
+                                <td class="align-middle">{{promo.precio_cod | currency:'MXN':'symbol'}}</td>
+                                <td class="align-middle">
+                                    <button type="button" class="btn btn-danger" (click)="eliminarPromoCodigo( promo.id_pro_cod )">Eliminar</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <h5 class="text-center">Agregar Promociones.</h5>
+            <div class="row mt-3">
+                <div class="col-md-4 d-block mx-auto">
+                    <button type="button" class="btn btn-outline-success btn-block" data-toggle="modal" data-target="#promoFechas">Promocion por Fechas</button>
+                    <button type="button" class="btn btn-outline-success btn-block" data-toggle="modal" data-target="#promoEvento">Promocion por Evento Relacionado</button>
+                    <button type="button" class="btn btn-outline-success btn-block" data-toggle="modal" data-target="#promoCodigo">Promocion por Codigo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-3 border-primary">
+        <div class="card-header border-primary">
+            <h4>Opciones de edición</h4>
+        </div>
+        <div class="card-body">
+            <div class="accordion" id="accordionExample">
+                <div class="card">
+                    <div class="card-header" id="headingOne">
+                        <h2 class="mb-0">
+                            <button class="btn btn-outline-primary btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                           Información Principal
+                        </button>
+                        </h2>
+                    </div>
+                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <form [formGroup]="formInfoBoleto" (ngSubmit)="guardarInfo()">
+                                <div class="form-row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="nombreBoleto">Nombre:</label>
+                                        <input type="text" class="form-control mb-3" id="nombreBoleto" placeholder="Ingrese el Nombre del Boleto" formControlName="nombre">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="descEvento">Descripción:</label>
+                                        <textarea id="descEvento" class="form-control" rows="5" formControlName="desc"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-row mb-3">
+                                    <div class="col-md-3">
+                                        <label for="inventarioBol">Inventario:</label>
+                                        <input type="number" class="form-control" id="inventarioBol" min="0" step="1" formControlName="inventario">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="precio">Precio por Boleto:</label>
+                                        <input type="number" min="0" step="1" value="0" id="precio" class="form-control" formControlName="precio">
+                                    </div>
+                                </div>
+                                <div class="input-group form-row mb-3">
+                                    <div class="col-md-12 text-center">
+                                        <button class="btn btn-success" type="submit">Guardar cambios</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="promoFechas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Promocion por Fechas</h5>
+                <button #cerrarFechas type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formPromoFechas" (ngSubmit)="crearPromoFecha()">
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-6">
+                            <label for="fechaInicio">Fecha de inicio: </label>
+                            <input type="date" id="fechaInicio" class="form-control" formControlName="fechaInicio">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="fechaCierre">Fecha de cierre: </label>
+                            <input type="date" id="fechaCierre" class="form-control" formControlName="fechaFin">
+                        </div>
+                        <small *ngIf="compararFechas()" class="form-text text-danger text-center ml-1">Fechas no válidas. {{ mensajeError }}</small>
+                    </div>
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-6">
+                            <label for="inventarioF">Inventario:</label>
+                            <input type="number" min="0" step="1" value="0" id="inventarioF" class="form-control" formControlName="inventarioFechas">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="precioF">Precio por Boleto:</label>
+                            <input type="number" min="0" step="1" value="0" id="precioF" class="form-control" formControlName="precioFechas">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row pb-2 mt-0">
+                        <div class="col-md-12 text-center">
+                            <button type="button" class="btn btn-secondary mr-1" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-success">Aplicar Promoción</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="promoEvento" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Promoción por Evento Relacionado</h5>
+                <button #cerrarReferencia type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formPromoReferencia" (ngSubmit)="crearPromoReferecnia()">
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-12">
+                            <label for="evento">Evento:</label>
+                            <select (change)="getBoletos($event)" id="evento" class="form-control">
+                              <option *ngFor="let evento of eventos" [value]="evento.id_evento"> {{evento.nombre_evento}} </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group form-row mb-3" *ngIf="id_evento != null">
+                        <div class="col-md-12">
+                            <label for="boletoReferencia">Boleto de Referencia:</label>
+                            <select id="boletoReferencia" class="form-control" formControlName="boletoReferencia">
+                                <option *ngFor="let boleto of boletos" [value]="boleto.id_boleto"> {{boleto.nom_bol}}  </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-6">
+                            <label for="inventario">Inventario: <small>(Cantidad de Boletos a los que se les aplicará la promoción.)</small></label>
+                            <input type="number" min="0" step="1" value="0" id="inventario" class="form-control" formControlName="inventarioReferencia">
+                        </div>
+                    </div>
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-6">
+                            <label for="precio">Precio por Boleto:</label>
+                            <input type="number" min="0" step="1" value="0" id="precio" class="form-control" formControlName="precioReferencia">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row pb-2 mt-0">
+                        <div class="col-md-12 text-center">
+                            <button type="button" class="btn btn-secondary mr-1" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-success">Aplicar Promoción</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="promoCodigo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Promoción por Código</h5>
+                <button #cerrar type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formPromoCodigo" (ngSubmit)="crearPromoCodigo()">
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-8 d-block mx-auto">
+                            <label for="codigo">Código: <small>(Clave única de 10 caracteres.)</small></label>
+                            <input type="text" minlength="10" maxlength="10" id="codigo" class="form-control" placeholder="AAAAAAAAAA" [class.is-invalid]="codigoValidacion" formControlName="codigo">
+                        </div>
+                        <small *ngIf="codigoValidacion" class="form-text text-danger text-center ml-1">Código no válido. Debe contener 10 caracteres.</small>
+
+                    </div>
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-8 d-block mx-auto">
+                            <label for="inventarioC">Inventario: <small>(Cantidad de Boletos a los que se les aplicará la promoción.)</small></label>
+                            <input type="number" min="0" step="1" value="0" id="inventarioC" class="form-control" formControlName="inventarioCodigo">
+                        </div>
+                    </div>
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-8 d-block mx-auto">
+                            <label for="precioC">Precio por Boleto:</label>
+                            <input type="number" min="0" step="1" value="0" id="precioC" class="form-control" formControlName="precioCodigo">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row pb-2 mt-0">
+                        <div class="col-md-12 text-center">
+                            <button type="button" class="btn btn-secondary mr-1" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-success">Crear Promoción</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

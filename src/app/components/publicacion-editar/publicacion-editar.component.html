@@ -1,0 +1,147 @@
+<div class="container-fluid animated fadeIn fast mt-2">
+
+    <div class="card mb-3 border-dark">
+        <div class="card-header border-dark">
+            <h4>Vista Previa</h4>
+        </div>
+        <div class="card-body">
+            <div class="card mb-3 border-primary">
+                <div class="card-header border-primary">
+                    <h4>{{ publicacion.titulo_pub }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="pt-4 text-center mb-3">
+                        <h4>Imagen Principal.</h4>
+                        <img [src]="'assets/img/publicaciones/'+publicacion.publi_img" alt="img_principal" class="figure-img img-fluid d-block rounded mx-auto" width="950" height="650">
+                    </div>
+                    <hr>
+                    <div class="container-fluid">
+                        <h4>Artículo.</h4>
+                        <p>{{ publicacion.articulo_pub }}</p>
+                    </div>
+                    <hr>
+                    <div class="container-fluid text-center">
+                        <h4>Imágenes Generales.</h4>
+                        <owl-carousel-o [options]="customOptions">
+                            <ng-template carouselSlide *ngFor="let img of imgs">
+                                <div class="slide">
+                                    <img [src]="'assets/img/publicaciones/'+img.ruta_imagen_pub" alt="imgs" width="300px" height="300px" class="p-1 figure-img rounded">
+                                </div>
+                            </ng-template>
+                        </owl-carousel-o>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <p class="card-text"><small class="text-muted">{{ publicacion.creacion_pub | date:' dd/mm/yyyy h:mm a' }}</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-3 border-primary">
+        <div class="card-header border-primary">
+            <h4>Opciones de edición</h4>
+        </div>
+        <div class="card-body">
+            <div class="accordion" id="accordionExample">
+                <div class="card">
+                    <div class="card-header" id="headingOne">
+                        <h2 class="mb-0">
+                            <button class="btn btn-outline-primary btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                           Información Principal
+                        </button>
+                        </h2>
+                    </div>
+
+                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <form [formGroup]="formInfoP" (ngSubmit)="guardarInfo()">
+                                <div class="form-row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="titulo">Título:</label>
+                                        <input type="text" class="form-control" id="nombreEvento" placeholder="Ingrese el Título" formControlName="titulo">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="cuerpo">Articulo:</label>
+                                        <textarea id="cuerpo" class="form-control" rows="5" formControlName="articulo"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="input-group form-row mb-3">
+                                    <div class="col-md-12 text-center">
+                                        <button class="btn btn-success" type="submit">Guardar cambios</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                            <button class="btn btn-outline-primary btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                          Imágenes
+                        </button>
+                        </h2>
+                    </div>
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <form [formGroup]="formImgP" (ngSubmit)="guardarImg()">
+                                <div class="input-group form-row mb-3">
+                                    <div class="col-md-6 text-center">
+                                        <label for="imgPrincipal">Imagen Principal:</label><br>
+                                        <input #imgInputP type="file" id="imgPrincipal" accept=".jpg" (change)="imgPrincipal($event)" formControlName="imgPrincipal"> <br>
+                                        <small *ngIf="validacionTamImg" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
+                                        <div class="row" *ngIf="(urlPrincipal != null) && (!validacionTamImg)">
+                                            <div class="col-md-9">
+                                                <img [src]="urlPrincipal" height="200" class="d-block mx-auto float-right"><br>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button type="button" aria-label="Close" class="btn btn-danger float-left" (click)="borrarImgPrincipal()">
+                                                  <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 text-center">
+                                        <label for="imgsPublicacion ">Imagenes Generales:</label><br>
+                                        <input #imgsInput type='file' id="imgsPublicacion " accept=".jpg " (change)="multiImg($event) " multiple formControlName="imgsPublicacion"> <br>
+                                        <small *ngIf="validacionTamImgs" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
+                                        <div class="row" *ngFor='let url of urls; let i = index'>
+                                            <div class="col-md-9">
+                                                <img [src]="url " height="200 " class="d-block mx-auto float-right"><br>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button type="button" aria-label="Close" class="btn btn-danger float-left" (click)="borrarImgs(url, i)">
+                                                      <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 text-center">
+                                            <h5>Imágenes Actuales.</h5>
+                                        </div>
+                                        <div class="row mt-3 border" *ngFor='let img of imgs'>
+                                            <div class="col-md-12 text-center">
+                                                <img [src]="'assets/img/publicaciones/'+img.ruta_imagen_pub " height="300" width="400"><br>
+                                                <button type="button" class="btn btn-danger" (click)="eliminarImg( img.id_imagen_pub )">Eliminar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="input-group form-row mb-3 ">
+                                    <div class="col-md-12 text-center ">
+                                        <button class="btn btn-success " type="submit ">Guardar cambios</button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

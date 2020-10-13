@@ -1,0 +1,81 @@
+<div class="container-fluid table-responsive animated fadeIn fast">
+    <div class="row ">
+        <div class="col-md-12 text-center">
+            <h2>Busca a Tus Usuarios</h2>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-6 d-block mx-auto">
+            <div class="input-group input-group-sm">
+                <input class="form-control" type="search" placeholder="Buscar" #buscar (keyup.enter)="buscarUsuario( buscar.value)">
+                <div class="input-group-append">
+                    <button class="btn btn-navbar" type="button" (click)="buscarUsuario( buscar.value )">
+                <i class="fas fa-search"></i>
+              </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="d-block mx-auto">
+            <h5 class="text-danger" *ngIf="encontrado == false">Sin Resultados de búsqueda para "{{buscar.value}}"</h5>
+        </div>
+        <div class="col-md-12 text-center" *ngIf="encontrado == true">
+            <h5>Resultados de Búsqueda:</h5>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="thead-dark text-center">
+                    <tr>
+                        <th scope="col" style="width: 10%;">ID</th>
+                        <th scope="col" style="width: 20%;">Nombre</th>
+                        <th scope="col" style="width: 20%;">Correo</th>
+                        <th scope="col" style="width: 10%;">Estado</th>
+                        <th scope="col" style="width: 20%;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <tr *ngFor="let resultado of busqueda">
+                        <th scope="row" class="align-middle">{{ resultado.id_usuario }}</th>
+                        <td class="align-middle">{{ resultado.nombre }}</td>
+                        <td class="align-middle">{{ resultado.correo }}</td>
+                        <td class="align-middle" *ngIf="resultado.activo == 1"> Activo </td>
+                        <td class="align-middle" *ngIf="resultado.activo == 0"> Inactivo </td>
+                        <td class="align-middle">
+                            <button class="btn btn-danger" type="button" (click)="eliminarUsuario(resultado.id_usuario)">Eliminar</button>
+                            <button class="btn btn-primary" type="button">Ver Usuario</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="thead-dark text-center">
+                    <tr>
+                        <th scope="col" style="width: 10%;">ID</th>
+                        <th scope="col" style="width: 20%;">Nombre</th>
+                        <th scope="col" style="width: 20%;">Correo</th>
+                        <th scope="col" style="width: 10%;">Estado</th>
+                        <th scope="col" style="width: 20%;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <tr *ngFor="let usuario of usuarios">
+                        <th scope="row" class="align-middle">{{ usuario.id_usuario }}</th>
+                        <td class="align-middle">{{ usuario.nombre }}</td>
+                        <td class="align-middle">{{ usuario.correo }}</td>
+                        <td class="align-middle" *ngIf="usuario.activo == 1"> Activo </td>
+                        <td class="align-middle" *ngIf="usuario.activo == 0"> Inactivo </td>
+                        <td class="align-middle">
+                            <button class="btn btn-danger" type="button" (click)="eliminarUsuario(usuario.id_usuario)">Eliminar</button>
+                            <button class="btn btn-primary ml-3" type="button" (click)="verUsuario(usuario.id_usuario)">Ver Usuario</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

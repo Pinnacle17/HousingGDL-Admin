@@ -1,0 +1,183 @@
+<div class="container-fluid table-responsive animated fadeIn fast">
+    <div class="row ">
+        <div class="col-md-12 text-center">
+            <h2>Busca a Tus Repartidores</h2>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-6 d-block mx-auto">
+            <div class="input-group input-group-sm">
+                <input class="form-control" type="search" placeholder="Buscar" #buscar (keyup.enter)="buscarRepartidor( buscar.value)">
+                <div class="input-group-append">
+                    <button class="btn btn-navbar" type="button" (click)="buscarRepartidor( buscar.value )">
+                  <i class="fas fa-search"></i>
+                </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="d-block mx-auto">
+            <h5 class="text-danger" *ngIf="encontrado == false">Sin Resultados de búsqueda para "{{buscar.value}}"</h5>
+        </div>
+        <div class="col-md-12 text-center" *ngIf="encontrado == true">
+            <h5>Resultados de Búsqueda:</h5>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="thead-dark text-center">
+                    <tr>
+                        <th scope="col" style="width: 10%;">ID</th>
+                        <th scope="col" style="width: 30%;">Nombre</th>
+                        <th scope="col" style="width: 20%;">Correo</th>
+                        <th scope="col" style="width: 10%;">Teléfono</th>
+                        <th scope="col" style="width: 10%;">Estado</th>
+                        <th scope="col" style="width: 20%;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <tr *ngFor="let resultado of busqueda">
+                        <th scope="row" class="align-middle"> {{resultado.id_usuario}} </th>
+                        <td class="align-middle"> {{resultado.nombre}} </td>
+                        <td class="align-middle"> {{resultado.correo}} </td>
+                        <td class="align-middle"> {{resultado.celular}} </td>
+                        <td class="align-middle" *ngIf="resultado.activo == 1"> Activo </td>
+                        <td class="align-middle" *ngIf="resultado.activo == 0"> Inactivo </td>
+                        <td class="align-middle">
+                            <button class="btn btn-primary" type="button" (click)="editarReapartidor( resultado.id_usuario )">Editar</button>
+                            <button class="btn btn-danger ml-lg-2" type="button" (click)="eliminarRepartidor( resultado.id_usuario )">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-md-12">
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="thead-dark text-center">
+                    <tr>
+                        <th scope="col" style="width: 5%;">ID</th>
+                        <th scope="col" style="width: 30%;">Nombre</th>
+                        <th scope="col" style="width: 20%;">Correo</th>
+                        <th scope="col" style="width: 10%;">Teléfono</th>
+                        <th scope="col" style="width: 10%;">Estado</th>
+                        <th scope="col" style="width: 20%;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <tr *ngFor="let repartidor of repartidores">
+                        <th scope="row" class="align-middle"> {{repartidor.id_usuario}} </th>
+                        <td class="align-middle"> {{repartidor.nombre}} </td>
+                        <td class="align-middle"> {{repartidor.correo}} </td>
+                        <td class="align-middle"> {{repartidor.celular}} </td>
+                        <td class="align-middle" *ngIf="repartidor.activo == 1"> Activo </td>
+                        <td class="align-middle" *ngIf="repartidor.activo == 0"> Inactivo </td>
+                        <td class="align-middle">
+                            <button class="btn btn-primary" type="button" (click)="editarReapartidor( repartidor.id_usuario )">Editar</button>
+                            <button class="btn btn-danger ml-lg-2" type="button" (click)="eliminarRepartidor( repartidor.id_usuario )">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <div class="col-md-12">
+            <button type="button" class="btn btn-outline-success btn-block" data-toggle="modal" data-target="#modalEvento">
+              + Agregar un Nuevo Repartidor
+            </button>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalEvento" tabindex="-1" role="dialog" aria-labelledby="modalEventoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEventoLabel">Registrar Repartidor</h5>
+                <button #cerrar type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formRepartidor" (ngSubmit)="guardarRepartidor()">
+
+                    <div class="form-row mb-3">
+                        <div class="col-md-12">
+                            <label for="nombre">Nombre(s): <small class="text-danger">*</small></label>
+                            <input type="text" class="form-control" id="nombre" placeholder="Ingrese el/los Nombre(s) del Repartidor/a" formControlName="nombre" [class.is-invalid]="validacionNombre">
+                            <small *ngIf="validacionNombre" class="form-text text-danger">Nombre Obligatorio.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-row mb-3">
+                        <div class="col-md-6">
+                            <label for="apellidoP">Apellido Paterno: <small class="text-danger">*</small></label>
+                            <input type="text" class="form-control" id="apellidoP" placeholder="Ingrese el Apellido Paterno del Repartidor/a" formControlName="apellidoP" [class.is-invalid]="validacionApellidoP">
+                            <small *ngIf="validacionApellidoP" class="form-text text-danger">Apellido Paterno Obligatorio.</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="apellidoM">Apellido Materno: <small class="text-danger">*</small></label>
+                            <input type="text" class="form-control" id="apellidoM" placeholder="Ingrese el Apellido Materno del Repartidor/a" formControlName="apellidoM" [class.is-invalid]="validacionApellidoM">
+                            <small *ngIf="validacionApellidoM" class="form-text text-danger">Apellido Materno Obligatorio.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-row mb-3">
+                        <div class="col-md-12">
+                            <label for="correo">Correo: <small class="text-danger">*</small></label>
+                            <input type="email" class="form-control" id="correo" placeholder="Ingrese el Correo del Repartidor/a" formControlName="correo" [class.is-invalid]="validacionCorreo">
+                            <small *ngIf="validacionCorreo" class="form-text text-danger">Correo Obligatorio.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-row mb-3">
+                        <div class="col-md-6">
+                            <label for="nacimiento">Fecha de Nacimiento: <small class="text-danger">*</small></label>
+                            <input type="date" class="form-control" id="nacimiento" placeholder="Ingrese la fecha de nacimiento del repartidor/a" formControlName="fechaNacimiento" [class.is-invalid]="validacionNacimiento">
+                            <small *ngIf="validacionNacimiento" class="form-text text-danger">Fecha de Nacimiento Obligatoria.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-row mb-3">
+                        <div class="col-md-6">
+                            <label for="tel">Teléfono: <small class="text-danger">*</small></label>
+                            <input class="form-control" type="tel" id="tel" placeholder="888 888 8888" maxlength="10" formControlName="telefono" [class.is-invalid]="validacionTelefono || validacionNumero">
+                            <small *ngIf="validacionTelefono" class="form-text text-danger">Teléfono Obligatorio.</small>
+                            <small *ngIf="validacionNumero" class="form-text text-danger">Ingrese un teléfono válido.</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="telext">Teléfono Adicional: <small class="text-danger">*</small></label>
+                            <input class="form-control" type="tel" id="telext" placeholder="888 888 8888" maxlength="10" formControlName="telefonoExt" [class.is-invalid]="validacionTelefonoExtra || validacionNumeroExtra">
+                            <small *ngIf="validacionTelefonoExtra" class="form-text text-danger">Teléfono Adicional Obligatorio.</small>
+                            <small *ngIf="validacionNumeroExtra" class="form-text text-danger">Ingrese un teléfono válido.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-row mb-3">
+                        <div class="col-md-12">
+                            <label for="contra">Contraseña: <small class="text-danger">*</small></label>
+                            <input type="password" class="form-control" id="contra" placeholder="Ingrese la Contraseña del Repartidor/a" formControlName="contra" [class.is-invalid]="validacionContra">
+                            <small *ngIf="validacionContra" class="form-text text-danger">Contraseña Obligatoria.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-row mb-3">
+                        <div class="col-md-12">
+                            <label for="contra">Repita la contraseña: <small class="text-danger">*</small></label>
+                            <input type="password" class="form-control" id="contra" placeholder="Repita la Contraseña del Repartidor/a" formControlName="contra2" [class.is-invalid]="passNoValida()">
+                            <small *ngIf=" passNoValida()" class="form-text text-danger">Las contraseñas no coinciden.</small>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-12 text-center">
+                            <button [disabled]="formRepartidor.invalid" class="btn btn-success" type="submit">Crear</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

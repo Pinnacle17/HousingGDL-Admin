@@ -1,0 +1,265 @@
+<div class="container-fluid table-responsive animated fadeIn fast">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h2>Busca Tus Eventos</h2>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-6 d-block mx-auto">
+            <div class="input-group input-group-sm">
+                <input class="form-control" type="search" placeholder="Buscar" #buscar (keyup.enter)="buscarEvento( buscar.value)">
+                <div class="input-group-append">
+                    <button class="btn btn-navbar" type="button" (click)="buscarEvento( buscar.value )">
+                      <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="d-block mx-auto">
+            <h5 class="text-danger" *ngIf="encontrado == false">Sin Resultados de búsqueda para"{{buscar.value}}"</h5>
+        </div>
+        <div class="col-md-12 text-center" *ngIf="encontrado == true">
+            <h5>Resultados de Búsqueda:</h5>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="thead-dark text-center">
+                    <tr>
+                        <th scope="col" style="width: 10%;">ID</th>
+                        <th scope="col" style="width: 20%;">Nombre</th>
+                        <th scope="col" style="width: 20%;">Descripcion</th>
+                        <th scope="col" style="width: 10%;">Estado</th>
+                        <th scope="col" style="width: 10%;">Orden de anuncio</th>
+                        <th scope="col" style="width: 30%;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <tr *ngFor="let resultado of busqueda">
+                        <th scope="row" class="align-middle">{{ resultado.id_evento }}</th>
+                        <td class="align-middle">{{ resultado.nombre_evento }}</td>
+                        <td class="align-middle text-left">{{ resultado.descripcion_evento }}</td>
+                        <td class="align-middle text-left text-danger" *ngIf="resultado.estado_evento == 0">Sin Boletos</td>
+                        <td class="align-middle text-left text-success" *ngIf="resultado.estado_evento == 1">Activo</td>
+                        <td class="align-middle text-left text-danger" *ngIf="resultado.estado_evento == 2">Cancelado</td>
+                        <td class="align-middle text-left text-primary" *ngIf="resultado.estado_evento == 3">Finalizado</td>
+                        <td class="align-middle">{{ resultado.orden_anuncio }}</td>
+                        <td class="align-middle">
+                            <button class="btn btn-primary" type="button" (click)="editarEvento( resultado.id_evento )">Editar</button>
+                            <button class="btn btn-danger ml-lg-2" type="button" (click)="eliminarEvento( resultado.id_evento )">Eliminar</button>
+                            <button class="btn btn-danger ml-lg-2" type="button" (click)="cancelarEvento( resultado.id_evento )">Cancelar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <table class="table table-striped table-bordered table-hover">
+        <thead class="thead-dark text-center">
+            <tr>
+                <th scope="col" style="width: 10%;">ID</th>
+                <th scope="col" style="width: 20%;">Nombre</th>
+                <th scope="col" style="width: 20%;">Descripcion</th>
+                <th scope="col" style="width: 10%;">Estado</th>
+                <th scope="col" style="width: 10%;">Orden de anuncio</th>
+                <th scope="col" style="width: 30%;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody class="text-center">
+            <tr *ngFor="let evento of eventos">
+                <th scope="row" class="align-middle">{{ evento.id_evento }}</th>
+                <td class="align-middle">{{ evento.nombre_evento }}</td>
+                <td class="align-middle text-left">{{ evento.descripcion_evento }}</td>
+                <td class="align-middle text-left text-danger" *ngIf="evento.estado_evento == 0">Sin Boletos</td>
+                <td class="align-middle text-left text-success" *ngIf="evento.estado_evento == 1">Activo</td>
+                <td class="align-middle text-left text-danger" *ngIf="evento.estado_evento == 2">Cancelado</td>
+                <td class="align-middle text-left text-primary" *ngIf="evento.estado_evento == 3">Finalizado</td>
+                <td class="align-middle">{{ evento.orden_anuncio }}</td>
+                <td class="align-middle">
+                    <button class="btn btn-primary" type="button" (click)="editarEvento( evento.id_evento )">Editar</button>
+                    <button class="btn btn-danger ml-lg-2" type="button" (click)="eliminarEvento( evento.id_evento )">Eliminar</button>
+                    <button class="btn btn-danger ml-lg-2" type="button" (click)="cancelarEvento( evento.id_evento )">Cancelar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="container-fluid">
+        <button type="button" class="btn btn-outline-success btn-block" data-toggle="modal" data-target="#modalEvento">
+        + Crear un Nuevo Evento
+      </button>
+    </div>
+
+</div>
+
+<div class="modal fade" id="modalEvento" tabindex="-1" role="dialog" aria-labelledby="modalEventoLabel" style="overflow-y: visible;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEventoLabel">Crear Evento</h5>
+                <button #cerrar type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formEventos" (ngSubmit)="guardarEvento()">
+
+                    <div class="form-row mb-3">
+                        <div class="col-md-12">
+                            <label for="nombreEvento">Nombre: <small class="text-danger">*</small></label>
+                            <input type="text" class="form-control" id="nombreEvento" placeholder="Ingrese el Nombre del Evento" formControlName="nombre" [class.is-invalid]="validacionNombre || nombreExistente">
+                            <small *ngIf="validacionNombre" class="form-text text-danger">Obligatorio.</small>
+                        </div>
+                    </div>
+                    <div class="input-group form-row mb-3" formGroupName="fecha">
+                        <div class="col-md-6">
+                            <label for="fechaInicio">Fecha de inicio: <small class="text-danger">*</small></label>
+                            <input type="date" id="fechaInicio" class="form-control" formControlName="inicio" [class.is-invalid]="validacionFechaInicio">
+                            <small *ngIf="validacionFechaInicio" class="form-text text-danger">Obligatorio.</small> </div>
+                        <div class="col-md-6">
+                            <label for="fechaCierre">Fecha de cierre: <small class="text-danger">*</small></label>
+                            <input type="date" name="fechaCierre" id="fechaCierre" class="form-control" formControlName="cierre" [class.is-invalid]="validacionFechaCierre">
+                            <small *ngIf="validacionFechaCierre" class="form-text text-danger">Obligatorio.</small>
+                        </div>
+                        <small *ngIf="compararFechas()" class="form-text text-danger text-center ml-1">Fechas no válidas. {{ mensajeError }}</small>
+                    </div>
+
+                    <div class="input-group form-row mb-3" formGroupName="horario">
+                        <div class="col-md-6">
+                            <label for="horaInicio">Hora de inicio: <small class="text-danger">*</small></label>
+                            <input type="time" id="horaInicio" class="form-control" formControlName="inicio" [class.is-invalid]="validacionHorarioInicio">
+                            <small *ngIf="validacionHorarioInicio" class="form-text text-danger">Obligatorio.</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="horaCierre">Hora de cierre: <small class="text-danger">*</small></label>
+                            <input type="time" id="horaCierre" class="form-control" formControlName="cierre" [class.is-invalid]="validacionHorarioCierre">
+                            <small *ngIf="validacionHorarioCierre" class="form-text text-danger">Obligatorio.</small>
+                        </div>
+                        <small *ngIf="compararHorarios()" class="form-text text-danger">Horarios no válidos. El evento no puede terminar antes de empezar.</small>
+                    </div>
+
+                    <div class="input-group form-row mb-3">
+                        <label for="tipo-col">Tipo: <small class="text-danger">*</small></label><br>
+                        <div class="col-md-12" id="tipo-col">
+                            <input type="radio" id="tipo1" value="0" formControlName="tipo" [class.is-invalid]="validacionTipo">
+                            <label for="tipo1" class="form-check-label"> Fiesta</label><br>
+
+                            <input type="radio" id="tipo2" value="1" formControlName="tipo" [class.is-invalid]="validacionTipo">
+                            <label for="tipo2" class="form-check-label"> Evento</label>
+                            <small *ngIf="validacionTipo" class="form-text text-danger">Obligatorio.</small>
+                        </div>
+                    </div>
+
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-12">
+                            <label for="enlaceEvento">Enlace:</label>
+                            <input type="text" class="form-control" id="enlaceEvento" placeholder="Ingrese el Enlace del Evento" formControlName="enlace" [class.is-invalid]="validacionEnlace">
+                            <small *ngIf="validacionEnlace" class="form-text text-danger">Enlace Obligatorio.</small>
+                        </div>
+                    </div>
+
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-12">
+                            <label for="descEvento">Descripción: <small class="text-danger">*</small></label>
+                            <textarea id="descEvento" class="form-control" rows="5" formControlName="desc" [class.is-invalid]="validacionDesc"></textarea>
+                            <small *ngIf="validacionDesc" class="form-text text-danger">Breve Descripción Obligatoria.</small>
+                        </div>
+                    </div>
+
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-6">
+                            <label for="ordenImg">Orden de Evento: <small class="text-danger">*</small> <small>(Posición de imagen principal en el carousel de eventos)</small></label>
+                            <input type="number" class="form-control" id="ordenImg" min="1" max="15" step="1" value="1" formControlName="orden" [class.is-invalid]="validacionOrden">
+                            <small *ngIf="validacionOrden" class="form-text text-danger">Orden Obligatorio.</small>
+                        </div>
+                    </div>
+
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-12">
+                            <label for="imgPrincipal">Imagen Principal del Evento: <small class="text-danger">*</small></label>
+                            <input #imgInputP [writeFile]="true" type="file" id="imgPrincipal" accept=".jpg" (change)="imgPrincipal($event)" formControlName="imgPrincipal">
+                            <small *ngIf="validacionImg" class="form-text text-danger">Imagen Principal Obligatoria.</small>
+                            <small *ngIf="validacionTamImg" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
+                            <div class="row" *ngIf="(urlPrincipal != null) && (!validacionTamImg)">
+                                <div class="col-md-9">
+                                    <img [src]="urlPrincipal" height="200" class="float-right"><br>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" aria-label="Close" class="btn btn-danger float-left" (click)="borrarImgPrincipal()">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-12">
+                            <label for="imgCarousel">Imagen de Carousel: <small class="text-danger">*</small></label>
+                            <input #imgInputC [writeFile]="true" type="file" id="imgCarousel" accept=".jpg" (change)="imgCarousel($event)" formControlName="imgCarousel">
+                            <small *ngIf="validacionImgCarousel" class="form-text text-danger">Imagen de Carousel Obligatoria.</small>
+                            <small *ngIf="validacionTamImgCarousel" class="form-text text-danger">Error: Tamaño mínimo 1250x690. Tamaño Máximo: 4096x2160</small>
+                            <div class="row" *ngIf="(urlCarousel != null) && (!validacionTamImgCarousel)">
+                                <div class="col-md-9">
+                                    <img [src]="urlCarousel" height="200" class="float-right"><br>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" aria-label="Close" class="btn btn-danger float-left" (click)="borrarImgCarousel()">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-12">
+                            <label for="imgsEvento">Imagenes del Evento: <small class="text-danger">*</small></label>
+                            <input #imgsInput [writeFile]="true" type='file' id="imgsEvento" accept=".jpg" (change)="multiImg($event)" multiple formControlName="imgsEvento">
+                            <small *ngIf="validacionImgs" class="form-text text-danger">Mínimo una imágen.</small>
+                            <small *ngIf="validacionTamImgs && formEventos.invalid" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
+                            <div class="row" *ngFor='let url of urls; let i = index'>
+                                <div class="col-md-9">
+                                    <img [src]="url" height="200" class="float-right"><br>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" aria-label="Close" class="btn btn-danger float-left" (click)="borrarImgs(url, i)">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-12 text-center">
+                            <button [disabled]="formEventos.invalid" class="btn btn-success" type="submit">Crear</button>
+                        </div>
+                        <button #modalError type="button" class="invisible" data-toggle="modal" data-target="#modalError"></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalError" tabindex="-1" role="dialog" aria-labelledby="modalErrorLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button #cerrarModalError type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+            </div>
+            <div class="modal-body text-center">
+                <h5 class="text-danger"> {{errorOrden}} </h5>
+                <h6>Desea liberar el espacio?</h6>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary mx-auto" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary mx-auto" (click)="liberarLugar()">Liberar</button>
+            </div>
+        </div>
+    </div>
+</div>

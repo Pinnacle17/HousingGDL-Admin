@@ -1,0 +1,25 @@
+<div class="login-page mt-0 pt-0">
+    <div class="mt-0 login-box card">
+        <div class="login-logo mt-0">
+            <!-- <img src="assets/img/icon.png" alt="logo" class="rounded" width="100" height="100"><br> -->
+            <strong>Housing</strong>GDL
+        </div>
+        <div class="card-body">
+            <form [formGroup]="formLogin" (ngSubmit)="login()">
+                <div class="form-group">
+                    <label>Correo electr&oacute;nico</label>
+                    <input type="email" class="form-control" placeholder="Ej. alguien@gmail.com" formControlName="correo" [class.is-invalid]="validacionCorreoL">
+                    <small *ngIf="validacionCorreoL" class="form-text text-danger">Obligatorio. Ingrese un correo válido</small>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" class="form-control" placeholder="Contraseña" formControlName="contra">
+                </div>
+                <hr>
+                <div class="container-fluid text-center">
+                    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

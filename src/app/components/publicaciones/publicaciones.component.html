@@ -1,0 +1,156 @@
+<div class="container-fluid table-responsive animated fadeIn fast">
+    <div class="row ">
+        <div class="col-md-12 text-center">
+            <h2>Busca Tus Publicaciones</h2>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-6 d-block mx-auto">
+            <div class="input-group input-group-sm">
+                <input class="form-control" type="search" placeholder="Buscar" #buscar (keyup.enter)="buscarPub( buscar.value)">
+                <div class="input-group-append">
+                    <button class="btn btn-navbar" type="button" (click)="buscarPub( buscar.value )">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="d-block mx-auto">
+            <h5 class="text-danger" *ngIf="encontrado == false">Sin Resultados de búsqueda para "{{buscar.value}}"</h5>
+        </div>
+        <div class="col-md-12 text-center" *ngIf="encontrado == true">
+            <h5>Resultados de Búsqueda:</h5>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="thead-dark text-center">
+                    <tr>
+                        <th scope="col" style="width: 5%;">ID</th>
+                        <th scope="col" style="width: 25%;">Título</th>
+                        <th scope="col" style="width: 45%;">Cuerpo de Publicación</th>
+                        <th scope="col" style="width: 20%;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <tr *ngFor="let resultado of busqueda">
+                        <th scope="row" class="align-middle"> {{ resultado.id_publicacion }} </th>
+                        <td class="align-middle"> {{ resultado.titulo_pub }} </td>
+                        <td class="text-left align-middle"> {{ resultado.articulo_pub }} </td>
+                        <td class="align-middle">
+                            <button class="btn btn-primary" type="button" (click)="editarPublicacion( resultado.id_publicacion )">Editar</button>
+                            <button class="btn btn-danger  ml-2" type="button" (click)="eliminarPublicacion( resultado.id_publicacion )">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <table class="table table-striped table-bordered table-hover">
+        <thead class="thead-dark text-center">
+            <tr>
+                <th scope="col" style="width: 5%;">ID</th>
+                <th scope="col" style="width: 25%;">Título</th>
+                <th scope="col" style="width: 45%;">Cuerpo de Publicación</th>
+                <th scope="col" style="width: 20%;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody class="text-center">
+            <tr *ngFor="let publicacion of publicaciones">
+                <th scope="row" class="align-middle"> {{ publicacion.id_publicacion }} </th>
+                <td class="align-middle"> {{ publicacion.titulo_pub }} </td>
+                <td class="text-left align-middle"> {{ publicacion.articulo_pub }} </td>
+                <td class="align-middle">
+                    <button class="btn btn-primary" type="button" (click)="editarPublicacion( publicacion.id_publicacion )">Editar</button>
+                    <button class="btn btn-danger  ml-2" type="button" (click)="eliminarPublicacion( publicacion.id_publicacion )">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="container-fluid">
+        <button type="button" class="btn btn-outline-success btn-block" data-toggle="modal" data-target="#modalPublicacion">
+          + Crear una Publicación
+        </button>
+    </div>
+</div>
+
+<div class="modal fade" id="modalPublicacion" tabindex="-1" role="dialog" aria-labelledby="modalPublicacionLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalPublicacionLabel">Crear Publicación</h5>
+                <button #cerrar type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formPublicaciones" (ngSubmit)="guardarPublicacion()">
+
+                    <div class="form-row mb-3">
+                        <div class="col-md-12">
+                            <label for="titulo">Título: <small class="text-danger">*</small></label>
+                            <input type="text" class="form-control" id="nombreEvento" placeholder="Ingrese el Titulo" formControlName="titulo" [class.is-invalid]="validacionTitulo">
+                            <small *ngIf="validacionTitulo" class="form-text text-danger">Título Obligatorio.</small>
+                            <small *ngIf="tituloExistente" class="form-text text-danger">Ya existe una publicacion con este título.</small>
+                        </div>
+                    </div>
+
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-12">
+                            <label for="descEvento">Cuerpo de Publicación: <small class="text-danger">*</small></label>
+                            <textarea id="descEvento" class="form-control" rows="5" formControlName="articulo" [class.is-invalid]="validacionArticulo"></textarea>
+                            <small *ngIf="validacionArticulo" class="form-text text-danger">Cuerpo de Publicación Obligatorio.</small>
+                        </div>
+                    </div>
+
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-12">
+                            <label for="principal">Imagen Principal: <small class="text-danger">*</small></label><br>
+                            <input #imgInputP [writeFile]="true" type="file" id="principal" accept=".jpg" (change)="imgPrincipal($event)" formControlName="imgPrincipal">
+                            <small *ngIf="validacionImgPrincipal" class="form-text text-danger">Imagen Principal Obligatoria.</small>
+                            <small *ngIf="validacionTamImg" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
+                            <div class="row" *ngIf="(urlPrincipal != null) && (!validacionTamImg)">
+                                <div class="col-md-9">
+                                    <img [src]="urlPrincipal" height="200" class="float-right"><br>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" aria-label="Close" class="btn btn-danger float-left" (click)="borrarImgPrincipal()">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-12">
+                            <label for="imgsPublicacion">Imagenes de la Publicación: <small class="text-danger">*</small></label>
+                            <input #imgsInput [writeFile]="true" type='file' id="imgsPublicacion" accept=".jpg" (change)="multiImg($event)" multiple formControlName="imgsPublicacion">
+                            <small *ngIf="validacionImgs" class="form-text text-danger">Mínimo una imágen.</small>
+                            <small *ngIf="validacionTamImgs" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
+                            <div class="row" *ngFor='let url of urls; let i = index'>
+                                <div class="col-md-9">
+                                    <img [src]="url " height="200 " class="float-right"><br>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" aria-label="Close" class="btn btn-danger float-left" (click)="borrarImgs(url, i)">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div class="input-group form-row mb-3">
+                        <div class="col-md-12 text-center">
+                            <button [disabled]="formPublicaciones.invalid" class="btn btn-success" type="submit">Crear</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
