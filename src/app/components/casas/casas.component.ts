@@ -208,16 +208,7 @@ export class CasasComponent implements OnInit, OnDestroy {
   formInit() {
     this.formCasas = this.fb.group({
       nombre: ['', [Validators.required]],
-      fecha: this.fb.group({
-        inicio: ['', [Validators.required]],
-        cierre: ['', [Validators.required]],
-      }),
-      horario: this.fb.group({
-        inicio: ['', [Validators.required]],
-        cierre: ['', [Validators.required]],
-      }),
-      tipo: ['', [Validators.required]],
-      enlace: ['', Validators.required],
+      ambiente: ['', [Validators.required]],
       desc: ['', [Validators.required]],
       orden: ['', Validators.required],
       imgPrincipal: ['', [Validators.required, RxwebValidators.image({minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096})]],
@@ -302,8 +293,8 @@ export class CasasComponent implements OnInit, OnDestroy {
     return this.formCasas.get('horario.cierre').invalid && this.formCasas.get('horario.cierre').touched;
   }
 
-  get validacionTipo() {
-    return this.formCasas.get('tipo').invalid && this.formCasas.get('tipo').touched;
+  get validacionAmbiente() {
+    return this.formCasas.get('ambiente').invalid && this.formCasas.get('ambiente').touched;
   }
 
   get validacionEnlace() {
