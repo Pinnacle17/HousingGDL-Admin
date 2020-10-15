@@ -8,14 +8,14 @@ import {environment} from 'src/environments/environment'
 })
 export class CasasService {
 
-  url = environment.apiUrl;
+  url = environment.apiUrl+"casas/";
 
   eventos = null;
 
   constructor(private http:HttpClient ) { }
 
-  getCasas( tipo:number=-1 ){
-    return this.http.get(`${this.url}getCasas.php?tipo=${tipo}`).pipe(retry(3))
+  getCasas(){
+    return this.http.get(`${this.url}VerCasas.php`).pipe(retry(3))
   }
 
   getCasa( id:number ){
@@ -36,7 +36,7 @@ export class CasasService {
 
   crearCasa( evento:any ){
     const EVENTO_FD = serialize(evento);
-    return this.http.post(`${this.url}crearCasa.php`, EVENTO_FD).pipe(retry(3))
+    return this.http.post(`${this.url}crearCasa.php`, EVENTO_FD)//.pipe(retry(3))
   }
 
   modificarInfoCasa( info:any ){
@@ -70,8 +70,8 @@ export class CasasService {
     return this.http.get(`${this.url}buscarCasa.php?nombre_evento=${nombre}`).pipe(retry(3))
   }
 
-  buscarLugar(  orden:number , id:number=null){
-    return this.http.get(`${this.url}consultaOrden.php?orden=${orden}&id=${id}`).pipe(retry(3))
+  buscarLugar(  orden:number){
+    return this.http.get(`${this.url}consultaOrden.php?orden_anuncio=${orden}`).pipe(retry(3))
   }
 
   liberarLugar( orden:number, id:number=null ){

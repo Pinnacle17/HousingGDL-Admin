@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl:'localhost/casas-php/PT-API-P/admin/',
+  apiUrl:'http://localhost/casas-php/PT-API-P/admin/',
 };
 
 /*

@@ -27,7 +27,6 @@
                     <tr>
                         <th scope="col" style="width: 10%;">ID</th>
                         <th scope="col" style="width: 20%;">Nombre</th>
-                        <th scope="col" style="width: 20%;">Descripcion</th>
                         <th scope="col" style="width: 10%;">Estado</th>
                         <th scope="col" style="width: 10%;">Orden de anuncio</th>
                         <th scope="col" style="width: 30%;">Acciones</th>
@@ -37,7 +36,6 @@
                     <tr *ngFor="let resultado of busqueda">
                         <th scope="row" class="align-middle">{{ resultado.id_casa }}</th>
                         <td class="align-middle">{{ resultado.nombre_casa }}</td>
-                        <td class="align-middle text-left">{{ resultado.descripcion_casa }}</td>
                         <td class="align-middle text-left text-danger" *ngIf="resultado.estado_casa == 0">Sin Boletos</td>
                         <td class="align-middle text-left text-success" *ngIf="resultado.estado_casa == 1">Activo</td>
                         <td class="align-middle text-left text-danger" *ngIf="resultado.estado_casa == 2">Cancelado</td>
@@ -59,7 +57,6 @@
             <tr>
                 <th scope="col" style="width: 10%;">ID</th>
                 <th scope="col" style="width: 20%;">Nombre</th>
-                <th scope="col" style="width: 20%;">Descripcion</th>
                 <th scope="col" style="width: 10%;">Estado</th>
                 <th scope="col" style="width: 10%;">Orden de anuncio</th>
                 <th scope="col" style="width: 30%;">Acciones</th>
@@ -69,16 +66,12 @@
             <tr *ngFor="let casa of casas">
                 <th scope="row" class="align-middle">{{ casa.id_casa }}</th>
                 <td class="align-middle">{{ casa.nombre_casa }}</td>
-                <td class="align-middle text-left">{{ casa.descripcion_casa }}</td>
-                <td class="align-middle text-left text-danger" *ngIf="casa.estado_casa == 0">Sin Boletos</td>
-                <td class="align-middle text-left text-success" *ngIf="casa.estado_casa == 1">Activo</td>
-                <td class="align-middle text-left text-danger" *ngIf="casa.estado_casa == 2">Cancelado</td>
-                <td class="align-middle text-left text-primary" *ngIf="casa.estado_casa == 3">Finalizado</td>
+                <td class="align-middle text-left text-danger" >{{casa.estado_casa}}</td>
                 <td class="align-middle">{{ casa.orden_anuncio }}</td>
                 <td class="align-middle">
                     <button class="btn btn-primary" type="button" (click)="editarCasa( casa.id_casa )">Editar</button>
-                    <button class="btn btn-danger ml-lg-2" type="button" (click)="eliminarCasa( casa.id_casa )">Eliminar</button>
-                    <button class="btn btn-danger ml-lg-2" type="button" (click)="cancelarCasa( casa.id_casa )">Cancelar</button>
+                    <button class="btn btn-success ml-lg-2" type="button" (click)="eliminarCasa( casa.id_casa )" *ngIf="casa.estado_casa=='Inactiva'">Activar</button>
+                    <button class="btn btn-danger ml-lg-2" type="button" (click)="cancelarCasa( casa.id_casa )" *ngIf="casa.estado_casa=='Activa'">Cancelar</button>
                 </td>
             </tr>
         </tbody>
@@ -107,7 +100,14 @@
                     <div class="form-row mb-3">
                         <div class="col-md-12">
                             <label for="nombreCasa">Nombre: <small class="text-danger">*</small></label>
-                            <input type="text" class="form-control" id="nombreCasa" placeholder="Ingrese el Nombre de la Casa" formControlName="nombre" [class.is-invalid]="validacionNombre || nombreExistente">
+                            <input type="text" class="form-control" id="nombreCasa" placeholder="Ingrese el Nombre de la Casa" formControlName="nombre_casa" [class.is-invalid]="validacionNombre || nombreExistente">
+                            <small *ngIf="validacionNombre" class="form-text text-danger">Obligatorio.</small>
+                        </div>
+                    </div>
+                    <div class="form-row mb-3">
+                        <div class="col-md-12">
+                            <label for="direccionCasa">Direccion: <small class="text-danger">*</small></label>
+                            <input type="text" class="form-control" id="direccionCasa" placeholder="Ingrese la direccion de la Casa" formControlName="direccion_casa" [class.is-invalid]="validacionNombre || nombreExistente">
                             <small *ngIf="validacionNombre" class="form-text text-danger">Obligatorio.</small>
                         </div>
                     </div>
@@ -127,7 +127,7 @@
                     <div class="input-group form-row mb-3">
                         <div class="col-md-12">
                             <label for="descCasa">Descripción: <small class="text-danger">*</small></label>
-                            <textarea id="descCasa" class="form-control" rows="5" formControlName="desc" [class.is-invalid]="validacionDesc"></textarea>
+                            <textarea id="descCasa" class="form-control" rows="5" formControlName="descripcion_casa" [class.is-invalid]="validacionDesc"></textarea>
                             <small *ngIf="validacionDesc" class="form-text text-danger">Breve Descripción Obligatoria.</small>
                         </div>
                     </div>
@@ -135,7 +135,7 @@
                     <div class="input-group form-row mb-3">
                         <div class="col-md-6">
                             <label for="ordenImg">Orden de Casa: <small class="text-danger">*</small> <small>(Posición de imagen principal en el carousel de casas)</small></label>
-                            <input type="number" class="form-control" id="ordenImg" min="1" max="15" step="1" value="1" formControlName="orden" [class.is-invalid]="validacionOrden">
+                            <input type="number" class="form-control" id="ordenImg" min="1" max="15" step="1" value="1" formControlName="orden_anuncio" [class.is-invalid]="validacionOrden">
                             <small *ngIf="validacionOrden" class="form-text text-danger">Orden Obligatorio.</small>
                         </div>
                     </div>

@@ -1,9 +1,9 @@
-import {Component, OnInit, OnDestroy, NgZone} from '@angular/core';
-import {FormGroup, FormBuilder, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {CasasService} from '../../services/casas.service';
-import {RxwebValidators} from '@rxweb/reactive-form-validators';
-import {ViewChild, ElementRef} from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { CasasService } from '../../services/casas.service';
+import { RxwebValidators } from '@rxweb/reactive-form-validators';
+import { ViewChild, ElementRef } from '@angular/core';
 
 declare var webkitSpeechRecognition;
 declare var webkitSpeechGrammarList;
@@ -45,9 +45,9 @@ export class CasasComponent implements OnInit, OnDestroy {
   @ViewChild('cerrarModalError') cerrarModalError;
 
   constructor(private fb: FormBuilder,
-              private router: Router,
-              private casasService: CasasService,
-              private ngZone: NgZone) {
+    private router: Router,
+    private casasService: CasasService,
+    private ngZone: NgZone) {
   }
 
   ngOnDestroy() {
@@ -161,7 +161,7 @@ export class CasasComponent implements OnInit, OnDestroy {
   }
 
   getCasas() {
-    this.casasService.getCasas().subscribe(resultado => this.casas = resultado);
+    this.casasService.getCasas().subscribe(resultado => {this.casas = resultado; console.log(this.casas)});
   }
 
   buscarCasa(nombre: string) {
@@ -182,11 +182,11 @@ export class CasasComponent implements OnInit, OnDestroy {
   eliminarCasa(id: number) {
     if (confirm('Está seguro de querer eliminar este casa?')) {
       this.casasService.buscarBoletos(id).subscribe(res => {
-        if(res == 0){
+        if (res == 0) {
           window.confirm("El casa tiene boletos. No es posible eliminar el casa.");
           return
         }
-        else{
+        else {
           this.casasService.eliminarCasa(id).subscribe(datos => {
             if (datos['resultado'] == 'OK') {
               this.getCasas();
@@ -197,7 +197,7 @@ export class CasasComponent implements OnInit, OnDestroy {
     }
   }
 
-  cancelarCasa(id_casa:number){
+  cancelarCasa(id_casa: number) {
     if (confirm('Está seguro de querer cancelar este casa?')) {
       this.casasService.cancelarCasa(id_casa).subscribe(() => {
         this.getCasas();
@@ -207,13 +207,14 @@ export class CasasComponent implements OnInit, OnDestroy {
 
   formInit() {
     this.formCasas = this.fb.group({
-      nombre: ['', [Validators.required]],
+      nombre_casa: ['', [Validators.required]],
+      direccion_casa: ['', [Validators.required]],
       ambiente: ['', [Validators.required]],
-      desc: ['', [Validators.required]],
-      orden: ['', Validators.required],
-      imgPrincipal: ['', [Validators.required, RxwebValidators.image({minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096})]],
-      imgCarousel: ['', [Validators.required, RxwebValidators.image({minWidth: 1250, maxWidth: 4096, minHeight: 690, maxHeight: 2160})]],
-      imgsCasa: ['', [Validators.required, RxwebValidators.image({minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096})]]
+      descripcion_casa: ['', [Validators.required]],
+      orden_anuncio: ['', Validators.required],
+      imgPrincipal: ['', [Validators.required, RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })]],
+      imgCarousel: ['', [Validators.required, RxwebValidators.image({ minWidth: 1250, maxWidth: 4096, minHeight: 690, maxHeight: 2160 })]],
+      imgsCasa: ['', [Validators.required, RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })]]
     });
   }
 
@@ -221,14 +222,14 @@ export class CasasComponent implements OnInit, OnDestroy {
     this.router.navigate(['editar-casa', id]);
   }
 
-  
+
 
   get validacionNombre() {
-    return this.formCasas.get('nombre').invalid && this.formCasas.get('nombre').touched;
+    return this.formCasas.get('nombre_casa').invalid && this.formCasas.get('nombre_casa').touched;
   }
 
   get nombreExistente() {
-    return this.formCasas.get('nombre').invalid && this.formCasas.get('nombre').value != '' && !this.formCasas.get('nombre').pristine;
+    return this.formCasas.get('nombre_casa').invalid && this.formCasas.get('nombre_casa').value != '' && !this.formCasas.get('nombre_casa').pristine;
   }
 
 
@@ -238,7 +239,7 @@ export class CasasComponent implements OnInit, OnDestroy {
 
 
   get validacionDesc() {
-    return this.formCasas.get('desc').invalid && this.formCasas.get('desc').touched;
+    return this.formCasas.get('descripcion_casa').invalid && this.formCasas.get('descripcion_casa').touched;
   }
 
   get validacionImg() {
@@ -266,7 +267,7 @@ export class CasasComponent implements OnInit, OnDestroy {
   }
 
   get validacionOrden() {
-    return this.formCasas.get('orden').invalid && this.formCasas.get('orden').touched;
+    return this.formCasas.get('orden_anuncio').invalid && this.formCasas.get('orden_anuncio').touched;
   }
 
   imgPrincipal(event) {
@@ -354,34 +355,29 @@ export class CasasComponent implements OnInit, OnDestroy {
   }
 
   guardarCasa() {
-    this.casasService.buscarNombre(this.formCasas.get('nombre').value).subscribe(datos => {
+    this.formCasas.addControl('id_colonia', this.fb.control(1))
+    this.casasService.buscarLugar(this.formCasas.get('orden_anuncio').value).subscribe(datos => {
       if (datos['estado'] == 0) {
-        this.errorNombre = datos['mensaje'];
-        window.confirm(this.errorNombre);
-        this.formCasas.get('nombre').setErrors({'incorrect': true});
+        this.errorOrden = datos['mensaje'];
+        this.modalError.nativeElement.click();
       } else if (datos['estado'] == 1) {
-        this.casasService.buscarLugar(this.formCasas.get('orden').value).subscribe(datos => {
-          if (datos['estado'] == 0) {
-            this.errorOrden = datos['mensaje'];
-            this.modalError.nativeElement.click();
-          } else if (datos['estado'] == 1) {
-            this.casasService.crearCasa(this.formCasas.value).subscribe(datos => {
-              if (datos['resultado'] == 'OK') {
-                this.getCasas();
-                this.formCasas.reset();
+        this.casasService.crearCasa(this.formCasas.value).subscribe(datos => {
+          if (datos['resultado'] == 'OK') {
+            this.getCasas();
+            this.formCasas.reset();
 
-                this.borrarImgPrincipal();
+            this.borrarImgPrincipal();
 
-                this.borrarImgCarousel();
+            this.borrarImgCarousel();
 
-                this.urls = [];
-                this.imgsInput.nativeElement.value = null;
-                this.cerrar.nativeElement.click();
-              }
-            });
+            this.urls = [];
+            this.imgsInput.nativeElement.value = null;
+            this.cerrar.nativeElement.click();
           }
         });
       }
     });
+
+
   }
 }
