@@ -2,25 +2,24 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { retry } from 'rxjs/operators';
 import { serialize } from 'object-to-formdata';
-
+import {environment} from 'src/environments/environment'
 @Injectable({
   providedIn: 'root'
 })
-export class EventosService {
+export class CasasService {
 
-  // url = "https://proyectotapatio.com/PT-API-P/eventos/";
-  url = "http://localhost:8080/PT-API/eventos/";
+  url = environment.apiUrl;
 
   eventos = null;
 
   constructor(private http:HttpClient ) { }
 
-  getEventos( tipo:number=-1 ){
-    return this.http.get(`${this.url}getEventos.php?tipo=${tipo}`).pipe(retry(3))
+  getCasas( tipo:number=-1 ){
+    return this.http.get(`${this.url}getCasas.php?tipo=${tipo}`).pipe(retry(3))
   }
 
-  getEvento( id:number ){
-    return this.http.get(`${this.url}getEvento.php?id_evento=${id}`).pipe(retry(3))
+  getCasa( id:number ){
+    return this.http.get(`${this.url}getCasa.php?id_evento=${id}`).pipe(retry(3))
   }
 
   getImgs( id:number ){
@@ -35,40 +34,40 @@ export class EventosService {
     return this.http.get(`${this.url}consultaNombre.php?nombre=${nombre}&id=${id}`).pipe(retry(3))
   }
 
-  crearEvento( evento:any ){
+  crearCasa( evento:any ){
     const EVENTO_FD = serialize(evento);
-    return this.http.post(`${this.url}crearEvento.php`, EVENTO_FD).pipe(retry(3))
+    return this.http.post(`${this.url}crearCasa.php`, EVENTO_FD).pipe(retry(3))
   }
 
-  modificarInfoEvento( info:any ){
+  modificarInfoCasa( info:any ){
     const INFOEVENTO_FD = serialize(info);
-    return this.http.post(`${this.url}modificarInfoEvento.php`, INFOEVENTO_FD).pipe(retry(3))
+    return this.http.post(`${this.url}modificarInfoCasa.php`, INFOEVENTO_FD).pipe(retry(3))
   }
 
-  modificarHorarioEvento( horario:any ){
+  modificarHorarioCasa( horario:any ){
     const HORARIOEVENTO_FD = serialize(horario);
-    return this.http.post(`${this.url}modificarHorarioEvento.php`, HORARIOEVENTO_FD).pipe(retry(3))
+    return this.http.post(`${this.url}modificarHorarioCasa.php`, HORARIOEVENTO_FD).pipe(retry(3))
   }
 
-  modificarImgsEvento( imgs:any ){
+  modificarImgsCasa( imgs:any ){
     const IMGSEVENTO_FD = serialize(imgs);
-    return this.http.post(`${this.url}modificarImgsEvento.php`, IMGSEVENTO_FD).pipe(retry(3))
+    return this.http.post(`${this.url}modificarImgsCasa.php`, IMGSEVENTO_FD).pipe(retry(3))
   }
 
   buscarBoletos(id_evento:number){
     return this.http.get(`${this.url}consultaBoletos.php?id_evento=${id_evento}`).pipe(retry(3))
   }
 
-  eliminarEvento( id:number ){
-    return this.http.get(`${this.url}eliminarEvento.php?id=${id}`).pipe(retry(3))
+  eliminarCasa( id:number ){
+    return this.http.get(`${this.url}eliminarCasa.php?id=${id}`).pipe(retry(3))
   }
 
-  cancelarEvento(id_evento:number){
-    return this.http.get(`${this.url}cancelarEvento.php?id_evento=${id_evento}`).pipe(retry(3))
+  cancelarCasa(id_evento:number){
+    return this.http.get(`${this.url}cancelarCasa.php?id_evento=${id_evento}`).pipe(retry(3))
   }
 
-  buscarEvento( nombre:string ){
-    return this.http.get(`${this.url}buscarEvento.php?nombre_evento=${nombre}`).pipe(retry(3))
+  buscarCasa( nombre:string ){
+    return this.http.get(`${this.url}buscarCasa.php?nombre_evento=${nombre}`).pipe(retry(3))
   }
 
   buscarLugar(  orden:number , id:number=null){
@@ -80,7 +79,7 @@ export class EventosService {
   }
 
   getVentasEdad( id_evento:number){
-    return this.http.get(`${this.url}EdadEvento.php?id_evento=${id_evento}`).pipe(retry(3))
+    return this.http.get(`${this.url}EdadCasa.php?id_evento=${id_evento}`).pipe(retry(3))
   }
 
   getVentasTotales( id_evento:number ){

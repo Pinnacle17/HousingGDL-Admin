@@ -22,7 +22,7 @@ import { PublicacionEditarComponent } from './components/publicacion-editar/publ
 import { PerfilComponent } from './components/perfil/perfil.component';
 
 import { UsuariosService } from './services/usuarios.service';
-import { EventosService } from './services/eventos.service';
+import { CasasService } from './services/casas.service';
 import { PublicacionesService } from './services/publicaciones.service';
 import es from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
@@ -68,7 +68,7 @@ registerLocaleData(es)
   ],
   providers: [
     UsuariosService,
-    EventosService,
+    CasasService,
     PublicacionesService,
     BoletosService,
     RepartidoresService,

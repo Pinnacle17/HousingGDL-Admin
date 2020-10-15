@@ -1,7 +1,7 @@
 import {Component, OnInit, OnDestroy, NgZone} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
-import {EventosService} from '../../services/eventos.service';
+import {CasasService} from '../../services/casas.service';
 import {RxwebValidators} from '@rxweb/reactive-form-validators';
 import {ViewChild, ElementRef} from '@angular/core';
 
@@ -15,13 +15,13 @@ declare var webkitSpeechRecognitionEvent;
 })
 export class CasasComponent implements OnInit, OnDestroy {
 
-  formEventos: FormGroup;
+  formCasas: FormGroup;
 
   urls = [];
   urlPrincipal = null;
   urlCarousel = null;
 
-  eventos = null;
+  casas = null;
 
   busqueda = null;
   encontrado: boolean = null;
@@ -46,7 +46,7 @@ export class CasasComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder,
               private router: Router,
-              private eventosService: EventosService,
+              private casasService: CasasService,
               private ngZone: NgZone) {
   }
 
@@ -70,7 +70,7 @@ export class CasasComponent implements OnInit, OnDestroy {
 
     speechRecognitionList.addFromString(`
       #JSGF V1.0;
-      public navigate = ver (eventos | publicaciones | usuarios | repartidores);
+      public navigate = ver (casas | publicaciones | usuarios | repartidores);
       public editar = editar;
       public eliminar = eliminar;
       `, 1);
@@ -111,11 +111,11 @@ export class CasasComponent implements OnInit, OnDestroy {
           case 'editar': {
             const event = command.slice(1, command.length).join(' ');
 
-            for (const e of this.eventos) {
-              if (e.id_evento == event) {
+            for (const e of this.casas) {
+              if (e.id_casa == event) {
                 navigate = true;
                 this.ngZone.run(() => {
-                  this.editarEvento(e.id_evento);
+                  this.editarCasa(e.id_casa);
                 });
                 break;
               }
@@ -125,11 +125,11 @@ export class CasasComponent implements OnInit, OnDestroy {
           case 'eliminar': {
             const event = command.slice(1, command.length).join(' ');
 
-            for (const e of this.eventos) {
-              if (e.id_evento == event) {
+            for (const e of this.casas) {
+              if (e.id_casa == event) {
                 navigate = true;
                 this.ngZone.run(() => {
-                  this.eliminarEvento(e.id_evento);
+                  this.eliminarCasa(e.id_casa);
                 });
                 break;
               }
@@ -156,19 +156,19 @@ export class CasasComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.initSpeech();
-    this.getEventos();
+    this.getCasas();
     this.formInit();
   }
 
-  getEventos() {
-    this.eventosService.getEventos().subscribe(resultado => this.eventos = resultado);
+  getCasas() {
+    this.casasService.getCasas().subscribe(resultado => this.casas = resultado);
   }
 
-  buscarEvento(nombre: string) {
+  buscarCasa(nombre: string) {
     if (nombre == null || nombre == '') {
       return null;
     } else {
-      this.eventosService.buscarEvento(nombre).subscribe(resultado => {
+      this.casasService.buscarCasa(nombre).subscribe(resultado => {
         if (resultado == null) {
           this.encontrado = false;
         } else {
@@ -179,17 +179,17 @@ export class CasasComponent implements OnInit, OnDestroy {
     }
   }
 
-  eliminarEvento(id: number) {
-    if (confirm('Está seguro de querer eliminar este evento?')) {
-      this.eventosService.buscarBoletos(id).subscribe(res => {
+  eliminarCasa(id: number) {
+    if (confirm('Está seguro de querer eliminar este casa?')) {
+      this.casasService.buscarBoletos(id).subscribe(res => {
         if(res == 0){
-          window.confirm("El evento tiene boletos. No es posible eliminar el evento.");
+          window.confirm("El casa tiene boletos. No es posible eliminar el casa.");
           return
         }
         else{
-          this.eventosService.eliminarEvento(id).subscribe(datos => {
+          this.casasService.eliminarCasa(id).subscribe(datos => {
             if (datos['resultado'] == 'OK') {
-              this.getEventos();
+              this.getCasas();
             }
           });
         }
@@ -197,16 +197,16 @@ export class CasasComponent implements OnInit, OnDestroy {
     }
   }
 
-  cancelarEvento(id_evento:number){
-    if (confirm('Está seguro de querer cancelar este evento?')) {
-      this.eventosService.cancelarEvento(id_evento).subscribe(() => {
-        this.getEventos();
+  cancelarCasa(id_casa:number){
+    if (confirm('Está seguro de querer cancelar este casa?')) {
+      this.casasService.cancelarCasa(id_casa).subscribe(() => {
+        this.getCasas();
       })
     }
   }
 
   formInit() {
-    this.formEventos = this.fb.group({
+    this.formCasas = this.fb.group({
       nombre: ['', [Validators.required]],
       fecha: this.fb.group({
         inicio: ['', [Validators.required]],
@@ -222,19 +222,19 @@ export class CasasComponent implements OnInit, OnDestroy {
       orden: ['', Validators.required],
       imgPrincipal: ['', [Validators.required, RxwebValidators.image({minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096})]],
       imgCarousel: ['', [Validators.required, RxwebValidators.image({minWidth: 1250, maxWidth: 4096, minHeight: 690, maxHeight: 2160})]],
-      imgsEvento: ['', [Validators.required, RxwebValidators.image({minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096})]]
+      imgsCasa: ['', [Validators.required, RxwebValidators.image({minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096})]]
     });
   }
 
-  editarEvento(id: number) {
-    this.router.navigate(['editar-evento', id]);
+  editarCasa(id: number) {
+    this.router.navigate(['editar-casa', id]);
   }
 
   compararFechas() {
-    let inicio = new Date(this.formEventos.get('fecha.inicio').value);
+    let inicio = new Date(this.formCasas.get('fecha.inicio').value);
     inicio.setMinutes(inicio.getMinutes() + inicio.getTimezoneOffset());
 
-    let cierre = new Date(this.formEventos.get('fecha.cierre').value);
+    let cierre = new Date(this.formCasas.get('fecha.cierre').value);
     cierre.setMinutes(cierre.getMinutes() + cierre.getTimezoneOffset());
 
     let hoy = new Date();
@@ -243,16 +243,16 @@ export class CasasComponent implements OnInit, OnDestroy {
     hoy.setHours(0);
 
     if (inicio > cierre) {
-      this.mensajeError = 'El evento no puede terminar antes de empezar.';
-      this.formEventos.get('fecha').setErrors({'incorrect': true});
+      this.mensajeError = 'El casa no puede terminar antes de empezar.';
+      this.formCasas.get('fecha').setErrors({'incorrect': true});
       return true;
     } else if (hoy > inicio) {
-      this.mensajeError = 'El evento no puede empezar hoy o antes de hoy.';
-      this.formEventos.get('fecha').setErrors({'incorrect': true});
+      this.mensajeError = 'El casa no puede empezar hoy o antes de hoy.';
+      this.formCasas.get('fecha').setErrors({'incorrect': true});
       return true;
     } else if (hoy > cierre) {
-      this.mensajeError = 'El evento no puede terminar hoy o antes de hoy.';
-      this.formEventos.get('fecha').setErrors({'incorrect': true});
+      this.mensajeError = 'El casa no puede terminar hoy o antes de hoy.';
+      this.formCasas.get('fecha').setErrors({'incorrect': true});
       return true;
     } else {
       return false;
@@ -260,17 +260,17 @@ export class CasasComponent implements OnInit, OnDestroy {
   }
 
   compararHorarios() {
-    let inicio = new Date(this.formEventos.get('fecha.inicio').value);
-    let cierre = new Date(this.formEventos.get('fecha.cierre').value);
+    let inicio = new Date(this.formCasas.get('fecha.inicio').value);
+    let cierre = new Date(this.formCasas.get('fecha.cierre').value);
 
 
-    if ((inicio.getTime() === cierre.getTime()) && this.formEventos.get('horario').dirty) {
+    if ((inicio.getTime() === cierre.getTime()) && this.formCasas.get('horario').dirty) {
 
-      let horarioInicio = this.formEventos.get('horario.inicio');
-      let horarioCierre = this.formEventos.get('horario.cierre');
+      let horarioInicio = this.formCasas.get('horario.inicio');
+      let horarioCierre = this.formCasas.get('horario.cierre');
 
       if ((horarioInicio.value >= horarioCierre.value) && (horarioInicio.dirty && horarioCierre.dirty)) {
-        this.formEventos.get('horario').setErrors({'incorrect': true});
+        this.formCasas.get('horario').setErrors({'incorrect': true});
         return true;
       } else {
         return false;
@@ -279,73 +279,73 @@ export class CasasComponent implements OnInit, OnDestroy {
   }
 
   get validacionNombre() {
-    return this.formEventos.get('nombre').invalid && this.formEventos.get('nombre').touched;
+    return this.formCasas.get('nombre').invalid && this.formCasas.get('nombre').touched;
   }
 
   get nombreExistente() {
-    return this.formEventos.get('nombre').invalid && this.formEventos.get('nombre').value != '' && !this.formEventos.get('nombre').pristine;
+    return this.formCasas.get('nombre').invalid && this.formCasas.get('nombre').value != '' && !this.formCasas.get('nombre').pristine;
   }
 
   get validacionFechaInicio() {
-    return this.formEventos.get('fecha.inicio').invalid && this.formEventos.get('fecha.inicio').touched;
+    return this.formCasas.get('fecha.inicio').invalid && this.formCasas.get('fecha.inicio').touched;
   }
 
   get validacionFechaCierre() {
-    return this.formEventos.get('fecha.cierre').invalid && this.formEventos.get('fecha.cierre').touched;
+    return this.formCasas.get('fecha.cierre').invalid && this.formCasas.get('fecha.cierre').touched;
   }
 
   get validacionHorarioInicio() {
-    return this.formEventos.get('horario.inicio').invalid && this.formEventos.get('horario.inicio').touched;
+    return this.formCasas.get('horario.inicio').invalid && this.formCasas.get('horario.inicio').touched;
   }
 
   get validacionHorarioCierre() {
-    return this.formEventos.get('horario.cierre').invalid && this.formEventos.get('horario.cierre').touched;
+    return this.formCasas.get('horario.cierre').invalid && this.formCasas.get('horario.cierre').touched;
   }
 
   get validacionTipo() {
-    return this.formEventos.get('tipo').invalid && this.formEventos.get('tipo').touched;
+    return this.formCasas.get('tipo').invalid && this.formCasas.get('tipo').touched;
   }
 
   get validacionEnlace() {
-    return this.formEventos.get('enlace').invalid && this.formEventos.get('enlace').touched;
+    return this.formCasas.get('enlace').invalid && this.formCasas.get('enlace').touched;
   }
 
   get validacionDesc() {
-    return this.formEventos.get('desc').invalid && this.formEventos.get('desc').touched;
+    return this.formCasas.get('desc').invalid && this.formCasas.get('desc').touched;
   }
 
   get validacionImg() {
-    return this.formEventos.get('imgPrincipal').invalid && this.formEventos.get('imgPrincipal').touched && this.formEventos.get('imgPrincipal').value == '';
+    return this.formCasas.get('imgPrincipal').invalid && this.formCasas.get('imgPrincipal').touched && this.formCasas.get('imgPrincipal').value == '';
   }
 
   get validacionImgCarousel() {
-    return this.formEventos.get('imgCarousel').invalid && this.formEventos.get('imgCarousel').touched && this.formEventos.get('imgCarousel').value == '';
+    return this.formCasas.get('imgCarousel').invalid && this.formCasas.get('imgCarousel').touched && this.formCasas.get('imgCarousel').value == '';
   }
 
   get validacionImgs() {
-    return this.formEventos.get('imgsEvento').invalid && this.formEventos.get('imgsEvento').touched && this.formEventos.get('imgsEvento').value == '';
+    return this.formCasas.get('imgsCasa').invalid && this.formCasas.get('imgsCasa').touched && this.formCasas.get('imgsCasa').value == '';
   }
 
   get validacionTamImg() {
-    return this.formEventos.get('imgPrincipal').invalid && this.formEventos.get('imgPrincipal').dirty && this.formEventos.get('imgPrincipal').value != '';
+    return this.formCasas.get('imgPrincipal').invalid && this.formCasas.get('imgPrincipal').dirty && this.formCasas.get('imgPrincipal').value != '';
   }
 
   get validacionTamImgCarousel() {
-    return this.formEventos.get('imgCarousel').invalid && this.formEventos.get('imgCarousel').dirty && this.formEventos.get('imgCarousel').value != '';
+    return this.formCasas.get('imgCarousel').invalid && this.formCasas.get('imgCarousel').dirty && this.formCasas.get('imgCarousel').value != '';
   }
 
   get validacionTamImgs() {
-    return this.formEventos.get('imgsEvento').invalid && this.formEventos.get('imgsEvento').dirty && this.formEventos.get('imgsEvento').value != '';
+    return this.formCasas.get('imgsCasa').invalid && this.formCasas.get('imgsCasa').dirty && this.formCasas.get('imgsCasa').value != '';
   }
 
   get validacionOrden() {
-    return this.formEventos.get('orden').invalid && this.formEventos.get('orden').touched;
+    return this.formCasas.get('orden').invalid && this.formCasas.get('orden').touched;
   }
 
   imgPrincipal(event) {
     if (event.target.files && event.target.files[0]) {
       this.imgSeleccionada = <File>event.target.files[0];
-      this.formEventos.controls['imgPrincipal'].setValue(this.imgSeleccionada);
+      this.formCasas.controls['imgPrincipal'].setValue(this.imgSeleccionada);
 
       var reader = new FileReader();
       reader.readAsDataURL(event.target.files[0]);
@@ -359,7 +359,7 @@ export class CasasComponent implements OnInit, OnDestroy {
   imgCarousel(event) {
     if (event.target.files && event.target.files[0]) {
       this.imgCarouselSeleccionada = <File>event.target.files[0];
-      this.formEventos.controls['imgCarousel'].setValue(this.imgCarouselSeleccionada);
+      this.formCasas.controls['imgCarousel'].setValue(this.imgCarouselSeleccionada);
 
       var reader = new FileReader();
 
@@ -384,19 +384,19 @@ export class CasasComponent implements OnInit, OnDestroy {
         var selectedFile = event.target.files[i];
         this.imgsSeleccionadas.push(selectedFile);
       }
-      this.formEventos.controls['imgsEvento'].setValue(this.imgsSeleccionadas);
+      this.formCasas.controls['imgsCasa'].setValue(this.imgsSeleccionadas);
     }
   }
 
   borrarImgPrincipal() {
     this.urlPrincipal = null;
-    this.formEventos.controls['imgPrincipal'].setValue('');
+    this.formCasas.controls['imgPrincipal'].setValue('');
     this.imgInputP.nativeElement.value = null;
   }
 
   borrarImgCarousel() {
     this.urlCarousel = null;
-    this.formEventos.controls['imgCarousel'].setValue('');
+    this.formCasas.controls['imgCarousel'].setValue('');
     this.imgInputC.nativeElement.value = null;
   }
 
@@ -404,18 +404,18 @@ export class CasasComponent implements OnInit, OnDestroy {
     this.urls = this.urls.filter((a) => a !== url);
     this.imgsSeleccionadas.splice(index, 1);
 
-    this.formEventos.controls['imgsEvento'].reset();
-    this.formEventos.controls['imgsEvento'].setErrors(null);
+    this.formCasas.controls['imgsCasa'].reset();
+    this.formCasas.controls['imgsCasa'].setErrors(null);
 
     if (this.imgsSeleccionadas.length == 0) {
-      this.formEventos.controls['imgsEvento'].setValue(null);
+      this.formCasas.controls['imgsCasa'].setValue(null);
       this.imgsInput.nativeElement.value = null;
     }
 
   }
 
   liberarLugar() {
-    this.eventosService.liberarLugar(this.formEventos.get('orden').value).subscribe(datos => {
+    this.casasService.liberarLugar(this.formCasas.get('orden').value).subscribe(datos => {
       if (datos['resultado'] == 'ERROR') {
         console.log('ERROR');
         return;
@@ -426,22 +426,22 @@ export class CasasComponent implements OnInit, OnDestroy {
     });
   }
 
-  guardarEvento() {
-    this.eventosService.buscarNombre(this.formEventos.get('nombre').value).subscribe(datos => {
+  guardarCasa() {
+    this.casasService.buscarNombre(this.formCasas.get('nombre').value).subscribe(datos => {
       if (datos['estado'] == 0) {
         this.errorNombre = datos['mensaje'];
         window.confirm(this.errorNombre);
-        this.formEventos.get('nombre').setErrors({'incorrect': true});
+        this.formCasas.get('nombre').setErrors({'incorrect': true});
       } else if (datos['estado'] == 1) {
-        this.eventosService.buscarLugar(this.formEventos.get('orden').value).subscribe(datos => {
+        this.casasService.buscarLugar(this.formCasas.get('orden').value).subscribe(datos => {
           if (datos['estado'] == 0) {
             this.errorOrden = datos['mensaje'];
             this.modalError.nativeElement.click();
           } else if (datos['estado'] == 1) {
-            this.eventosService.crearEvento(this.formEventos.value).subscribe(datos => {
+            this.casasService.crearCasa(this.formCasas.value).subscribe(datos => {
               if (datos['resultado'] == 'OK') {
-                this.getEventos();
-                this.formEventos.reset();
+                this.getCasas();
+                this.formCasas.reset();
 
                 this.borrarImgPrincipal();
 

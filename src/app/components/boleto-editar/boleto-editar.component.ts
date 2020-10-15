@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BoletosService } from '../../services/boletos.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { EventosService } from '../../services/eventos.service';
+import { CasasService } from '../../services/casas.service';
 
 @Component({
   selector: 'app-boleto-editar',
@@ -59,7 +59,7 @@ export class BoletoEditarComponent implements OnInit {
   constructor(private activatedRoute:ActivatedRoute,
               private boletosService:BoletosService,
               private fb:FormBuilder,
-              private eventosService:EventosService) { }
+              private eventosService:CasasService) { }
 
   ngOnInit() {
     this.getEventos();
@@ -176,7 +176,7 @@ export class BoletoEditarComponent implements OnInit {
   }
 
   getEventos(){
-    this.eventosService.getEventos().subscribe( resultado => {
+    this.eventosService.getCasas().subscribe( resultado => {
       this.eventos = resultado
       console.log(this.eventos );
     });

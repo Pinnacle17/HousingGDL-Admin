@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RepartidoresService } from '../../services/repartidores.service';
 import { BoletosService } from 'src/app/services/boletos.service';
-import { EventosService } from 'src/app/services/eventos.service';
+import { CasasService } from 'src/app/services/casas.service';
 
 @Component({
   selector: 'app-repartidor-editar',
@@ -31,7 +31,7 @@ export class RepartidorEditarComponent implements OnInit {
               private activatedRoute:ActivatedRoute,
               private repartidoresService:RepartidoresService,
               private boletosService:BoletosService,
-              private eventosService:EventosService
+              private eventosService:CasasService
               ) { }
 
   ngOnInit() {
@@ -150,7 +150,7 @@ export class RepartidorEditarComponent implements OnInit {
   }
 
   getEventos(){
-    this.eventosService.getEventos(2).subscribe( resultado => {
+    this.eventosService.getCasas(2).subscribe( resultado => {
       this.eventos = resultado
       console.log(this.eventos );
     });

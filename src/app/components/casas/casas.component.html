@@ -1,15 +1,15 @@
 <div class="container-fluid table-responsive animated fadeIn fast">
     <div class="row">
         <div class="col-md-12 text-center">
-            <h2>Busca Tus Eventos</h2>
+            <h2>Busca Tus Casas</h2>
         </div>
     </div>
     <div class="row mb-4">
         <div class="col-md-6 d-block mx-auto">
             <div class="input-group input-group-sm">
-                <input class="form-control" type="search" placeholder="Buscar" #buscar (keyup.enter)="buscarEvento( buscar.value)">
+                <input class="form-control" type="search" placeholder="Buscar" #buscar (keyup.enter)="buscarCasa( buscar.value)">
                 <div class="input-group-append">
-                    <button class="btn btn-navbar" type="button" (click)="buscarEvento( buscar.value )">
+                    <button class="btn btn-navbar" type="button" (click)="buscarCasa( buscar.value )">
                       <i class="fas fa-search"></i>
                     </button>
                 </div>
@@ -35,18 +35,18 @@
                 </thead>
                 <tbody class="text-center">
                     <tr *ngFor="let resultado of busqueda">
-                        <th scope="row" class="align-middle">{{ resultado.id_evento }}</th>
-                        <td class="align-middle">{{ resultado.nombre_evento }}</td>
-                        <td class="align-middle text-left">{{ resultado.descripcion_evento }}</td>
-                        <td class="align-middle text-left text-danger" *ngIf="resultado.estado_evento == 0">Sin Boletos</td>
-                        <td class="align-middle text-left text-success" *ngIf="resultado.estado_evento == 1">Activo</td>
-                        <td class="align-middle text-left text-danger" *ngIf="resultado.estado_evento == 2">Cancelado</td>
-                        <td class="align-middle text-left text-primary" *ngIf="resultado.estado_evento == 3">Finalizado</td>
+                        <th scope="row" class="align-middle">{{ resultado.id_casa }}</th>
+                        <td class="align-middle">{{ resultado.nombre_casa }}</td>
+                        <td class="align-middle text-left">{{ resultado.descripcion_casa }}</td>
+                        <td class="align-middle text-left text-danger" *ngIf="resultado.estado_casa == 0">Sin Boletos</td>
+                        <td class="align-middle text-left text-success" *ngIf="resultado.estado_casa == 1">Activo</td>
+                        <td class="align-middle text-left text-danger" *ngIf="resultado.estado_casa == 2">Cancelado</td>
+                        <td class="align-middle text-left text-primary" *ngIf="resultado.estado_casa == 3">Finalizado</td>
                         <td class="align-middle">{{ resultado.orden_anuncio }}</td>
                         <td class="align-middle">
-                            <button class="btn btn-primary" type="button" (click)="editarEvento( resultado.id_evento )">Editar</button>
-                            <button class="btn btn-danger ml-lg-2" type="button" (click)="eliminarEvento( resultado.id_evento )">Eliminar</button>
-                            <button class="btn btn-danger ml-lg-2" type="button" (click)="cancelarEvento( resultado.id_evento )">Cancelar</button>
+                            <button class="btn btn-primary" type="button" (click)="editarCasa( resultado.id_casa )">Editar</button>
+                            <button class="btn btn-danger ml-lg-2" type="button" (click)="eliminarCasa( resultado.id_casa )">Eliminar</button>
+                            <button class="btn btn-danger ml-lg-2" type="button" (click)="cancelarCasa( resultado.id_casa )">Cancelar</button>
                         </td>
                     </tr>
                 </tbody>
@@ -66,48 +66,48 @@
             </tr>
         </thead>
         <tbody class="text-center">
-            <tr *ngFor="let evento of eventos">
-                <th scope="row" class="align-middle">{{ evento.id_evento }}</th>
-                <td class="align-middle">{{ evento.nombre_evento }}</td>
-                <td class="align-middle text-left">{{ evento.descripcion_evento }}</td>
-                <td class="align-middle text-left text-danger" *ngIf="evento.estado_evento == 0">Sin Boletos</td>
-                <td class="align-middle text-left text-success" *ngIf="evento.estado_evento == 1">Activo</td>
-                <td class="align-middle text-left text-danger" *ngIf="evento.estado_evento == 2">Cancelado</td>
-                <td class="align-middle text-left text-primary" *ngIf="evento.estado_evento == 3">Finalizado</td>
-                <td class="align-middle">{{ evento.orden_anuncio }}</td>
+            <tr *ngFor="let casa of casas">
+                <th scope="row" class="align-middle">{{ casa.id_casa }}</th>
+                <td class="align-middle">{{ casa.nombre_casa }}</td>
+                <td class="align-middle text-left">{{ casa.descripcion_casa }}</td>
+                <td class="align-middle text-left text-danger" *ngIf="casa.estado_casa == 0">Sin Boletos</td>
+                <td class="align-middle text-left text-success" *ngIf="casa.estado_casa == 1">Activo</td>
+                <td class="align-middle text-left text-danger" *ngIf="casa.estado_casa == 2">Cancelado</td>
+                <td class="align-middle text-left text-primary" *ngIf="casa.estado_casa == 3">Finalizado</td>
+                <td class="align-middle">{{ casa.orden_anuncio }}</td>
                 <td class="align-middle">
-                    <button class="btn btn-primary" type="button" (click)="editarEvento( evento.id_evento )">Editar</button>
-                    <button class="btn btn-danger ml-lg-2" type="button" (click)="eliminarEvento( evento.id_evento )">Eliminar</button>
-                    <button class="btn btn-danger ml-lg-2" type="button" (click)="cancelarEvento( evento.id_evento )">Cancelar</button>
+                    <button class="btn btn-primary" type="button" (click)="editarCasa( casa.id_casa )">Editar</button>
+                    <button class="btn btn-danger ml-lg-2" type="button" (click)="eliminarCasa( casa.id_casa )">Eliminar</button>
+                    <button class="btn btn-danger ml-lg-2" type="button" (click)="cancelarCasa( casa.id_casa )">Cancelar</button>
                 </td>
             </tr>
         </tbody>
     </table>
 
     <div class="container-fluid">
-        <button type="button" class="btn btn-outline-success btn-block" data-toggle="modal" data-target="#modalEvento">
-        + Crear un Nuevo Evento
+        <button type="button" class="btn btn-outline-success btn-block" data-toggle="modal" data-target="#modalCasa">
+        + Crear un Nuevo Casa
       </button>
     </div>
 
 </div>
 
-<div class="modal fade" id="modalEvento" tabindex="-1" role="dialog" aria-labelledby="modalEventoLabel" style="overflow-y: visible;">
+<div class="modal fade" id="modalCasa" tabindex="-1" role="dialog" aria-labelledby="modalCasaLabel" style="overflow-y: visible;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalEventoLabel">Crear Evento</h5>
+                <h5 class="modal-title" id="modalCasaLabel">Crear Casa</h5>
                 <button #cerrar type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-                <form [formGroup]="formEventos" (ngSubmit)="guardarEvento()">
+                <form [formGroup]="formCasas" (ngSubmit)="guardarCasa()">
 
                     <div class="form-row mb-3">
                         <div class="col-md-12">
-                            <label for="nombreEvento">Nombre: <small class="text-danger">*</small></label>
-                            <input type="text" class="form-control" id="nombreEvento" placeholder="Ingrese el Nombre del Evento" formControlName="nombre" [class.is-invalid]="validacionNombre || nombreExistente">
+                            <label for="nombreCasa">Nombre: <small class="text-danger">*</small></label>
+                            <input type="text" class="form-control" id="nombreCasa" placeholder="Ingrese el Nombre del Casa" formControlName="nombre" [class.is-invalid]="validacionNombre || nombreExistente">
                             <small *ngIf="validacionNombre" class="form-text text-danger">Obligatorio.</small>
                         </div>
                     </div>
@@ -135,7 +135,7 @@
                             <input type="time" id="horaCierre" class="form-control" formControlName="cierre" [class.is-invalid]="validacionHorarioCierre">
                             <small *ngIf="validacionHorarioCierre" class="form-text text-danger">Obligatorio.</small>
                         </div>
-                        <small *ngIf="compararHorarios()" class="form-text text-danger">Horarios no válidos. El evento no puede terminar antes de empezar.</small>
+                        <small *ngIf="compararHorarios()" class="form-text text-danger">Horarios no válidos. El casa no puede terminar antes de empezar.</small>
                     </div>
 
                     <div class="input-group form-row mb-3">
@@ -145,30 +145,30 @@
                             <label for="tipo1" class="form-check-label"> Fiesta</label><br>
 
                             <input type="radio" id="tipo2" value="1" formControlName="tipo" [class.is-invalid]="validacionTipo">
-                            <label for="tipo2" class="form-check-label"> Evento</label>
+                            <label for="tipo2" class="form-check-label"> Casa</label>
                             <small *ngIf="validacionTipo" class="form-text text-danger">Obligatorio.</small>
                         </div>
                     </div>
 
                     <div class="input-group form-row mb-3">
                         <div class="col-md-12">
-                            <label for="enlaceEvento">Enlace:</label>
-                            <input type="text" class="form-control" id="enlaceEvento" placeholder="Ingrese el Enlace del Evento" formControlName="enlace" [class.is-invalid]="validacionEnlace">
+                            <label for="enlaceCasa">Enlace:</label>
+                            <input type="text" class="form-control" id="enlaceCasa" placeholder="Ingrese el Enlace del Casa" formControlName="enlace" [class.is-invalid]="validacionEnlace">
                             <small *ngIf="validacionEnlace" class="form-text text-danger">Enlace Obligatorio.</small>
                         </div>
                     </div>
 
                     <div class="input-group form-row mb-3">
                         <div class="col-md-12">
-                            <label for="descEvento">Descripción: <small class="text-danger">*</small></label>
-                            <textarea id="descEvento" class="form-control" rows="5" formControlName="desc" [class.is-invalid]="validacionDesc"></textarea>
+                            <label for="descCasa">Descripción: <small class="text-danger">*</small></label>
+                            <textarea id="descCasa" class="form-control" rows="5" formControlName="desc" [class.is-invalid]="validacionDesc"></textarea>
                             <small *ngIf="validacionDesc" class="form-text text-danger">Breve Descripción Obligatoria.</small>
                         </div>
                     </div>
 
                     <div class="input-group form-row mb-3">
                         <div class="col-md-6">
-                            <label for="ordenImg">Orden de Evento: <small class="text-danger">*</small> <small>(Posición de imagen principal en el carousel de eventos)</small></label>
+                            <label for="ordenImg">Orden de Casa: <small class="text-danger">*</small> <small>(Posición de imagen principal en el carousel de casas)</small></label>
                             <input type="number" class="form-control" id="ordenImg" min="1" max="15" step="1" value="1" formControlName="orden" [class.is-invalid]="validacionOrden">
                             <small *ngIf="validacionOrden" class="form-text text-danger">Orden Obligatorio.</small>
                         </div>
@@ -176,7 +176,7 @@
 
                     <div class="input-group form-row mb-3">
                         <div class="col-md-12">
-                            <label for="imgPrincipal">Imagen Principal del Evento: <small class="text-danger">*</small></label>
+                            <label for="imgPrincipal">Imagen Principal del Casa: <small class="text-danger">*</small></label>
                             <input #imgInputP [writeFile]="true" type="file" id="imgPrincipal" accept=".jpg" (change)="imgPrincipal($event)" formControlName="imgPrincipal">
                             <small *ngIf="validacionImg" class="form-text text-danger">Imagen Principal Obligatoria.</small>
                             <small *ngIf="validacionTamImg" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
@@ -214,10 +214,10 @@
 
                     <div class="input-group form-row mb-3">
                         <div class="col-md-12">
-                            <label for="imgsEvento">Imagenes del Evento: <small class="text-danger">*</small></label>
-                            <input #imgsInput [writeFile]="true" type='file' id="imgsEvento" accept=".jpg" (change)="multiImg($event)" multiple formControlName="imgsEvento">
+                            <label for="imgsCasa">Imagenes del Casa: <small class="text-danger">*</small></label>
+                            <input #imgsInput [writeFile]="true" type='file' id="imgsCasa" accept=".jpg" (change)="multiImg($event)" multiple formControlName="imgsCasa">
                             <small *ngIf="validacionImgs" class="form-text text-danger">Mínimo una imágen.</small>
-                            <small *ngIf="validacionTamImgs && formEventos.invalid" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
+                            <small *ngIf="validacionTamImgs && formCasas.invalid" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
                             <div class="row" *ngFor='let url of urls; let i = index'>
                                 <div class="col-md-9">
                                     <img [src]="url" height="200" class="float-right"><br>
@@ -234,7 +234,7 @@
                     <hr>
                     <div class="input-group form-row mb-3">
                         <div class="col-md-12 text-center">
-                            <button [disabled]="formEventos.invalid" class="btn btn-success" type="submit">Crear</button>
+                            <button [disabled]="formCasas.invalid" class="btn btn-success" type="submit">Crear</button>
                         </div>
                         <button #modalError type="button" class="invisible" data-toggle="modal" data-target="#modalError"></button>
                     </div>

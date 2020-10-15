@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EventosService } from '../../services/eventos.service';
+import { CasasService } from '../../services/casas.service';
 import { BoletosService } from '../../services/boletos.service';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
@@ -135,7 +135,7 @@ export class EventoEditarComponent implements OnInit {
 
   constructor(private fb:FormBuilder,
               private activatedRoute:ActivatedRoute,
-              private eventosService:EventosService,
+              private casasService:CasasService,
               private boletosService:BoletosService,
               private router:Router) {}
 
@@ -145,7 +145,7 @@ export class EventoEditarComponent implements OnInit {
     this.formImgInit();
     this.formBoletosInit();
     this.activatedRoute.params.subscribe( params => {
-      this.eventosService.getEvento(params['id']).subscribe( resultado => {
+      this.casasService.getCasa(params['id']).subscribe( resultado => {
         this.evento = resultado[0];
 
         this.formInfoE.setValue({
@@ -164,7 +164,7 @@ export class EventoEditarComponent implements OnInit {
         });
 
       });
-      this.eventosService.getImgs(params['id']).subscribe(resultado => this.imgs = resultado);
+      this.casasService.getImgs(params['id']).subscribe(resultado => this.imgs = resultado);
       this.boletosService.getBoletos(params['id']).subscribe( resultado => {
         if(resultado == null){
           this.noBoletos = true;
@@ -187,7 +187,7 @@ export class EventoEditarComponent implements OnInit {
   }
 
   getComentarios( id_evento ){
-    this.eventosService.getComentarios(id_evento).subscribe(resultado => {
+    this.casasService.getComentarios(id_evento).subscribe(resultado => {
       this.comentarios = resultado;
       if(this.comentarios == null){
         this.sinComentarios = true;
@@ -200,7 +200,7 @@ export class EventoEditarComponent implements OnInit {
 
   eliminarComentario( id_calificacion:number ){
     if(window.confirm("Está seguro de querer eliminar el comentario?")){
-      this.eventosService.eliminarComentrio(id_calificacion).subscribe( () => {
+      this.casasService.eliminarComentrio(id_calificacion).subscribe( () => {
         this.activatedRoute.params.subscribe( () => {
           this.activatedRoute.params.subscribe( params => {
             this.getComentarios(params['id']);
@@ -211,7 +211,7 @@ export class EventoEditarComponent implements OnInit {
   }
 
   getVentasEdad( id_evento:number ){
-    this.eventosService.getVentasEdad(id_evento).subscribe(resultado => {
+    this.casasService.getVentasEdad(id_evento).subscribe(resultado => {
         this.edadData = resultado;
         console.log(this.edadData);
 
@@ -229,14 +229,14 @@ export class EventoEditarComponent implements OnInit {
   }
 
   getVentasTotales( id_evento:number ){
-    this.eventosService.getVentasTotales(id_evento).subscribe( resultado => {
+    this.casasService.getVentasTotales(id_evento).subscribe( resultado => {
       this.ventasTotales = resultado;
       console.log(this.ventasTotales);
     })
   }
 
   buscarVentasDia( fecha:any ){
-    this.eventosService.getVentasDia( fecha, this.id_evento).subscribe( resultado => {
+    this.casasService.getVentasDia( fecha, this.id_evento).subscribe( resultado => {
       if(resultado == null){
         this.hayVentasDia = false;
         return
@@ -250,7 +250,7 @@ export class EventoEditarComponent implements OnInit {
   }
 
   getVentasRango( fecha_1:any, fecha_2:any ){
-    this.eventosService.getVentasR( fecha_1, fecha_2, this.id_evento).subscribe( resultado => {
+    this.casasService.getVentasR( fecha_1, fecha_2, this.id_evento).subscribe( resultado => {
       if(resultado == null){
         this.hayVentasRango = false;
         return
@@ -370,8 +370,8 @@ export class EventoEditarComponent implements OnInit {
 
   refresh(){
     this.activatedRoute.params.subscribe( params => {
-      this.eventosService.getEvento(params['id']).subscribe( resultado => this.evento = resultado[0]);
-      this.eventosService.getImgs(params['id']).subscribe( resultado => this.imgs = resultado);
+      this.casasService.getCasa(params['id']).subscribe( resultado => this.evento = resultado[0]);
+      this.casasService.getImgs(params['id']).subscribe( resultado => this.imgs = resultado);
       this.boletosService.getBoletos(params['id']).subscribe( resultado => {
         if(resultado == null){
           this.noBoletos = true;
@@ -390,19 +390,19 @@ export class EventoEditarComponent implements OnInit {
     this.infoEvento.orden = this.formInfoE.get('orden').value;
     this.infoEvento.enlace = this.formInfoE.get('enlace').value;
 
-    this.eventosService.buscarNombre(this.infoEvento.nombre, this.infoEvento.id).subscribe( datos => {
+    this.casasService.buscarNombre(this.infoEvento.nombre, this.infoEvento.id).subscribe( datos => {
       if(datos['estado'] == 0){
         this.errorNombre = datos['mensaje'];
         window.confirm(this.errorNombre);
       }
       else if(datos['estado'] == 1){
-        this.eventosService.buscarLugar(this.infoEvento.orden, this.infoEvento.id).subscribe(datos => {
+        this.casasService.buscarLugar(this.infoEvento.orden, this.infoEvento.id).subscribe(datos => {
           if(datos['estado'] == 0){
             this.errorOrden = datos['mensaje'];
             this.modalError.nativeElement.click();
           }
           else if(datos['estado'] == 1){
-            this.eventosService.modificarInfoEvento(this.infoEvento).subscribe( datos => {
+            this.casasService.modificarInfoCasa(this.infoEvento).subscribe( datos => {
               if(datos['resultado'] == "ERROR"){
                 console.log("ERROR");
                 return
@@ -418,7 +418,7 @@ export class EventoEditarComponent implements OnInit {
   }
 
   liberarLugar(){
-    this.eventosService.liberarLugar(this.formInfoE.get('orden').value, this.infoEvento.id).subscribe( datos => {
+    this.casasService.liberarLugar(this.formInfoE.get('orden').value, this.infoEvento.id).subscribe( datos => {
       if(datos['resultado'] == "ERROR"){
         console.log("ERROR");
         return
@@ -440,7 +440,7 @@ export class EventoEditarComponent implements OnInit {
 
     console.log(this.fechasEvento);
 
-    this.eventosService.modificarHorarioEvento(this.fechasEvento).subscribe( datos => {
+    this.casasService.modificarHorarioCasa(this.fechasEvento).subscribe( datos => {
       if(datos['resultado'] == "ERROR"){
         console.log("ERROR");
         return
@@ -456,7 +456,7 @@ export class EventoEditarComponent implements OnInit {
     this.imgsEvento.imgCarousel = this.imgCarouselSeleccionada;
     this.imgsEvento.imgs = this.imgsSeleccionadas;
 
-    this.eventosService.modificarImgsEvento(this.imgsEvento).subscribe( datos => {
+    this.casasService.modificarImgsCasa(this.imgsEvento).subscribe( datos => {
       if(datos['resultado'] == "ERROR"){
         console.log("ERROR");
         return
@@ -588,7 +588,7 @@ export class EventoEditarComponent implements OnInit {
 
   eliminarImg( id:number ){
     if(confirm("Está seguro de querer eliminar esta imagen?")){
-      this.eventosService.eliminarImgs(id).subscribe( datos => {
+      this.casasService.eliminarImgs(id).subscribe( datos => {
         if(datos['resultado'] == "OK"){
           this.refresh();
           window.confirm("Imagen eliminada con éxito");
