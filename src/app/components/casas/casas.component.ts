@@ -221,53 +221,7 @@ export class CasasComponent implements OnInit, OnDestroy {
     this.router.navigate(['editar-casa', id]);
   }
 
-  compararFechas() {
-    let inicio = new Date(this.formCasas.get('fecha.inicio').value);
-    inicio.setMinutes(inicio.getMinutes() + inicio.getTimezoneOffset());
-
-    let cierre = new Date(this.formCasas.get('fecha.cierre').value);
-    cierre.setMinutes(cierre.getMinutes() + cierre.getTimezoneOffset());
-
-    let hoy = new Date();
-    hoy.setSeconds(0);
-    hoy.setMinutes(0);
-    hoy.setHours(0);
-
-    if (inicio > cierre) {
-      this.mensajeError = 'El casa no puede terminar antes de empezar.';
-      this.formCasas.get('fecha').setErrors({'incorrect': true});
-      return true;
-    } else if (hoy > inicio) {
-      this.mensajeError = 'El casa no puede empezar hoy o antes de hoy.';
-      this.formCasas.get('fecha').setErrors({'incorrect': true});
-      return true;
-    } else if (hoy > cierre) {
-      this.mensajeError = 'El casa no puede terminar hoy o antes de hoy.';
-      this.formCasas.get('fecha').setErrors({'incorrect': true});
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  compararHorarios() {
-    let inicio = new Date(this.formCasas.get('fecha.inicio').value);
-    let cierre = new Date(this.formCasas.get('fecha.cierre').value);
-
-
-    if ((inicio.getTime() === cierre.getTime()) && this.formCasas.get('horario').dirty) {
-
-      let horarioInicio = this.formCasas.get('horario.inicio');
-      let horarioCierre = this.formCasas.get('horario.cierre');
-
-      if ((horarioInicio.value >= horarioCierre.value) && (horarioInicio.dirty && horarioCierre.dirty)) {
-        this.formCasas.get('horario').setErrors({'incorrect': true});
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
+  
 
   get validacionNombre() {
     return this.formCasas.get('nombre').invalid && this.formCasas.get('nombre').touched;
@@ -277,29 +231,11 @@ export class CasasComponent implements OnInit, OnDestroy {
     return this.formCasas.get('nombre').invalid && this.formCasas.get('nombre').value != '' && !this.formCasas.get('nombre').pristine;
   }
 
-  get validacionFechaInicio() {
-    return this.formCasas.get('fecha.inicio').invalid && this.formCasas.get('fecha.inicio').touched;
-  }
-
-  get validacionFechaCierre() {
-    return this.formCasas.get('fecha.cierre').invalid && this.formCasas.get('fecha.cierre').touched;
-  }
-
-  get validacionHorarioInicio() {
-    return this.formCasas.get('horario.inicio').invalid && this.formCasas.get('horario.inicio').touched;
-  }
-
-  get validacionHorarioCierre() {
-    return this.formCasas.get('horario.cierre').invalid && this.formCasas.get('horario.cierre').touched;
-  }
 
   get validacionAmbiente() {
     return this.formCasas.get('ambiente').invalid && this.formCasas.get('ambiente').touched;
   }
 
-  get validacionEnlace() {
-    return this.formCasas.get('enlace').invalid && this.formCasas.get('enlace').touched;
-  }
 
   get validacionDesc() {
     return this.formCasas.get('desc').invalid && this.formCasas.get('desc').touched;
