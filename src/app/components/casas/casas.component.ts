@@ -10,10 +10,10 @@ declare var webkitSpeechGrammarList;
 declare var webkitSpeechRecognitionEvent;
 
 @Component({
-  selector: 'app-eventos',
-  templateUrl: './eventos.component.html'
+  selector: 'app-casas',
+  templateUrl: './casas.component.html'
 })
-export class EventosComponent implements OnInit, OnDestroy {
+export class CasasComponent implements OnInit, OnDestroy {
 
   formEventos: FormGroup;
 

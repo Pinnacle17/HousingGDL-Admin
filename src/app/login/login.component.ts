@@ -9,59 +9,65 @@ import { LoginService } from '../services/login.service';
 })
 export class LoginComponent implements OnInit {
 
-  loggedIn:boolean = false;
-  formLogin:FormGroup;
+  loggedIn: boolean = false;
+  formLogin: FormGroup;
 
-  @ViewChild('modalLogin',{ static: false }) modalLogin;
+  @ViewChild('modalLogin', { static: false }) modalLogin;
 
-  constructor(private fb:FormBuilder,
-              private loginService:LoginService,
-              private router:Router) { }
+  constructor(private fb: FormBuilder,
+    private loginService: LoginService,
+    private router: Router) { }
 
   ngOnInit() {
     this.formLoginInit();
   }
 
-  formLoginInit(){
+  formLoginInit() {
     this.formLogin = this.fb.group({
-      correo:[null, [Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')]],
-      contra:[null, Validators.required]
+      correo: [null, [Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')]],
+      contra: [null, Validators.required]
     })
   }
 
-  get validacionCorreoL(){
+  get validacionCorreoL() {
     return this.formLogin.get('correo').invalid && this.formLogin.get('correo').touched
   }
 
-  login(){
-    if(this.formLogin.invalid){
-      Object.values(this.formLogin.controls).forEach( control =>{
+  login() {
+    if (this.formLogin.invalid) {
+      Object.values(this.formLogin.controls).forEach(control => {
 
-        if(control instanceof FormGroup){
-          Object.values(control.controls).forEach( control => control.markAllAsTouched())
+        if (control instanceof FormGroup) {
+          Object.values(control.controls).forEach(control => control.markAllAsTouched())
         }
-        else{
+        else {
           control.markAllAsTouched();
         }
       });
       return;
     }
-    else{
+    else {
+      // FAKE_LOGIN
+      localStorage.setItem("id_admin", "1")
+      this.router.navigate(['/inicio']);
+      return
+      // FAKE_LOGIN
+
       this.formLogin.addControl("tipo", this.fb.control(null));
       this.formLogin.get("tipo").setValue(55);
-      this.loginService.login(this.formLogin.value).subscribe( datos => {
-          if(datos['estado'] == 0){
-            console.log(datos);
-            window.confirm(datos['mensaje']);
-            return
-          }
-          else if(datos['estado'] == 1){
-            let id = datos['id_usuario'];
+      this.loginService.login(this.formLogin.value).subscribe(datos => {
+        if (datos['estado'] == 0) {
+          console.log(datos);
+          window.confirm(datos['mensaje']);
+          return
+        }
+        else if (datos['estado'] == 1) {
+          let id = datos['id_usuario'];
 
-            localStorage.setItem("id_admin", id);
+          localStorage.setItem("id_admin", id);
 
-            this.router.navigate(['/inicio']);
-          }
+          this.router.navigate(['/inicio']);
+        }
       })
     }
   }

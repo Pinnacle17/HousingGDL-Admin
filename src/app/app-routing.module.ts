@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { InicioComponent } from './components/inicio/inicio.component';
-import { EventosComponent } from './components/eventos/eventos.component';
+import { CasasComponent } from './components/casas/casas.component';
 import { PublicacionesComponent } from './components/publicaciones/publicaciones.component';
 import { RepartidoresComponent } from './components/repartidores/repartidores.component';
 import { UsuariosComponent } from './components/usuarios/usuarios.component';
@@ -19,7 +19,7 @@ const routes: Routes = [
   { path: '', component: LayoutComponent, children: [
     { path: '', pathMatch: 'full', redirectTo: 'inicio' },
     { path: 'inicio', component: InicioComponent },
-    { path: 'eventos', component: EventosComponent },
+    { path: 'casas', component: CasasComponent },
     { path: 'publicaciones', component: PublicacionesComponent },
     { path: 'usuarios', component: UsuariosComponent },
     { path: 'ver-usuario/:id', component: UsuarioVerComponent },

@@ -11,7 +11,7 @@ import { ChartsModule } from 'ng2-charts';
 
 import { AppComponent } from './app.component';
 import { InicioComponent } from './components/inicio/inicio.component';
-import { EventosComponent } from './components/eventos/eventos.component';
+import { CasasComponent } from './components/casas/casas.component';
 import { PublicacionesComponent } from './components/publicaciones/publicaciones.component';
 import { UsuariosComponent } from './components/usuarios/usuarios.component';
 import { RepartidoresComponent } from './components/repartidores/repartidores.component';
@@ -41,7 +41,7 @@ registerLocaleData(es)
   declarations: [
     AppComponent,
     InicioComponent,
-    EventosComponent,
+    CasasComponent,
     PublicacionesComponent,
     UsuariosComponent,
     RepartidoresComponent,
