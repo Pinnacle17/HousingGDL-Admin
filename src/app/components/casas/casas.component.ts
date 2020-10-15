@@ -179,21 +179,10 @@ export class CasasComponent implements OnInit, OnDestroy {
     }
   }
 
-  eliminarCasa(id: number) {
-    if (confirm('Está seguro de querer eliminar este casa?')) {
-      this.casasService.buscarBoletos(id).subscribe(res => {
-        if (res == 0) {
-          window.confirm("El casa tiene boletos. No es posible eliminar el casa.");
-          return
-        }
-        else {
-          this.casasService.eliminarCasa(id).subscribe(datos => {
-            if (datos['resultado'] == 'OK') {
-              this.getCasas();
-            }
-          });
-        }
-      })
+  activarCasa(id_casa: number) {
+    if (confirm('Está seguro de querer activar esta casa?')) {
+      this.casasService.activarCasa(id_casa).subscribe(()=>this.getCasas())
+      
     }
   }
 

@@ -70,7 +70,7 @@
                 <td class="align-middle">{{ casa.orden_anuncio }}</td>
                 <td class="align-middle">
                     <button class="btn btn-primary" type="button" (click)="editarCasa( casa.id_casa )">Editar</button>
-                    <button class="btn btn-success ml-lg-2" type="button" (click)="eliminarCasa( casa.id_casa )" *ngIf="casa.estado_casa=='Inactiva'">Activar</button>
+                    <button class="btn btn-success ml-lg-2" type="button" (click)="activarCasa( casa.id_casa )" *ngIf="casa.estado_casa=='Inactiva'">Activar</button>
                     <button class="btn btn-danger ml-lg-2" type="button" (click)="cancelarCasa( casa.id_casa )" *ngIf="casa.estado_casa=='Activa'">Cancelar</button>
                 </td>
             </tr>

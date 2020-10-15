@@ -58,12 +58,12 @@ export class CasasService {
     return this.http.get(`${this.url}consultaBoletos.php?id_evento=${id_evento}`).pipe(retry(3))
   }
 
-  eliminarCasa( id:number ){
-    return this.http.get(`${this.url}eliminarCasa.php?id=${id}`).pipe(retry(3))
+  activarCasa( id_casa:number ){
+    return this.http.get(`${this.url}activarCasa.php?id_casa=${id_casa}`)//.pipe(retry(3))
   }
 
-  cancelarCasa(id_evento:number){
-    return this.http.get(`${this.url}cancelarCasa.php?id_evento=${id_evento}`).pipe(retry(3))
+  cancelarCasa(id_casa:number){
+    return this.http.get(`${this.url}cancelarCasa.php?id_casa=${id_casa}`).pipe(retry(3))
   }
 
   buscarCasa( nombre:string ){
