@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { OwlOptions } from 'ngx-owl-carousel-o';
-import { RxwebValidators } from '@rxweb/reactive-form-validators';
+import { async, RxwebValidators } from '@rxweb/reactive-form-validators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CasasService } from '../../services/casas.service';
 import { BoletosService } from '../../services/boletos.service';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
-import {environment} from 'src/environments/environment'
+import { environment } from 'src/environments/environment'
 
 @Component({
   selector: 'app-casaEditar',
@@ -15,75 +15,75 @@ import {environment} from 'src/environments/environment'
 })
 export class CasaEditarComponent implements OnInit {
   imgUrl = environment.imgUrl
-  formInfoE:FormGroup;
-  formFechas:FormGroup;
-  formImgE:FormGroup;
-  formBoletos:FormGroup;
+  formInfoE: FormGroup;
+  formFechas: FormGroup;
+  formImgE: FormGroup;
+  formBoletos: FormGroup;
 
   urls = [];
   urlPrincipal = null;
   urlCarousel = null;
 
-  casa:any = {};
-  id_casa:number = null;
+  casa: any = {};
+  id_casa: number = null;
 
-  imgSeleccionada:File = null;
-  imgCarouselSeleccionada:File = null;
-  imgsSeleccionadas:File[] = [];
-  listaImg:any[] = [];
+  imgSeleccionada: File = null;
+  imgCarouselSeleccionada: File = null;
+  imgsSeleccionadas: File[] = [];
+  listaImg: any[] = [];
 
-  errorNombre:string = "";
+  errorNombre: string = "";
 
-  imgs:any = null;
-  boletos:any = null;
+  imgs: any = null;
+  boletos: any = null;
   mensajeError = null;
-  errorOrden:string = null;
-  noBoletos:boolean = null;
+  errorOrden: string = null;
+  noBoletos: boolean = null;
 
-  edadData:any = null;
+  edadData: any = null;
 
-  chartLabels:string[] = [];
-  chartData:number[] = [];
+  chartLabels: string[] = [];
+  chartData: number[] = [];
 
-  ventasTotales:any = null;
-  ventasDia:any = null;
-  ventasRango:any = null;
-  hayVentasDia:boolean = null;
-  hayVentasRango:boolean = null;
+  ventasTotales: any = null;
+  ventasDia: any = null;
+  ventasRango: any = null;
+  hayVentasDia: boolean = null;
+  hayVentasRango: boolean = null;
 
-  comentarios:any = null;
-  sinComentarios:boolean = false;
+  comentarios: any = null;
+  sinComentarios: boolean = false;
 
-  infoCasa:any = {
-    id:null,
-    nombre:null,
-    tipo:null,
-    desc:null,
-    orden:null,
-    enlace:null
+  infoCasa: any = {
+    id: null,
+    nombre: null,
+    tipo: null,
+    desc: null,
+    orden: null,
+    enlace: null
   };
 
-  fechasCasa:any = {
-    id:null,
+  fechasCasa: any = {
+    id: null,
     diaInicio: null,
     diaFin: null,
     horaInicio: null,
     horaFin: null
   };
 
-  imgsCasa:any = {
-    id:null,
-    imgPrincipal:null,
-    imgCarousel:null,
-    imgs:null
+  imgsCasa: any = {
+    id: null,
+    imgPrincipal: null,
+    imgCarousel: null,
+    imgs: null
   };
 
-  boletoCasa:any = {
-    id:null,
-    nombre:null,
-    desc:null,
-    inventario:null,
-    precio:null
+  boletoCasa: any = {
+    id: null,
+    nombre: null,
+    desc: null,
+    inventario: null,
+    precio: null
   }
 
   public customOptions: OwlOptions = {
@@ -111,51 +111,35 @@ export class CasaEditarComponent implements OnInit {
     nav: true
   }
 
-  @ViewChild('imgInputP') imgInputP:ElementRef;
-  @ViewChild('imgInputC') imgInputC:ElementRef;
-  @ViewChild('imgsInput') imgsInput:ElementRef;
+  @ViewChild('imgInputP') imgInputP: ElementRef;
+  @ViewChild('imgInputC') imgInputC: ElementRef;
+  @ViewChild('imgsInput') imgsInput: ElementRef;
   @ViewChild('modalError') modalError;
   @ViewChild('cerrarModalError') cerrarModalError;
 
-  public barChartOptions: ChartOptions = {
-    responsive: true
-  };
-  public barChartType:ChartType = 'bar';
-  public barChartLegend = true;
-  public barChartLabels:Label = [];
-  public barChartData:ChartDataSets[] = [];
 
-  public barChartColors:Color[] = [{
-    backgroundColor: 'rgba(63,127,191,1)',
-    borderColor: 'green',
-    pointBackgroundColor: 'rgba(148,159,177,1)',
-    pointBorderColor: '#fff',
-    pointHoverBackgroundColor: '#fff',
-    pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-  }];
-
-  constructor(private fb:FormBuilder,
-              private activatedRoute:ActivatedRoute,
-              private casasService:CasasService,
-              private boletosService:BoletosService,
-              private router:Router) {}
+  constructor(private fb: FormBuilder,
+    private activatedRoute: ActivatedRoute,
+    private casasService: CasasService,
+    private boletosService: BoletosService,
+    private router: Router) { }
 
   ngOnInit() {
     this.formInfoInit();
     this.formFechasInit();
     this.formImgInit();
     this.formBoletosInit();
-    this.activatedRoute.params.subscribe( params => {
-      this.casasService.getCasa(params['id']).subscribe( resultado => {
+    this.activatedRoute.params.subscribe(params => {
+      this.casasService.getCasa(params['id']).subscribe(resultado => {
         console.log(resultado)
         this.casa = resultado[0];
 
         this.formInfoE.setValue({
-          nombre: this.casa.nombre_casa,
-          tipo: this.casa.tipo_casa,
-          desc: this.casa.descripcion_casa,
-          orden: this.casa.orden_anuncio,
-          enlace: this.casa.enlace_casa
+          nombre_casa: this.casa.nombre_casa,
+          ambiente: this.casa.ambiente,
+          descripcion_casa: this.casa.descripcion_casa,
+          orden_anuncio: this.casa.orden_anuncio,
+          direccion_casa: this.casa.direccion_casa,
         });
 
         this.formFechas.setValue({
@@ -167,10 +151,10 @@ export class CasaEditarComponent implements OnInit {
 
       });
       this.casasService.getImgs(params['id']).subscribe(resultado => this.imgs = resultado);
-      this.boletosService.getBoletos(params['id']).subscribe( resultado => {
-        if(resultado == null){
+      this.boletosService.getBoletos(params['id']).subscribe(resultado => {
+        if (resultado == null) {
           this.noBoletos = true;
-        }else{
+        } else {
           this.noBoletos = false;
           this.boletos = resultado;
         }
@@ -178,7 +162,6 @@ export class CasaEditarComponent implements OnInit {
 
       this.id_casa = params['id'];
       this.getComentarios(params['id']);
-      this.getVentasEdad(params['id']);
       this.getVentasTotales(params['id']);
       this.infoCasa.id = params['id'];
       this.fechasCasa.id = params['id'];
@@ -188,23 +171,23 @@ export class CasaEditarComponent implements OnInit {
     });
   }
 
-  getComentarios( id_casa ){
+  getComentarios(id_casa) {
     this.casasService.getComentarios(id_casa).subscribe(resultado => {
       this.comentarios = resultado;
-      if(this.comentarios == null){
+      if (this.comentarios == null) {
         this.sinComentarios = true;
       }
-      else{
+      else {
         this.sinComentarios = false;
       }
     })
   }
 
-  eliminarComentario( id_calificacion:number ){
-    if(window.confirm("Está seguro de querer eliminar el comentario?")){
-      this.casasService.eliminarComentrio(id_calificacion).subscribe( () => {
-        this.activatedRoute.params.subscribe( () => {
-          this.activatedRoute.params.subscribe( params => {
+  eliminarComentario(id_calificacion: number) {
+    if (window.confirm("Está seguro de querer eliminar el comentario?")) {
+      this.casasService.eliminarComentrio(id_calificacion).subscribe(() => {
+        this.activatedRoute.params.subscribe(() => {
+          this.activatedRoute.params.subscribe(params => {
             this.getComentarios(params['id']);
           });
         });
@@ -212,38 +195,22 @@ export class CasaEditarComponent implements OnInit {
     }
   }
 
-  getVentasEdad( id_casa:number ){
-    this.casasService.getVentasEdad(id_casa).subscribe(resultado => {
-        this.edadData = resultado;
-        console.log(this.edadData);
+  
 
-        for(let x in this.edadData){
-          if(x != '0'){
-            this.chartLabels.push(x.toString());
-            this.chartData.push(this.edadData[x]['cantidad']);
-          }
-        }
-        this.barChartLabels = this.chartLabels;
-        this.barChartData = [
-          {data: this.chartData, label: "Compras por edad" }
-        ];
-      })
-  }
-
-  getVentasTotales( id_casa:number ){
-    this.casasService.getVentasTotales(id_casa).subscribe( resultado => {
+  getVentasTotales(id_casa: number) {
+    this.casasService.getVentasTotales(id_casa).subscribe(resultado => {
       this.ventasTotales = resultado;
       console.log(this.ventasTotales);
     })
   }
 
-  buscarVentasDia( fecha:any ){
-    this.casasService.getVentasDia( fecha, this.id_casa).subscribe( resultado => {
-      if(resultado == null){
+  buscarVentasDia(fecha: any) {
+    this.casasService.getVentasDia(fecha, this.id_casa).subscribe(resultado => {
+      if (resultado == null) {
         this.hayVentasDia = false;
         return
       }
-      else{
+      else {
         this.hayVentasDia = true;
         this.ventasDia = resultado;
         console.log(this.ventasDia);
@@ -251,13 +218,13 @@ export class CasaEditarComponent implements OnInit {
     })
   }
 
-  getVentasRango( fecha_1:any, fecha_2:any ){
-    this.casasService.getVentasR( fecha_1, fecha_2, this.id_casa).subscribe( resultado => {
-      if(resultado == null){
+  getVentasRango(fecha_1: any, fecha_2: any) {
+    this.casasService.getVentasR(fecha_1, fecha_2, this.id_casa).subscribe(resultado => {
+      if (resultado == null) {
         this.hayVentasRango = false;
         return
       }
-      else{
+      else {
         this.hayVentasRango = true;
         this.ventasRango = resultado;
         console.log(this.ventasRango);
@@ -265,43 +232,42 @@ export class CasaEditarComponent implements OnInit {
     })
   }
 
-  formInfoInit(){
+  formInfoInit() {
     this.formInfoE = this.fb.group({
-      nombre:['',],
-      tipo:['',],
-      desc:['',],
-      orden:['',],
-      enlace:['',]
+      nombre_casa: ['', [Validators.required]],
+      ambiente: ['', [Validators.required]],
+      descripcion_casa: ['', [Validators.required]],
+      orden_anuncio: ['', Validators.required],
     })
   }
 
-  formFechasInit(){
+  formFechasInit() {
     this.formFechas = this.fb.group({
-      diaInicio:['',],
-      diaFin:['',],
-      horaInicio:['',],
-      horaFin:['',],
+      diaInicio: ['',],
+      diaFin: ['',],
+      horaInicio: ['',],
+      horaFin: ['',],
     })
   }
 
-  formImgInit(){
+  formImgInit() {
     this.formImgE = this.fb.group({
-      imgPrincipal:['', RxwebValidators.image({minHeight:690, maxHeight:2160, minWidth:950, maxWidth:4096})],
-      imgCarousel:['', RxwebValidators.image({minWidth:1250, maxWidth:4096, minHeight:690, maxHeight:2160})],
-      imgsCasa: ['', RxwebValidators.image({minHeight:690, maxHeight:2160, minWidth:950, maxWidth:4096})]
+      imgPrincipal: ['', RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })],
+      imgCarousel: ['', RxwebValidators.image({ minWidth: 1250, maxWidth: 4096, minHeight: 690, maxHeight: 2160 })],
+      imgsCasa: ['', RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })]
     })
   }
 
-  formBoletosInit(){
+  formBoletosInit() {
     this.formBoletos = this.fb.group({
-      nombre:['', Validators.required],
-      desc:['', Validators.required],
-      inventario:['', Validators.required],
-      precio:['', Validators.required]
+      nombre: ['', Validators.required],
+      desc: ['', Validators.required],
+      inventario: ['', Validators.required],
+      precio: ['', Validators.required]
     })
   }
 
-  compararFechas(){
+  compararFechas() {
     let inicio = new Date(this.formFechas.get('diaInicio').value);
     inicio.setMinutes(inicio.getMinutes() + inicio.getTimezoneOffset())
 
@@ -313,71 +279,71 @@ export class CasaEditarComponent implements OnInit {
     hoy.setMinutes(0);
     hoy.setHours(0);
 
-    if(inicio > cierre){
+    if (inicio > cierre) {
       this.mensajeError = "El casa no puede terminar antes de empezar."
-      this.formFechas.setErrors({'incorrect':true});
+      this.formFechas.setErrors({ 'incorrect': true });
       return true
     }
-    else if( hoy > inicio ){
+    else if (hoy > inicio) {
       this.mensajeError = "El casa no puede empezar hoy o antes de hoy."
-      this.formFechas.setErrors({'incorrect':true});
+      this.formFechas.setErrors({ 'incorrect': true });
       return true
     }
-    else if( hoy > cierre ){
+    else if (hoy > cierre) {
       this.mensajeError = "El casa no puede terminar hoy o antes de hoy."
-      this.formFechas.setErrors({'incorrect':true});
+      this.formFechas.setErrors({ 'incorrect': true });
       return true
     }
-    else{
+    else {
       return false
     }
   }
 
-  compararHorarios(){
+  compararHorarios() {
     let inicio = new Date(this.formFechas.get('diaInicio').value);
     let cierre = new Date(this.formFechas.get('diaFin').value);
 
 
-    if(inicio.getTime() === cierre.getTime()){
+    if (inicio.getTime() === cierre.getTime()) {
 
       let horarioInicio = this.formFechas.get('horaInicio');
       let horarioCierre = this.formFechas.get('horaFin');
 
-      if(horarioInicio.value >= horarioCierre.value) {
-        this.formFechas.setErrors({'incorrect': true})
+      if (horarioInicio.value >= horarioCierre.value) {
+        this.formFechas.setErrors({ 'incorrect': true })
         return true
       }
-      else{
+      else {
         return false
 
       }
     }
   }
 
-  get validacionTamImg(){
+  get validacionTamImg() {
     return this.formImgE.get('imgPrincipal').invalid && this.formImgE.get('imgPrincipal').dirty
   }
 
-  get validacionTamImgs(){
+  get validacionTamImgs() {
     return this.formImgE.get('imgsCasa').invalid
   }
 
-  get validacionTamImgCarousel(){
+  get validacionTamImgCarousel() {
     return this.formImgE.get('imgCarousel').invalid && this.formImgE.get('imgCarousel').dirty
   }
 
-  editarBoleto( id:number){
+  editarBoleto(id: number) {
     this.router.navigate(['editar-boleto', id])
   }
 
-  refresh(){
-    this.activatedRoute.params.subscribe( params => {
-      this.casasService.getCasa(params['id']).subscribe( resultado => this.casa = resultado[0]);
-      this.casasService.getImgs(params['id']).subscribe( resultado => this.imgs = resultado);
-      this.boletosService.getBoletos(params['id']).subscribe( resultado => {
-        if(resultado == null){
+  refresh() {
+    this.activatedRoute.params.subscribe(params => {
+      this.casasService.getCasa(params['id']).subscribe(resultado => this.casa = resultado[0]);
+      this.casasService.getImgs(params['id']).subscribe(resultado => this.imgs = resultado);
+      this.boletosService.getBoletos(params['id']).subscribe(resultado => {
+        if (resultado == null) {
           this.noBoletos = true;
-        }else{
+        } else {
           this.noBoletos = false;
           this.boletos = resultado;
         }
@@ -385,30 +351,30 @@ export class CasaEditarComponent implements OnInit {
     });
   }
 
-  guardarInfo(){
-    this.infoCasa.nombre = this.formInfoE.get('nombre').value;
-    this.infoCasa.tipo = this.formInfoE.get('tipo').value;
-    this.infoCasa.desc = this.formInfoE.get('desc').value;
-    this.infoCasa.orden = this.formInfoE.get('orden').value;
-    this.infoCasa.enlace = this.formInfoE.get('enlace').value;
-
-    this.casasService.buscarNombre(this.infoCasa.nombre, this.infoCasa.id).subscribe( datos => {
-      if(datos['estado'] == 0){
+  guardarInfo() {
+    this.casasService.consultaNombre(this.formInfoE.get('nombre_casa').value, this.casa.id_casa).subscribe(datos => {
+      if (datos['estado'] == 0) {
         this.errorNombre = datos['mensaje'];
         window.confirm(this.errorNombre);
       }
-      else if(datos['estado'] == 1){
-        this.casasService.buscarLugar(this.infoCasa.orden).subscribe(datos => {
-          if(datos['estado'] == 0){
-            this.errorOrden = datos['mensaje'];
-            this.modalError.nativeElement.click();
+      else if (datos['estado'] == 1) {
+
+        this.casasService.buscarLugar(this.formInfoE.get('orden_anuncio').value).subscribe(datos => {
+          if (datos['estado'] == 0) {
+            if (this.formInfoE.get('orden_anuncio').value == this.casa.orden_anuncio) {
+              datos['estado'] = 1
+            } else {
+              this.errorOrden = datos['mensaje'];
+              this.modalError.nativeElement.click();
+            }
           }
-          else if(datos['estado'] == 1){
-            this.casasService.modificarInfoCasa(this.infoCasa).subscribe( datos => {
-              if(datos['resultado'] == "ERROR"){
+          if (datos['estado'] == 1) {
+            this.formInfoE.addControl('id_casa', this.fb.control(this.casa.id_casa))
+            this.casasService.modificarInfoCasa(this.formInfoE.value).subscribe(datos => {
+              if (datos['resultado'] == "ERROR") {
                 console.log("ERROR");
                 return
-              }else if(datos['resultado'] == "OK"){
+              } else if (datos['resultado'] == "OK") {
                 this.refresh();
                 window.confirm("Información modificada con éxito");
               }
@@ -419,20 +385,20 @@ export class CasaEditarComponent implements OnInit {
     });
   }
 
-  liberarLugar(){
-    this.casasService.liberarLugar(this.formInfoE.get('orden').value, this.infoCasa.id).subscribe( datos => {
-      if(datos['resultado'] == "ERROR"){
+  liberarLugar() {
+    this.casasService.liberarLugar(this.formInfoE.get('orden').value, this.infoCasa.id).subscribe(datos => {
+      if (datos['resultado'] == "ERROR") {
         console.log("ERROR");
         return
       }
-      else if(datos['resultado'] == "OK"){
+      else if (datos['resultado'] == "OK") {
         window.confirm("Lugar liberado con exito");
         this.cerrarModalError.nativeElement.click();
       }
     })
   }
 
-  guardarFechas(){
+  guardarFechas() {
     this.fechasCasa.diaInicio = this.formFechas.get('diaInicio').value;
     this.fechasCasa.diaFin = this.formFechas.get('diaFin').value;
     this.fechasCasa.horaInicio = this.formFechas.get('horaInicio').value;
@@ -442,27 +408,27 @@ export class CasaEditarComponent implements OnInit {
 
     console.log(this.fechasCasa);
 
-    this.casasService.modificarHorarioCasa(this.fechasCasa).subscribe( datos => {
-      if(datos['resultado'] == "ERROR"){
+    this.casasService.modificarHorarioCasa(this.fechasCasa).subscribe(datos => {
+      if (datos['resultado'] == "ERROR") {
         console.log("ERROR");
         return
-      }else if(datos['resultado'] == "OK"){
+      } else if (datos['resultado'] == "OK") {
         this.refresh();
         window.confirm("Horario modificado con éxito");
       }
     })
   }
 
-  guardarImg(){
+  guardarImg() {
     this.imgsCasa.imgPrincipal = this.imgSeleccionada;
     this.imgsCasa.imgCarousel = this.imgCarouselSeleccionada;
     this.imgsCasa.imgs = this.imgsSeleccionadas;
 
-    this.casasService.modificarImgsCasa(this.imgsCasa).subscribe( datos => {
-      if(datos['resultado'] == "ERROR"){
+    this.casasService.modificarImgsCasa(this.imgsCasa).subscribe(datos => {
+      if (datos['resultado'] == "ERROR") {
         console.log("ERROR");
         return
-      }else if(datos['resultado'] == "OK"){
+      } else if (datos['resultado'] == "OK") {
         this.refresh();
 
         this.borrarImgPrincipal();
@@ -476,25 +442,25 @@ export class CasaEditarComponent implements OnInit {
     });
   }
 
-  guardarBoletos(){
+  guardarBoletos() {
     this.boletoCasa.nombre = this.formBoletos.get('nombre').value;
     this.boletoCasa.desc = this.formBoletos.get('desc').value;
     this.boletoCasa.inventario = this.formBoletos.get('inventario').value;
     this.boletoCasa.precio = this.formBoletos.get('precio').value;
 
     this.boletosService.buscarNombre(this.boletoCasa.nombre, this.boletoCasa.id).subscribe(datos => {
-      if(datos['estado'] == 0){
+      if (datos['estado'] == 0) {
         this.errorNombre = datos['mensaje'];
         window.confirm(this.errorNombre);
         return
       }
-      else if(datos['estado'] == 1){
-        this.boletosService.crearBoleto(this.boletoCasa).subscribe( datos => {
-          if(datos['resultado'] == "ERROR"){
+      else if (datos['estado'] == 1) {
+        this.boletosService.crearBoleto(this.boletoCasa).subscribe(datos => {
+          if (datos['resultado'] == "ERROR") {
             console.log("ERROR");
             return
           }
-          else if(datos['resultado'] == "OK"){
+          else if (datos['resultado'] == "OK") {
             this.refresh();
             window.confirm("Boleto creado con éxito");
             this.formBoletos.reset();
@@ -506,7 +472,7 @@ export class CasaEditarComponent implements OnInit {
 
   }
 
-  imgPrincipal(event){
+  imgPrincipal(event) {
     this.imgSeleccionada = <File>event.target.files[0];
     this.formImgE.controls['imgPrincipal'].setValue(this.imgSeleccionada);
 
@@ -514,14 +480,14 @@ export class CasaEditarComponent implements OnInit {
       var reader = new FileReader();
       reader.readAsDataURL(event.target.files[0]);
 
-      reader.onload = (event:any) => {
+      reader.onload = (event: any) => {
         console.log(event.target.result);
-          this.urlPrincipal = event.target.result;
+        this.urlPrincipal = event.target.result;
       }
     }
   }
 
-  imgCarousel(event){
+  imgCarousel(event) {
     this.imgCarouselSeleccionada = <File>event.target.files[0];
     this.formImgE.controls['imgCarousel'].setValue(this.imgCarouselSeleccionada);
 
@@ -529,9 +495,9 @@ export class CasaEditarComponent implements OnInit {
       var reader = new FileReader();
       reader.readAsDataURL(event.target.files[0]);
 
-      reader.onload = (event:any) => {
+      reader.onload = (event: any) => {
         console.log(event.target.result);
-          this.urlCarousel = event.target.result;
+        this.urlCarousel = event.target.result;
       }
     }
   }
@@ -543,15 +509,15 @@ export class CasaEditarComponent implements OnInit {
         var reader = new FileReader();
 
         reader.readAsDataURL(event.target.files[i]);
-        reader.onload = (event:any) => {
-          if(!this.validacionTamImgs){
+        reader.onload = (event: any) => {
+          if (!this.validacionTamImgs) {
             this.urls.push(event.target.result);
           }
         }
 
         var selectedFile = event.target.files[i];
 
-        if(!this.validacionTamImgs){
+        if (!this.validacionTamImgs) {
           this.imgsSeleccionadas.push(selectedFile);
         }
       }
@@ -560,19 +526,19 @@ export class CasaEditarComponent implements OnInit {
     // this.formImgE.controls['imgsCasa'].setValue(this.imgsSeleccionadas);
   }
 
-  borrarImgPrincipal(){
+  borrarImgPrincipal() {
     this.urlPrincipal = null;
     this.formImgE.controls['imgPrincipal'].setValue("");
     this.imgInputP.nativeElement.value = null;
   }
 
-  borrarImgCarousel(){
+  borrarImgCarousel() {
     this.urlCarousel = null;
     this.formImgE.controls['imgCarousel'].setValue("");
     this.imgInputC.nativeElement.value = null;
   }
 
-  borrarImgs( url:any, index:number ){
+  borrarImgs(url: any, index: number) {
     this.urls = this.urls.filter((a) => a !== url);
     this.listaImg.splice(index, 1);
     this.imgsSeleccionadas.splice(index, 1);
@@ -580,7 +546,7 @@ export class CasaEditarComponent implements OnInit {
     this.formImgE.controls['imgsCasa'].reset();
 
     console.log(this.formImgE.get('imgsCasa').value);
-    if(this.imgsSeleccionadas.length == 0){
+    if (this.imgsSeleccionadas.length == 0) {
       this.formImgE.controls['imgsCasa'].setValue("");
       this.imgsInput.nativeElement.value = null;
     }
@@ -588,10 +554,10 @@ export class CasaEditarComponent implements OnInit {
     console.log(this.formImgE);
   }
 
-  eliminarImg( id:number ){
-    if(confirm("Está seguro de querer eliminar esta imagen?")){
-      this.casasService.eliminarImgs(id).subscribe( datos => {
-        if(datos['resultado'] == "OK"){
+  eliminarImg(id: number) {
+    if (confirm("Está seguro de querer eliminar esta imagen?")) {
+      this.casasService.eliminarImgs(id).subscribe(datos => {
+        if (datos['resultado'] == "OK") {
           this.refresh();
           window.confirm("Imagen eliminada con éxito");
         }
@@ -599,10 +565,10 @@ export class CasaEditarComponent implements OnInit {
     }
   }
 
-  eliminarBoleto( id_boleto:number){
-    if(window.confirm("Está seguro de querer eliminar este boleto?")){
-      this.boletosService.eliminarBoleto(id_boleto).subscribe( datos => {
-        if(datos['resultado'] == "OK"){
+  eliminarBoleto(id_boleto: number) {
+    if (window.confirm("Está seguro de querer eliminar este boleto?")) {
+      this.boletosService.eliminarBoleto(id_boleto).subscribe(datos => {
+        if (datos['resultado'] == "OK") {
           this.refresh();
           window.confirm("Boleto eliminado con éxito");
         }

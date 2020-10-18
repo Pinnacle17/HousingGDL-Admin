@@ -30,8 +30,8 @@ export class CasasService {
     return this.http.get(`${this.url}eliminarImgs.php?id_imagen=${id}`)//.pipe(retry(3))
   }
 
-  buscarNombre( nombre:string, id:number = null ){
-    return this.http.get(`${this.url}consultaNombre.php?nombre=${nombre}&id=${id}`)//.pipe(retry(3))
+  consultaNombre( nombre:string, id:number = -1 ){
+    return this.http.get(`${this.url}consultaNombre.php?nombre_casa=${nombre}&id_casa=${id}`)//.pipe(retry(3))
   }
 
   crearCasa( casa:any ){
