@@ -17,7 +17,7 @@ import { UsuariosComponent } from './components/usuarios/usuarios.component';
 import { RepartidoresComponent } from './components/repartidores/repartidores.component';
 
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
-import { EventoEditarComponent } from './components/eventoEditar/eventoEditar.component';
+import { CasaEditarComponent } from './components/casaEditar/casaEditar.component';
 import { PublicacionEditarComponent } from './components/publicacion-editar/publicacion-editar.component';
 import { PerfilComponent } from './components/perfil/perfil.component';
 
@@ -45,7 +45,7 @@ registerLocaleData(es)
     PublicacionesComponent,
     UsuariosComponent,
     RepartidoresComponent,
-    EventoEditarComponent,
+    CasaEditarComponent,
     PublicacionEditarComponent,
     PerfilComponent,
     BoletoEditarComponent,

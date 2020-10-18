@@ -122,20 +122,7 @@ export class CasasComponent implements OnInit, OnDestroy {
             }
             break;
           }
-          case 'eliminar': {
-            const event = command.slice(1, command.length).join(' ');
 
-            for (const e of this.casas) {
-              if (e.id_casa == event) {
-                navigate = true;
-                this.ngZone.run(() => {
-                  this.eliminarCasa(e.id_casa);
-                });
-                break;
-              }
-            }
-            break;
-          }
         }
 
       }

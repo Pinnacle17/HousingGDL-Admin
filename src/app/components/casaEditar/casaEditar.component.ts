@@ -8,11 +8,12 @@ import { BoletosService } from '../../services/boletos.service';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 import {environment} from 'src/environments/environment'
+
 @Component({
-  selector: 'app-eventoEditar',
-  templateUrl: './eventoEditar.component.html'
+  selector: 'app-casaEditar',
+  templateUrl: './casaEditar.component.html'
 })
-export class EventoEditarComponent implements OnInit {
+export class CasaEditarComponent implements OnInit {
   imgUrl = environment.imgUrl
   formInfoE:FormGroup;
   formFechas:FormGroup;
@@ -23,8 +24,8 @@ export class EventoEditarComponent implements OnInit {
   urlPrincipal = null;
   urlCarousel = null;
 
-  evento:any = {};
-  id_evento:number = null;
+  casa:any = {};
+  id_casa:number = null;
 
   imgSeleccionada:File = null;
   imgCarouselSeleccionada:File = null;
@@ -53,7 +54,7 @@ export class EventoEditarComponent implements OnInit {
   comentarios:any = null;
   sinComentarios:boolean = false;
 
-  infoEvento:any = {
+  infoCasa:any = {
     id:null,
     nombre:null,
     tipo:null,
@@ -62,7 +63,7 @@ export class EventoEditarComponent implements OnInit {
     enlace:null
   };
 
-  fechasEvento:any = {
+  fechasCasa:any = {
     id:null,
     diaInicio: null,
     diaFin: null,
@@ -70,14 +71,14 @@ export class EventoEditarComponent implements OnInit {
     horaFin: null
   };
 
-  imgsEvento:any = {
+  imgsCasa:any = {
     id:null,
     imgPrincipal:null,
     imgCarousel:null,
     imgs:null
   };
 
-  boletoEvento:any = {
+  boletoCasa:any = {
     id:null,
     nombre:null,
     desc:null,
@@ -146,21 +147,21 @@ export class EventoEditarComponent implements OnInit {
     this.formBoletosInit();
     this.activatedRoute.params.subscribe( params => {
       this.casasService.getCasa(params['id']).subscribe( resultado => {
-        this.evento = resultado[0];
+        this.casa = resultado[0];
 
         this.formInfoE.setValue({
-          nombre: this.evento.nombre_evento,
-          tipo: this.evento.tipo_evento,
-          desc: this.evento.descripcion_evento,
-          orden: this.evento.orden_anuncio,
-          enlace: this.evento.enlace_evento
+          nombre: this.casa.nombre_casa,
+          tipo: this.casa.tipo_casa,
+          desc: this.casa.descripcion_casa,
+          orden: this.casa.orden_anuncio,
+          enlace: this.casa.enlace_casa
         });
 
         this.formFechas.setValue({
-          diaInicio: this.evento.dia_inicio_evento,
-          diaFin: this.evento.dia_conclusion_evento,
-          horaInicio: this.evento.hora_inicio_evento,
-          horaFin: this.evento.hora_conclusion_evento
+          diaInicio: this.casa.dia_inicio_casa,
+          diaFin: this.casa.dia_conclusion_casa,
+          horaInicio: this.casa.hora_inicio_casa,
+          horaFin: this.casa.hora_conclusion_casa
         });
 
       });
@@ -174,20 +175,20 @@ export class EventoEditarComponent implements OnInit {
         }
       });
 
-      this.id_evento = params['id'];
+      this.id_casa = params['id'];
       this.getComentarios(params['id']);
       this.getVentasEdad(params['id']);
       this.getVentasTotales(params['id']);
-      this.infoEvento.id = params['id'];
-      this.fechasEvento.id = params['id'];
-      this.imgsEvento.id = params['id'];
-      this.boletoEvento.id = params['id'];
+      this.infoCasa.id = params['id'];
+      this.fechasCasa.id = params['id'];
+      this.imgsCasa.id = params['id'];
+      this.boletoCasa.id = params['id'];
 
     });
   }
 
-  getComentarios( id_evento ){
-    this.casasService.getComentarios(id_evento).subscribe(resultado => {
+  getComentarios( id_casa ){
+    this.casasService.getComentarios(id_casa).subscribe(resultado => {
       this.comentarios = resultado;
       if(this.comentarios == null){
         this.sinComentarios = true;
@@ -210,8 +211,8 @@ export class EventoEditarComponent implements OnInit {
     }
   }
 
-  getVentasEdad( id_evento:number ){
-    this.casasService.getVentasEdad(id_evento).subscribe(resultado => {
+  getVentasEdad( id_casa:number ){
+    this.casasService.getVentasEdad(id_casa).subscribe(resultado => {
         this.edadData = resultado;
         console.log(this.edadData);
 
@@ -228,15 +229,15 @@ export class EventoEditarComponent implements OnInit {
       })
   }
 
-  getVentasTotales( id_evento:number ){
-    this.casasService.getVentasTotales(id_evento).subscribe( resultado => {
+  getVentasTotales( id_casa:number ){
+    this.casasService.getVentasTotales(id_casa).subscribe( resultado => {
       this.ventasTotales = resultado;
       console.log(this.ventasTotales);
     })
   }
 
   buscarVentasDia( fecha:any ){
-    this.casasService.getVentasDia( fecha, this.id_evento).subscribe( resultado => {
+    this.casasService.getVentasDia( fecha, this.id_casa).subscribe( resultado => {
       if(resultado == null){
         this.hayVentasDia = false;
         return
@@ -250,7 +251,7 @@ export class EventoEditarComponent implements OnInit {
   }
 
   getVentasRango( fecha_1:any, fecha_2:any ){
-    this.casasService.getVentasR( fecha_1, fecha_2, this.id_evento).subscribe( resultado => {
+    this.casasService.getVentasR( fecha_1, fecha_2, this.id_casa).subscribe( resultado => {
       if(resultado == null){
         this.hayVentasRango = false;
         return
@@ -286,7 +287,7 @@ export class EventoEditarComponent implements OnInit {
     this.formImgE = this.fb.group({
       imgPrincipal:['', RxwebValidators.image({minHeight:690, maxHeight:2160, minWidth:950, maxWidth:4096})],
       imgCarousel:['', RxwebValidators.image({minWidth:1250, maxWidth:4096, minHeight:690, maxHeight:2160})],
-      imgsEvento: ['', RxwebValidators.image({minHeight:690, maxHeight:2160, minWidth:950, maxWidth:4096})]
+      imgsCasa: ['', RxwebValidators.image({minHeight:690, maxHeight:2160, minWidth:950, maxWidth:4096})]
     })
   }
 
@@ -312,17 +313,17 @@ export class EventoEditarComponent implements OnInit {
     hoy.setHours(0);
 
     if(inicio > cierre){
-      this.mensajeError = "El evento no puede terminar antes de empezar."
+      this.mensajeError = "El casa no puede terminar antes de empezar."
       this.formFechas.setErrors({'incorrect':true});
       return true
     }
     else if( hoy > inicio ){
-      this.mensajeError = "El evento no puede empezar hoy o antes de hoy."
+      this.mensajeError = "El casa no puede empezar hoy o antes de hoy."
       this.formFechas.setErrors({'incorrect':true});
       return true
     }
     else if( hoy > cierre ){
-      this.mensajeError = "El evento no puede terminar hoy o antes de hoy."
+      this.mensajeError = "El casa no puede terminar hoy o antes de hoy."
       this.formFechas.setErrors({'incorrect':true});
       return true
     }
@@ -357,7 +358,7 @@ export class EventoEditarComponent implements OnInit {
   }
 
   get validacionTamImgs(){
-    return this.formImgE.get('imgsEvento').invalid
+    return this.formImgE.get('imgsCasa').invalid
   }
 
   get validacionTamImgCarousel(){
@@ -370,7 +371,7 @@ export class EventoEditarComponent implements OnInit {
 
   refresh(){
     this.activatedRoute.params.subscribe( params => {
-      this.casasService.getCasa(params['id']).subscribe( resultado => this.evento = resultado[0]);
+      this.casasService.getCasa(params['id']).subscribe( resultado => this.casa = resultado[0]);
       this.casasService.getImgs(params['id']).subscribe( resultado => this.imgs = resultado);
       this.boletosService.getBoletos(params['id']).subscribe( resultado => {
         if(resultado == null){
@@ -384,25 +385,25 @@ export class EventoEditarComponent implements OnInit {
   }
 
   guardarInfo(){
-    this.infoEvento.nombre = this.formInfoE.get('nombre').value;
-    this.infoEvento.tipo = this.formInfoE.get('tipo').value;
-    this.infoEvento.desc = this.formInfoE.get('desc').value;
-    this.infoEvento.orden = this.formInfoE.get('orden').value;
-    this.infoEvento.enlace = this.formInfoE.get('enlace').value;
+    this.infoCasa.nombre = this.formInfoE.get('nombre').value;
+    this.infoCasa.tipo = this.formInfoE.get('tipo').value;
+    this.infoCasa.desc = this.formInfoE.get('desc').value;
+    this.infoCasa.orden = this.formInfoE.get('orden').value;
+    this.infoCasa.enlace = this.formInfoE.get('enlace').value;
 
-    this.casasService.buscarNombre(this.infoEvento.nombre, this.infoEvento.id).subscribe( datos => {
+    this.casasService.buscarNombre(this.infoCasa.nombre, this.infoCasa.id).subscribe( datos => {
       if(datos['estado'] == 0){
         this.errorNombre = datos['mensaje'];
         window.confirm(this.errorNombre);
       }
       else if(datos['estado'] == 1){
-        this.casasService.buscarLugar(this.infoEvento.orden, this.infoEvento.id).subscribe(datos => {
+        this.casasService.buscarLugar(this.infoCasa.orden).subscribe(datos => {
           if(datos['estado'] == 0){
             this.errorOrden = datos['mensaje'];
             this.modalError.nativeElement.click();
           }
           else if(datos['estado'] == 1){
-            this.casasService.modificarInfoCasa(this.infoEvento).subscribe( datos => {
+            this.casasService.modificarInfoCasa(this.infoCasa).subscribe( datos => {
               if(datos['resultado'] == "ERROR"){
                 console.log("ERROR");
                 return
@@ -418,7 +419,7 @@ export class EventoEditarComponent implements OnInit {
   }
 
   liberarLugar(){
-    this.casasService.liberarLugar(this.formInfoE.get('orden').value, this.infoEvento.id).subscribe( datos => {
+    this.casasService.liberarLugar(this.formInfoE.get('orden').value, this.infoCasa.id).subscribe( datos => {
       if(datos['resultado'] == "ERROR"){
         console.log("ERROR");
         return
@@ -431,16 +432,16 @@ export class EventoEditarComponent implements OnInit {
   }
 
   guardarFechas(){
-    this.fechasEvento.diaInicio = this.formFechas.get('diaInicio').value;
-    this.fechasEvento.diaFin = this.formFechas.get('diaFin').value;
-    this.fechasEvento.horaInicio = this.formFechas.get('horaInicio').value;
-    this.fechasEvento.horaFin = this.formFechas.get('horaFin').value;
-    console.log(this.fechasEvento.horarioInicio);
-    console.log(this.fechasEvento.horarioFin);
+    this.fechasCasa.diaInicio = this.formFechas.get('diaInicio').value;
+    this.fechasCasa.diaFin = this.formFechas.get('diaFin').value;
+    this.fechasCasa.horaInicio = this.formFechas.get('horaInicio').value;
+    this.fechasCasa.horaFin = this.formFechas.get('horaFin').value;
+    console.log(this.fechasCasa.horarioInicio);
+    console.log(this.fechasCasa.horarioFin);
 
-    console.log(this.fechasEvento);
+    console.log(this.fechasCasa);
 
-    this.casasService.modificarHorarioCasa(this.fechasEvento).subscribe( datos => {
+    this.casasService.modificarHorarioCasa(this.fechasCasa).subscribe( datos => {
       if(datos['resultado'] == "ERROR"){
         console.log("ERROR");
         return
@@ -452,11 +453,11 @@ export class EventoEditarComponent implements OnInit {
   }
 
   guardarImg(){
-    this.imgsEvento.imgPrincipal = this.imgSeleccionada;
-    this.imgsEvento.imgCarousel = this.imgCarouselSeleccionada;
-    this.imgsEvento.imgs = this.imgsSeleccionadas;
+    this.imgsCasa.imgPrincipal = this.imgSeleccionada;
+    this.imgsCasa.imgCarousel = this.imgCarouselSeleccionada;
+    this.imgsCasa.imgs = this.imgsSeleccionadas;
 
-    this.casasService.modificarImgsCasa(this.imgsEvento).subscribe( datos => {
+    this.casasService.modificarImgsCasa(this.imgsCasa).subscribe( datos => {
       if(datos['resultado'] == "ERROR"){
         console.log("ERROR");
         return
@@ -475,19 +476,19 @@ export class EventoEditarComponent implements OnInit {
   }
 
   guardarBoletos(){
-    this.boletoEvento.nombre = this.formBoletos.get('nombre').value;
-    this.boletoEvento.desc = this.formBoletos.get('desc').value;
-    this.boletoEvento.inventario = this.formBoletos.get('inventario').value;
-    this.boletoEvento.precio = this.formBoletos.get('precio').value;
+    this.boletoCasa.nombre = this.formBoletos.get('nombre').value;
+    this.boletoCasa.desc = this.formBoletos.get('desc').value;
+    this.boletoCasa.inventario = this.formBoletos.get('inventario').value;
+    this.boletoCasa.precio = this.formBoletos.get('precio').value;
 
-    this.boletosService.buscarNombre(this.boletoEvento.nombre, this.boletoEvento.id).subscribe(datos => {
+    this.boletosService.buscarNombre(this.boletoCasa.nombre, this.boletoCasa.id).subscribe(datos => {
       if(datos['estado'] == 0){
         this.errorNombre = datos['mensaje'];
         window.confirm(this.errorNombre);
         return
       }
       else if(datos['estado'] == 1){
-        this.boletosService.crearBoleto(this.boletoEvento).subscribe( datos => {
+        this.boletosService.crearBoleto(this.boletoCasa).subscribe( datos => {
           if(datos['resultado'] == "ERROR"){
             console.log("ERROR");
             return
@@ -555,7 +556,7 @@ export class EventoEditarComponent implements OnInit {
       }
     }
     console.log(this.imgsSeleccionadas);
-    // this.formImgE.controls['imgsEvento'].setValue(this.imgsSeleccionadas);
+    // this.formImgE.controls['imgsCasa'].setValue(this.imgsSeleccionadas);
   }
 
   borrarImgPrincipal(){
@@ -575,11 +576,11 @@ export class EventoEditarComponent implements OnInit {
     this.listaImg.splice(index, 1);
     this.imgsSeleccionadas.splice(index, 1);
 
-    this.formImgE.controls['imgsEvento'].reset();
+    this.formImgE.controls['imgsCasa'].reset();
 
-    console.log(this.formImgE.get('imgsEvento').value);
+    console.log(this.formImgE.get('imgsCasa').value);
     if(this.imgsSeleccionadas.length == 0){
-      this.formImgE.controls['imgsEvento'].setValue("");
+      this.formImgE.controls['imgsCasa'].setValue("");
       this.imgsInput.nativeElement.value = null;
     }
 

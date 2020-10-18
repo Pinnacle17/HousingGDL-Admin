@@ -150,7 +150,7 @@ export class RepartidorEditarComponent implements OnInit {
   }
 
   getEventos(){
-    this.eventosService.getCasas(2).subscribe( resultado => {
+    this.eventosService.getCasas().subscribe( resultado => {
       this.eventos = resultado
       console.log(this.eventos );
     });

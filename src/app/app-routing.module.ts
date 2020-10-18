@@ -5,7 +5,7 @@ import { CasasComponent } from './components/casas/casas.component';
 import { PublicacionesComponent } from './components/publicaciones/publicaciones.component';
 import { RepartidoresComponent } from './components/repartidores/repartidores.component';
 import { UsuariosComponent } from './components/usuarios/usuarios.component';
-import { EventoEditarComponent } from './components/eventoEditar/eventoEditar.component';
+import { CasaEditarComponent } from './components/casaEditar/casaEditar.component';
 import { PublicacionEditarComponent } from './components/publicacion-editar/publicacion-editar.component';
 import { PerfilComponent } from './components/perfil/perfil.component';
 import { BoletoEditarComponent } from './components/boleto-editar/boleto-editar.component';
@@ -25,7 +25,7 @@ const routes: Routes = [
     { path: 'ver-usuario/:id', component: UsuarioVerComponent },
     { path: 'ver-compra/:id', component: CompraVerComponent },
     { path: 'repartidores', component: RepartidoresComponent },
-    { path: 'editar-evento/:id', component: EventoEditarComponent },
+    { path: 'editar-casa/:id', component: CasaEditarComponent },
     { path: 'editar-publicacion/:id', component: PublicacionEditarComponent },
     { path: 'editar-boleto/:id', component: BoletoEditarComponent },
     { path: 'editar-repartidor/:id', component: RepartidorEditarComponent },
