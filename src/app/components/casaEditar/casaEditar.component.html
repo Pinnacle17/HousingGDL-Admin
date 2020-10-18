@@ -11,18 +11,18 @@
                 </div>
                 <div class="pt-4 text-center mb-3">
                     <h4>Imagen Principal.</h4>
-                    <img [src]="imgUrl+casa.casa_img" alt="img_principal" class="figure-img img-fluid rounded mx-auto" width="950" height="650">
+                    <img [src]="imgUrl+casa.principal_img" alt="img_principal" class="figure-img img-fluid rounded mx-auto" width="950" height="650">
                 </div>
                 <div class="pt-4 text-center mb-3">
                     <h4>Imagen en Carousel.</h4>
-                    <img [src]="'assets/img/casas/'+casa.carousel_img" alt="img_carousel" class="figure-img img-fluid rounded mx-auto" width="950" height="650">
+                    <img [src]="imgUrl+casa.carousel_img" alt="img_carousel" class="figure-img img-fluid rounded mx-auto" width="950" height="650">
                 </div>
                 <div class="card-body text-center">
                     <h4>Imágenes Generales.</h4>
                     <owl-carousel-o [options]="customOptions">
                         <ng-template carouselSlide *ngFor="let img of imgs">
                             <div class="slide">
-                                <img [src]="'assets/img/casas/'+img.ruta_imagen_eve" alt="imgs" width="300" height="300" class="p-1 figure-img rounded">
+                                <img [src]="imgUrl+img.ruta_imagen_casa" alt="imgs" width="300" height="300" class="p-1 figure-img rounded">
                             </div>
                         </ng-template>
                     </owl-carousel-o>
@@ -32,15 +32,11 @@
                         <p> {{casa.descripcion_casa}} </p>
                     </div>
                     <hr>
-                    <div class="container-fluid text-left">
-                        <h4>Enlace.</h4>
-                        <p> {{casa.enlace_casa}} </p>
-                    </div>
                 </div>
                 <div class="card-footer">
                     <p class="card-text">
-                        <small class="text-muted"> Inicio: {{ casa.dia_inicio_casa }} a las {{casa.hora_inicio_casa}} </small><br>
-                        <small class="text-muted"> Cierre: {{ casa.dia_conclusion_casa }} a las {{casa.hora_conclusion_casa}}</small>
+                        <small class="text-muted"> Direccion: {{casa.direccion_casa}} </small><br>
+                        
                     </p>
                 </div>
             </div>

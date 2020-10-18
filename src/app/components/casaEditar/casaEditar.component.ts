@@ -147,6 +147,7 @@ export class CasaEditarComponent implements OnInit {
     this.formBoletosInit();
     this.activatedRoute.params.subscribe( params => {
       this.casasService.getCasa(params['id']).subscribe( resultado => {
+        console.log(resultado)
         this.casa = resultado[0];
 
         this.formInfoE.setValue({
