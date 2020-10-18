@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   apiUrl:'http://localhost/casas-php/PT-API-P/admin/',
+  imgUrl:'http://localhost/casas-php/admin/assets/img/casas/'
 };
 
 /*

@@ -7,13 +7,13 @@ import { CasasService } from '../../services/casas.service';
 import { BoletosService } from '../../services/boletos.service';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
-
+import {environment} from 'src/environments/environment'
 @Component({
   selector: 'app-eventoEditar',
   templateUrl: './eventoEditar.component.html'
 })
 export class EventoEditarComponent implements OnInit {
-
+  imgUrl = environment.imgUrl
   formInfoE:FormGroup;
   formFechas:FormGroup;
   formImgE:FormGroup;
