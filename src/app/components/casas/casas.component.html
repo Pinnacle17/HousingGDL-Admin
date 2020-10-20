@@ -36,15 +36,12 @@
                     <tr *ngFor="let resultado of busqueda">
                         <th scope="row" class="align-middle">{{ resultado.id_casa }}</th>
                         <td class="align-middle">{{ resultado.nombre_casa }}</td>
-                        <td class="align-middle text-left text-danger" *ngIf="resultado.estado_casa == 0">Sin Boletos</td>
-                        <td class="align-middle text-left text-success" *ngIf="resultado.estado_casa == 1">Activo</td>
-                        <td class="align-middle text-left text-danger" *ngIf="resultado.estado_casa == 2">Cancelado</td>
-                        <td class="align-middle text-left text-primary" *ngIf="resultado.estado_casa == 3">Finalizado</td>
+                        <td class="align-middle text-left text-danger" >{{resultado.estado_casa}}</td>
                         <td class="align-middle">{{ resultado.orden_anuncio }}</td>
                         <td class="align-middle">
                             <button class="btn btn-primary" type="button" (click)="editarCasa( resultado.id_casa )">Editar</button>
-                            <!-- <button class="btn btn-danger ml-lg-2" type="button" (click)="eliminarCasa( resultado.id_casa )">Eliminar</button> -->
-                            <button class="btn btn-danger ml-lg-2" type="button" (click)="cancelarCasa( resultado.id_casa )">Cancelar</button>
+                            <button class="btn btn-success ml-lg-2" type="button" (click)="activarCasa( resultado.id_casa )" *ngIf="resultado.estado_casa=='Inactiva'">Activar</button>
+                            <button class="btn btn-danger ml-lg-2" type="button" (click)="cancelarCasa( resultado.id_casa )" *ngIf="resultado.estado_casa=='Activa'">Cancelar</button>
                         </td>
                     </tr>
                 </tbody>

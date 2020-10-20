@@ -70,7 +70,7 @@ export class CasasService {
   }
 
   buscarCasa( nombre:string ){
-    return this.http.get(`${this.url}buscarCasa.php?nombre=${nombre}`)//.pipe(retry(3))
+    return this.http.get(`${this.url}buscarCasas.php?nombre=${nombre}`)//.pipe(retry(3))
   }
 
   buscarLugar(  orden:number){
