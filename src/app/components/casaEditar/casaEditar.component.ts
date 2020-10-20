@@ -423,8 +423,7 @@ export class CasaEditarComponent implements OnInit {
     this.imgsCasa.imgPrincipal = this.imgSeleccionada;
     this.imgsCasa.imgCarousel = this.imgCarouselSeleccionada;
     this.imgsCasa.imgs = this.imgsSeleccionadas;
-
-    this.casasService.modificarImgsCasa(this.imgsCasa).subscribe(datos => {
+    this.casasService.modificarImgsCasa(this.imgsCasa,this.casa.id_casa.toString()).subscribe(datos => {
       if (datos['resultado'] == "ERROR") {
         console.log("ERROR");
         return
@@ -554,9 +553,10 @@ export class CasaEditarComponent implements OnInit {
     console.log(this.formImgE);
   }
 
-  eliminarImg(id: number) {
+  eliminarImgCasa(id: number) {
+    console.log(id)
     if (confirm("Está seguro de querer eliminar esta imagen?")) {
-      this.casasService.eliminarImgs(id).subscribe(datos => {
+      this.casasService.eliminarImgCasa(id).subscribe(datos => {
         if (datos['resultado'] == "OK") {
           this.refresh();
           window.confirm("Imagen eliminada con éxito");

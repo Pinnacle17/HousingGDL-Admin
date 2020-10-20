@@ -26,8 +26,10 @@ export class CasasService {
     return this.http.get(`${this.url}verImagenesCasa.php?id_casa=${id}`)//.pipe(retry(3))
   }
 
-  eliminarImgs( id:number ){
-    return this.http.get(`${this.url}eliminarImgs.php?id_imagen=${id}`)//.pipe(retry(3))
+  eliminarImgCasa( id:number ){
+    let data = new FormData()
+    data.append('id_imagen_casa',id.toString())
+    return this.http.post(`${this.url}eliminarImgCasa.php`,data)//.pipe(retry(3))
   }
 
   consultaNombre( nombre:string, id:number = -1 ){
@@ -49,8 +51,9 @@ export class CasasService {
     return this.http.post(`${this.url}modificarHorarioCasa.php`, HORARIOEVENTO_FD)//.pipe(retry(3))
   }
 
-  modificarImgsCasa( imgs:any ){
+  modificarImgsCasa( imgs:any , id_casa:string){
     const IMGSEVENTO_FD = serialize(imgs);
+    IMGSEVENTO_FD.append('id_casa',id_casa)
     return this.http.post(`${this.url}modificarImgsCasa.php`, IMGSEVENTO_FD)//.pipe(retry(3))
   }
 
@@ -67,7 +70,7 @@ export class CasasService {
   }
 
   buscarCasa( nombre:string ){
-    return this.http.get(`${this.url}buscarCasa.php?nombre_casa=${nombre}`)//.pipe(retry(3))
+    return this.http.get(`${this.url}buscarCasa.php?nombre=${nombre}`)//.pipe(retry(3))
   }
 
   buscarLugar(  orden:number){

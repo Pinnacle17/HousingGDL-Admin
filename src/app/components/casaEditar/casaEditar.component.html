@@ -269,8 +269,8 @@
                                         </div>
                                         <div class="row mt-3 border" *ngFor='let img of imgs'>
                                             <div class="col-md-12 text-center">
-                                                <img [src]="'assets/img/casas/'+img.ruta_imagen_eve " height="300" width="400"><br>
-                                                <button type="button" class="btn btn-danger" (click)="eliminarImg( img.id_imagen_eve )">Eliminar</button>
+                                                <img [src]="imgUrl+img.ruta_imagen_casa " height="300" width="400"><br>
+                                                <button type="button" class="btn btn-danger" (click)="eliminarImgCasa( img.id_imagen_casa )">Eliminar</button>
                                             </div>
                                         </div>
                                     </div>
