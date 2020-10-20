@@ -319,7 +319,7 @@ export class CasasComponent implements OnInit, OnDestroy {
   }
 
   liberarLugar() {
-    this.casasService.liberarLugar(this.formCasas.get('orden').value).subscribe(datos => {
+    this.casasService.liberarLugar(this.formCasas.get('orden_anuncio').value).subscribe(datos => {
       if (datos['resultado'] == 'ERROR') {
         console.log('ERROR');
         return;

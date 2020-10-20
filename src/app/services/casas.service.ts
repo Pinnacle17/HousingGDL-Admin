@@ -78,7 +78,7 @@ export class CasasService {
   }
 
   liberarLugar( orden:number, id:number=null ){
-    return this.http.get(`${this.url}liberarLugar.php?orden=${orden}&id=${id}`)//.pipe(retry(3))
+    return this.http.get(`${this.url}liberarLugar.php?orden_anuncio=${orden}&id_casa=${id}`)//.pipe(retry(3))
   }
 
   getVentasEdad( id_casa:number){
