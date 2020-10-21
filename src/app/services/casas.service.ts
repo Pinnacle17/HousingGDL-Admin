@@ -14,6 +14,9 @@ export class CasasService {
 
   constructor(private http:HttpClient ) { }
 
+  getColonias(){
+    return this.http.get(`${this.url}VerColonias.php`)
+  }
   getCasas(){
     return this.http.get(`${this.url}VerCasas.php`)//.pipe(retry(3))
   }

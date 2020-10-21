@@ -22,6 +22,7 @@ export class CasasComponent implements OnInit, OnDestroy {
   urlCarousel = null;
 
   casas = null;
+  colonias = null
 
   busqueda = null;
   encontrado: boolean = null;
@@ -148,7 +149,11 @@ export class CasasComponent implements OnInit, OnDestroy {
   }
 
   getCasas() {
-    this.casasService.getCasas().subscribe(resultado => {this.casas = resultado; console.log(this.casas)});
+    this.casasService.getCasas().subscribe(resultado => {this.casas = resultado});
+    this.casasService.getColonias().subscribe(r=>{
+      this.colonias=r;
+      console.log(this.colonias)
+    })
   }
 
   buscarCasa(nombre: string) {
@@ -188,6 +193,7 @@ export class CasasComponent implements OnInit, OnDestroy {
       ambiente: ['', [Validators.required]],
       descripcion_casa: ['', [Validators.required]],
       orden_anuncio: ['', Validators.required],
+      id_colonia: ['', Validators.required],
       imgPrincipal: ['', [Validators.required, RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })]],
       imgCarousel: ['', [Validators.required, RxwebValidators.image({ minWidth: 1250, maxWidth: 4096, minHeight: 690, maxHeight: 2160 })]],
       imgsCasa: ['', [Validators.required, RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })]]
@@ -331,7 +337,6 @@ export class CasasComponent implements OnInit, OnDestroy {
   }
 
   guardarCasa() {
-    this.formCasas.addControl('id_colonia', this.fb.control(1))
     this.casasService.buscarLugar(this.formCasas.get('orden_anuncio').value).subscribe(datos => {
       if (datos['estado'] == 0) {
         this.errorOrden = datos['mensaje'];

@@ -7,10 +7,11 @@
     <div class="row mb-4">
         <div class="col-md-6 d-block mx-auto">
             <div class="input-group input-group-sm">
-                <input class="form-control" type="search" placeholder="Buscar" #buscar (keyup.enter)="buscarCasa( buscar.value)">
+                <input class="form-control" type="search" placeholder="Buscar" #buscar
+                    (keyup.enter)="buscarCasa( buscar.value)">
                 <div class="input-group-append">
                     <button class="btn btn-navbar" type="button" (click)="buscarCasa( buscar.value )">
-                      <i class="fas fa-search"></i>
+                        <i class="fas fa-search"></i>
                     </button>
                 </div>
             </div>
@@ -36,12 +37,17 @@
                     <tr *ngFor="let resultado of busqueda">
                         <th scope="row" class="align-middle">{{ resultado.id_casa }}</th>
                         <td class="align-middle">{{ resultado.nombre_casa }}</td>
-                        <td class="align-middle text-left text-danger" >{{resultado.estado_casa}}</td>
+                        <td class="align-middle text-left text-danger">{{resultado.estado_casa}}</td>
                         <td class="align-middle">{{ resultado.orden_anuncio }}</td>
                         <td class="align-middle">
-                            <button class="btn btn-primary" type="button" (click)="editarCasa( resultado.id_casa )">Editar</button>
-                            <button class="btn btn-success ml-lg-2" type="button" (click)="activarCasa( resultado.id_casa )" *ngIf="resultado.estado_casa=='Inactiva'">Activar</button>
-                            <button class="btn btn-danger ml-lg-2" type="button" (click)="cancelarCasa( resultado.id_casa )" *ngIf="resultado.estado_casa=='Activa'">Cancelar</button>
+                            <button class="btn btn-primary" type="button"
+                                (click)="editarCasa( resultado.id_casa )">Editar</button>
+                            <button class="btn btn-success ml-lg-2" type="button"
+                                (click)="activarCasa( resultado.id_casa )"
+                                *ngIf="resultado.estado_casa=='Inactiva'">Activar</button>
+                            <button class="btn btn-danger ml-lg-2" type="button"
+                                (click)="cancelarCasa( resultado.id_casa )"
+                                *ngIf="resultado.estado_casa=='Activa'">Cancelar</button>
                         </td>
                     </tr>
                 </tbody>
@@ -63,12 +69,14 @@
             <tr *ngFor="let casa of casas">
                 <th scope="row" class="align-middle">{{ casa.id_casa }}</th>
                 <td class="align-middle">{{ casa.nombre_casa }}</td>
-                <td class="align-middle text-left text-danger" >{{casa.estado_casa}}</td>
+                <td class="align-middle text-left text-danger">{{casa.estado_casa}}</td>
                 <td class="align-middle">{{ casa.orden_anuncio }}</td>
                 <td class="align-middle">
                     <button class="btn btn-primary" type="button" (click)="editarCasa( casa.id_casa )">Editar</button>
-                    <button class="btn btn-success ml-lg-2" type="button" (click)="activarCasa( casa.id_casa )" *ngIf="casa.estado_casa=='Inactiva'">Activar</button>
-                    <button class="btn btn-danger ml-lg-2" type="button" (click)="cancelarCasa( casa.id_casa )" *ngIf="casa.estado_casa=='Activa'">Cancelar</button>
+                    <button class="btn btn-success ml-lg-2" type="button" (click)="activarCasa( casa.id_casa )"
+                        *ngIf="casa.estado_casa=='Inactiva'">Activar</button>
+                    <button class="btn btn-danger ml-lg-2" type="button" (click)="cancelarCasa( casa.id_casa )"
+                        *ngIf="casa.estado_casa=='Activa'">Cancelar</button>
                 </td>
             </tr>
         </tbody>
@@ -76,20 +84,21 @@
 
     <div class="container-fluid">
         <button type="button" class="btn btn-outline-success btn-block" data-toggle="modal" data-target="#modalCasa">
-        + Crear una Nueva Casa
-      </button>
+            + Crear una Nueva Casa
+        </button>
     </div>
 
 </div>
 
-<div class="modal fade" id="modalCasa" tabindex="-1" role="dialog" aria-labelledby="modalCasaLabel" style="overflow-y: visible;">
+<div class="modal fade" id="modalCasa" tabindex="-1" role="dialog" aria-labelledby="modalCasaLabel"
+    style="overflow-y: visible;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalCasaLabel">Crear Casa</h5>
                 <button #cerrar type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <form [formGroup]="formCasas" (ngSubmit)="guardarCasa()">
@@ -97,25 +106,39 @@
                     <div class="form-row mb-3">
                         <div class="col-md-12">
                             <label for="nombreCasa">Nombre: <small class="text-danger">*</small></label>
-                            <input type="text" class="form-control" id="nombreCasa" placeholder="Ingrese el Nombre de la Casa" formControlName="nombre_casa" [class.is-invalid]="validacionNombre || nombreExistente">
+                            <input type="text" class="form-control" id="nombreCasa"
+                                placeholder="Ingrese el Nombre de la Casa" formControlName="nombre_casa"
+                                [class.is-invalid]="validacionNombre || nombreExistente">
                             <small *ngIf="validacionNombre" class="form-text text-danger">Obligatorio.</small>
                         </div>
                     </div>
                     <div class="form-row mb-3">
                         <div class="col-md-12">
                             <label for="direccionCasa">Direccion: <small class="text-danger">*</small></label>
-                            <input type="text" class="form-control" id="direccionCasa" placeholder="Ingrese la direccion de la Casa" formControlName="direccion_casa" [class.is-invalid]="validacionNombre || nombreExistente">
+                            <input type="text" class="form-control" id="direccionCasa"
+                                placeholder="Ingrese la direccion de la Casa" formControlName="direccion_casa"
+                                [class.is-invalid]="validacionNombre || nombreExistente">
                             <small *ngIf="validacionNombre" class="form-text text-danger">Obligatorio.</small>
                         </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="id_colonia">Colonia</label>
+                        </div>
+                        <select class="custom-select" id="id_colonia" formControlName="id_colonia">
+                            <option *ngFor="let colonia of colonias" value="{{colonia['id_colonia']}}">{{colonia['nombre_colonia']}}</option>
+                        </select>
                     </div>
 
                     <div class="input-group form-row mb-3">
                         <label for="ambiente-col">Ambiente: <small class="text-danger">*</small></label><br>
                         <div class="col-md-12" id="ambiente-col">
-                            <input type="radio" id="ambiente1" value="0" formControlName="ambiente" [class.is-invalid]="validacionAmbiente">
+                            <input type="radio" id="ambiente1" value="0" formControlName="ambiente"
+                                [class.is-invalid]="validacionAmbiente">
                             <label for="ambiente1" class="form-check-label"> Fiesta</label><br>
 
-                            <input type="radio" id="ambiente2" value="1" formControlName="ambiente" [class.is-invalid]="validacionAmbiente">
+                            <input type="radio" id="ambiente2" value="1" formControlName="ambiente"
+                                [class.is-invalid]="validacionAmbiente">
                             <label for="ambiente2" class="form-check-label"> Relax</label>
                             <small *ngIf="validacionAmbiente" class="form-text text-danger">Obligatorio.</small>
                         </div>
@@ -124,33 +147,42 @@
                     <div class="input-group form-row mb-3">
                         <div class="col-md-12">
                             <label for="descCasa">Descripción: <small class="text-danger">*</small></label>
-                            <textarea id="descCasa" class="form-control" rows="5" formControlName="descripcion_casa" [class.is-invalid]="validacionDesc"></textarea>
-                            <small *ngIf="validacionDesc" class="form-text text-danger">Breve Descripción Obligatoria.</small>
+                            <textarea id="descCasa" class="form-control" rows="5" formControlName="descripcion_casa"
+                                [class.is-invalid]="validacionDesc"></textarea>
+                            <small *ngIf="validacionDesc" class="form-text text-danger">Breve Descripción
+                                Obligatoria.</small>
                         </div>
                     </div>
 
                     <div class="input-group form-row mb-3">
                         <div class="col-md-6">
-                            <label for="ordenImg">Orden de Casa: <small class="text-danger">*</small> <small>(Posición de imagen principal en el carousel de casas)</small></label>
-                            <input type="number" class="form-control" id="ordenImg" min="1" max="15" step="1" value="1" formControlName="orden_anuncio" [class.is-invalid]="validacionOrden">
+                            <label for="ordenImg">Orden de Casa: <small class="text-danger">*</small> <small>(Posición
+                                    de imagen principal en el carousel de casas)</small></label>
+                            <input type="number" class="form-control" id="ordenImg" min="1" max="15" step="1" value="1"
+                                formControlName="orden_anuncio" [class.is-invalid]="validacionOrden">
                             <small *ngIf="validacionOrden" class="form-text text-danger">Orden Obligatorio.</small>
                         </div>
                     </div>
 
                     <div class="input-group form-row mb-3">
                         <div class="col-md-12">
-                            <label for="imgPrincipal">Imagen Principal de la Casa: <small class="text-danger">*</small></label>
-                            <input #imgInputP [writeFile]="true" type="file" id="imgPrincipal" accept=".jpg" (change)="imgPrincipal($event)" formControlName="imgPrincipal">
-                            <small *ngIf="validacionImg" class="form-text text-danger">Imagen Principal Obligatoria.</small>
-                            <small *ngIf="validacionTamImg" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
+                            <label for="imgPrincipal">Imagen Principal de la Casa: <small
+                                    class="text-danger">*</small></label>
+                            <input #imgInputP [writeFile]="true" type="file" id="imgPrincipal" accept=".jpg"
+                                (change)="imgPrincipal($event)" formControlName="imgPrincipal">
+                            <small *ngIf="validacionImg" class="form-text text-danger">Imagen Principal
+                                Obligatoria.</small>
+                            <small *ngIf="validacionTamImg" class="form-text text-danger">Error: Tamaño Mínimo: 950x690.
+                                Tamaño Máximo: 4096x2160</small>
                             <div class="row" *ngIf="(urlPrincipal != null) && (!validacionTamImg)">
                                 <div class="col-md-9">
                                     <img [src]="urlPrincipal" height="200" class="float-right"><br>
                                 </div>
                                 <div class="col-md-3">
-                                    <button type="button" aria-label="Close" class="btn btn-danger float-left" (click)="borrarImgPrincipal()">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
+                                    <button type="button" aria-label="Close" class="btn btn-danger float-left"
+                                        (click)="borrarImgPrincipal()">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -159,17 +191,21 @@
                     <div class="input-group form-row mb-3">
                         <div class="col-md-12">
                             <label for="imgCarousel">Imagen de Carousel: <small class="text-danger">*</small></label>
-                            <input #imgInputC [writeFile]="true" type="file" id="imgCarousel" accept=".jpg" (change)="imgCarousel($event)" formControlName="imgCarousel">
-                            <small *ngIf="validacionImgCarousel" class="form-text text-danger">Imagen de Carousel Obligatoria.</small>
-                            <small *ngIf="validacionTamImgCarousel" class="form-text text-danger">Error: Tamaño mínimo 1250x690. Tamaño Máximo: 4096x2160</small>
+                            <input #imgInputC [writeFile]="true" type="file" id="imgCarousel" accept=".jpg"
+                                (change)="imgCarousel($event)" formControlName="imgCarousel">
+                            <small *ngIf="validacionImgCarousel" class="form-text text-danger">Imagen de Carousel
+                                Obligatoria.</small>
+                            <small *ngIf="validacionTamImgCarousel" class="form-text text-danger">Error: Tamaño mínimo
+                                1250x690. Tamaño Máximo: 4096x2160</small>
                             <div class="row" *ngIf="(urlCarousel != null) && (!validacionTamImgCarousel)">
                                 <div class="col-md-9">
                                     <img [src]="urlCarousel" height="200" class="float-right"><br>
                                 </div>
                                 <div class="col-md-3">
-                                    <button type="button" aria-label="Close" class="btn btn-danger float-left" (click)="borrarImgCarousel()">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
+                                    <button type="button" aria-label="Close" class="btn btn-danger float-left"
+                                        (click)="borrarImgCarousel()">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -178,17 +214,20 @@
                     <div class="input-group form-row mb-3">
                         <div class="col-md-12">
                             <label for="imgsCasa">Imagenes de la Casa: <small class="text-danger">*</small></label>
-                            <input #imgsInput [writeFile]="true" type='file' id="imgsCasa" accept=".jpg" (change)="multiImg($event)" multiple formControlName="imgsCasa">
+                            <input #imgsInput [writeFile]="true" type='file' id="imgsCasa" accept=".jpg"
+                                (change)="multiImg($event)" multiple formControlName="imgsCasa">
                             <small *ngIf="validacionImgs" class="form-text text-danger">Mínimo una imágen.</small>
-                            <small *ngIf="validacionTamImgs && formCasas.invalid" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
+                            <small *ngIf="validacionTamImgs && formCasas.invalid" class="form-text text-danger">Error:
+                                Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
                             <div class="row" *ngFor='let url of urls; let i = index'>
                                 <div class="col-md-9">
                                     <img [src]="url" height="200" class="float-right"><br>
                                 </div>
                                 <div class="col-md-3">
-                                    <button type="button" aria-label="Close" class="btn btn-danger float-left" (click)="borrarImgs(url, i)">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
+                                    <button type="button" aria-label="Close" class="btn btn-danger float-left"
+                                        (click)="borrarImgs(url, i)">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -199,7 +238,8 @@
                         <div class="col-md-12 text-center">
                             <button [disabled]="formCasas.invalid" class="btn btn-success" type="submit">Crear</button>
                         </div>
-                        <button #modalError type="button" class="invisible" data-toggle="modal" data-target="#modalError"></button>
+                        <button #modalError type="button" class="invisible" data-toggle="modal"
+                            data-target="#modalError"></button>
                     </div>
                 </form>
             </div>
@@ -207,13 +247,14 @@
     </div>
 </div>
 
-<div class="modal fade" id="modalError" tabindex="-1" role="dialog" aria-labelledby="modalErrorLabel" aria-hidden="true">
+<div class="modal fade" id="modalError" tabindex="-1" role="dialog" aria-labelledby="modalErrorLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button #cerrarModalError type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body text-center">
                 <h5 class="text-danger"> {{errorOrden}} </h5>
