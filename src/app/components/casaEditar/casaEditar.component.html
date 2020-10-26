@@ -36,28 +36,31 @@
                 <div class="card-footer">
                     <p class="card-text">
                         <small class="text-muted"> Direccion: {{casa.direccion_casa}} </small><br>
-                        
+
                     </p>
                 </div>
             </div>
 
-            <div class="card mb-3 border-success" *ngIf="noBoletos">
+            <div class="card mb-3 border-success" *ngIf="noCuartos">
                 <div class="card-header border-success text-center">
 
-                    <h5 class="text-danger"> No hay boletos. </h5>
+                    <h5 class="text-danger"> No hay cuartos. </h5>
 
                 </div>
             </div>
-            <ng-container *ngIf="!noBoletos">
-                <div class="card mb-3 border-success" *ngFor="let boleto of boletos">
+            <ng-container *ngIf="!noCuartos">
+                <div class="card mb-3 border-success" *ngFor="let cuarto of cuartos">
                     <div class="card-header border-success">
                         <div class="row">
                             <div class="col-md-6">
-                                <h4> {{boleto.nom_bol}} </h4>
+                                <h4> {{cuarto.nom_bol}} </h4>
                             </div>
                             <div class="col-md-6">
-                                <button class="btn btn-danger  float-right m-1" type="button" (click)="eliminarBoleto( boleto.id_boleto )">Eliminar</button>
-                                <button class="btn btn-success float-right m-1" (click)="editarBoleto( boleto.id_boleto )">Editar</button>
+                              <button class="btn btn-success ml-lg-2" type="button" (click)="activarCuarto( cuarto.id_cuarto )"
+                              *ngIf="cuarto.estado_cuarto==1">Activar</button>
+                          <button class="btn btn-danger ml-lg-2" type="button" (click)="desactivarCuarto( cuarto.id_cuarto )"
+                              *ngIf="cuarto.estado_cuarto==0">Desactivar</button>
+                                <button class="btn btn-success float-right m-1" (click)="editarBoleto( cuarto.id_cuarto )">Editar</button>
                             </div>
                         </div>
                     </div>
@@ -65,18 +68,7 @@
                         <div class="row h-100">
                             <div class="col-md-12">
                                 <h5>Descripción</h5>
-                                <p> {{boleto.descripcion_boleto}} </p>
-                            </div>
-
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h5>Inventario</h5>
-                                <p> {{boleto.stock_boleto}} </p>
-                            </div>
-                            <div class="col-md-4">
-                                <h5>Precio por boleto.</h5>
-                                <h6> {{boleto.precio_bol}} </h6>
+                                <p> {{cuarto.descripcion_cuarto}} </p>
                             </div>
                         </div>
                     </div>
@@ -138,19 +130,19 @@
                                         <small *ngIf="validacionNombre" class="form-text text-danger">Obligatorio.</small>
                                     </div>
                                 </div>
-            
+
                                 <div class="input-group form-row mb-3">
                                     <label for="ambiente-col">Ambiente: <small class="text-danger">*</small></label><br>
                                     <div class="col-md-12" id="ambiente-col">
                                         <input type="radio" id="ambiente1" value="0" formControlName="ambiente" [class.is-invalid]="validacionAmbiente">
                                         <label for="ambiente1" class="form-check-label"> Fiesta</label><br>
-            
+
                                         <input type="radio" id="ambiente2" value="1" formControlName="ambiente" [class.is-invalid]="validacionAmbiente">
                                         <label for="ambiente2" class="form-check-label"> Relax</label>
                                         <small *ngIf="validacionAmbiente" class="form-text text-danger">Obligatorio.</small>
                                     </div>
                                 </div>
-            
+
                                 <div class="input-group form-row mb-3">
                                     <div class="col-md-12">
                                         <label for="descCasa">Descripción: <small class="text-danger">*</small></label>
@@ -158,7 +150,7 @@
                                         <small *ngIf="validacionDesc" class="form-text text-danger">Breve Descripción Obligatoria.</small>
                                     </div>
                                 </div>
-            
+
                                 <div class="input-group form-row mb-3">
                                     <div class="col-md-6">
                                         <label for="ordenImg">Orden de Casa: <small class="text-danger">*</small> <small>(Posición de imagen principal en el carousel de casas)</small></label>
@@ -166,7 +158,7 @@
                                         <small *ngIf="validacionOrden" class="form-text text-danger">Orden Obligatorio.</small>
                                     </div>
                                 </div>
-            
+
                                 <hr>
                                 <div class="input-group form-row mb-3">
                                     <div class="col-md-12 text-center">
@@ -176,51 +168,6 @@
                                 </div>
                             </form>
                             <button #modalError type="button" class="invisible" data-toggle="modal" data-target="#modalError"></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header" id="headingTwo">
-                        <h2 class="mb-0">
-                            <button class="btn btn-outline-primary btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            Fechas y Horarios
-                          </button>
-                        </h2>
-                    </div>
-                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                        <div class="card-body">
-                            <form [formGroup]="formFechas" (ngSubmit)="guardarFechas()">
-                                <div class="input-group form-row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="fechaInicio">Fecha de inicio:</label>
-                                        <input type="date" id="fechaInicio" class="form-control" formControlName="diaInicio">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="fechaCierre">Fecha de cierre:</label>
-                                        <input type="date" id="fechaCierre" class="form-control" formControlName="diaFin">
-                                    </div>
-                                    <small *ngIf="compararFechas()" class="form-text text-danger text-center ml-1">Fechas no válidas. {{ mensajeError }}</small>
-                                </div>
-
-                                <div class="input-group form-row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="horaInicio">Hora de inicio:</label>
-                                        <input type="time" id="horaInicio" class="form-control" formControlName="horaInicio">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="horaCierre">Hora de cierre:</label>
-                                        <input type="time" id="horaCierre" class="form-control" formControlName="horaFin">
-                                    </div>
-                                    <small *ngIf="compararHorarios()" class="form-text text-danger">Horarios no válidos. El casa no puede terminar antes de empezar.</small>
-                                </div>
-
-                                <div class="input-group form-row mb-3">
-                                    <div class="col-md-12 text-center">
-                                        <button [disabled]="formFechas.invalid" class="btn btn-success" type="submit">Guardar cambios</button>
-                                    </div>
-                                </div>
-
-                            </form>
                         </div>
                     </div>
                 </div>
@@ -251,7 +198,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="imgCasa">Imagenes del Casa:</label><br>
+                                        <label for="imgCasa">Imagenes de la Casa:</label><br>
                                         <input #imgsInput type='file' id="imgCasa" accept=".jpg" (change)="multiImg($event)" multiple formControlName="imgsCasa">
                                         <small *ngIf="validacionTamImgs" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
                                         <ng-container *ngIf="(urls != null) && (!validacionTamImgs)">
@@ -306,36 +253,73 @@
                     <div class="card-header" id="headingFour">
                         <h2 class="mb-0">
                             <button class="btn btn-outline-primary btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
-                          Boletos
+                          Cuartos
                         </button>
                         </h2>
                     </div>
                     <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
                         <div class="card-body">
-                            <form [formGroup]="formBoletos" (ngSubmit)="guardarBoletos()">
+                            <form [formGroup]="formCuartos" (ngSubmit)="guardarCuarto()">
                                 <div class="input-group form-row mb-2">
                                     <div class="col-md-6">
-                                        <label for="nobmre">Nombre del Boleto: <small class="text-danger">*</small></label>
-                                        <input type="text" id="nombre" class="form-control" placeholder="Ingrese el Nombre del Boleto" formControlName="nombre">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="inventario">Inventario: <small class="text-danger">*</small></label>
-                                        <input type="number" min="0" step="1" value="0" id="inventario" class="form-control" formControlName="inventario">
-                                    </div>
+                                        <label for="nombre_cuarto">Nombre del  Cuarto: <small class="text-danger">*</small></label>
+                                        <input type="text" id="nombre_cuarto" class="form-control" placeholder="Ingrese el Nombre del Cuarto" formControlName="nombre_cuarto">
+                                      </div>
                                 </div>
 
                                 <div class="input-group form-row mb-2">
                                     <div class="col-md-6">
-                                        <label for="desc">Descripción: <small class="text-danger">*</small></label>
-                                        <textarea id="desc" rows="5" class="form-control" formControlName="desc"></textarea>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="precio">Precio por Boleto: <small class="text-danger">*</small></label>
-                                        <input type="number" min="0" step="1" value="0" id="precio" class="form-control" formControlName="precio">
+                                        <label for="descripcion_cuarto">Descripción: <small class="text-danger">*</small></label>
+                                        <textarea id="descripcion_cuarto" rows="5" class="form-control" formControlName="descripcion_cuarto"></textarea>
                                     </div>
                                 </div>
+                                <div class="input-group form-row mb-3">
+                                  <div class="col-md-12">
+                                          <label for="imgPrincipalCuarto">Imagen Principal de el cuarto: <small
+                                              class="text-danger">*</small></label>
+                                          <input #imgInputPriCua [writeFile]="true" type="file" id="imgPrincipalCuarto" accept=".jpg"
+                                          (change)="imgPrincipalCuarto($event)" formControlName="imgPrincipalCuarto">
+                                          <small *ngIf="validacionImgCuarto" class="form-text text-danger">Imagen Principal
+                                          Obligatoria.</small>
+                                          <small *ngIf="validacionTamImgPCuarto" class="form-text text-danger">Error: Tamaño Mínimo: 950x690.
+                                          Tamaño Máximo: 4096x2160</small>
+                                            <div class="row" *ngIf="(urlPrincipalCuarto != null) && (!validacionTamImgPCuarto)">
+                                              <div class="col-md-9">
+                                                <img [src]="urlPrincipalCuarto" height="200" class="float-right"><br>
+                                              </div>
+                                              <div class="col-md-3">
+                                                <button type="button" aria-label="Close" class="btn btn-danger float-left"
+                                                  (click)="borrarImgPrincipalCuarto()">
+                                                  <span aria-hidden="true">&times;</span>
+                                                </button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                      </div>
 
-                                <button class="btn btn-success btn-block mx-auto" style="width: 25%; display: block;" type="submit">Crear Boleto</button>
+                                      <div class="input-group form-row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="imgsCuarto">Imagenes de el cuarto: <small class="text-danger">*</small></label>
+                                            <input #imgsInputCua [writeFile]="true" type='file' id="imgsCuarto" accept=".jpg"
+                                                (change)="multiImgCuarto($event)" multiple formControlName="imgsCuarto">
+                                            <small *ngIf="validacionImgsCuarto" class="form-text text-danger">Mínimo una imágen.</small>
+                                            <small *ngIf="validacionTamImgsCuarto && formCuartos.invalid" class="form-text text-danger">Error:
+                                                Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
+                                            <div class="row" *ngFor='let url of urlsCuarto; let i = index'>
+                                                <div class="col-md-9">
+                                                    <img [src]="url" height="200" class="float-right"><br>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <button type="button" aria-label="Close" class="btn btn-danger float-left"
+                                                        (click)="borrarImgsCuarto(url, i)">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <button class="btn btn-success btn-block mx-auto" style="width: 25%; display: block;" type="submit">Crear Cuarto</button>
                             </form>
                         </div>
                     </div>

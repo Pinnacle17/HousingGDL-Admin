@@ -1,27 +1,43 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BoletosService } from '../../services/boletos.service';
+import { CuartosService } from '../../services/cuartos.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CasasService } from '../../services/casas.service';
+import { environment } from 'src/environments/environment'
+import { async, RxwebValidators } from '@rxweb/reactive-form-validators';
 
 @Component({
   selector: 'app-boleto-editar',
   templateUrl: './boleto-editar.component.html'
 })
 export class BoletoEditarComponent implements OnInit {
+  imgUrl = environment.imgUrl
 
   @ViewChild('cerrarCodigo') cerrarCodigo;
   @ViewChild('cerrarFechas') cerrarFechas;
   @ViewChild('cerrarReferencia') cerrarReferencia;
-
-  boleto:any = {};
-
-  formPromoFechas:FormGroup;
-  formPromoReferencia:FormGroup;
-  formPromoCodigo:FormGroup;
-
+  @ViewChild('imgInputPriCua') imgInputPriCua: ElementRef;
+  @ViewChild('imgsInputCua') imgsInputCua: ElementRef;
+  //
+  //
+  cuarto:any = {};
+  //
+  //
+  formInfoCuarto: FormGroup;
+  formImgCuarto: FormGroup;
+  formOferta: FormGroup;
+  //
+  imgPrincipalSeleccionadaCuarto: File = null;
+  imgsSeleccionadasCuarto: File[] = [];
+  listaImgCuarto: any[] = [];
+  //
+  urlsCuarto = [];
+  urlPrincipalCuarto = null;
+  //
   mensajeError:string = null;
-
+  //
+  semestres:any = null;
+  //
   eventos:any = null;
   boletos:any = null;
   promosCodigo:any = null;
@@ -30,7 +46,9 @@ export class BoletoEditarComponent implements OnInit {
 
   errorCodigo:string = "";
   id_evento:number = null;
-
+  //
+  id_casa:number = null;
+  //
   infoBoleto:any = {
     id:null,
     nombre:null,
@@ -38,305 +56,221 @@ export class BoletoEditarComponent implements OnInit {
     inventario:null,
     precio:null
   }
-
-  infoPromoFechas:any = {
-    id_boleto:null,
-    id_evento:null,
-    fechaInicio:null,
-    fechaFin:null,
-    inventario:null,
-    precio:null
+  //
+  infoCuarto:any = {
+    id_cuarto:null,
+    nombre_cuarto:null,
+    descripcion_cuarto:null,
   }
 
-  infoPromoCodigo:any = {
-    id: null,
-    codigo:null,
-    inventario:null,
-    precio:null
+  imgsCuarto:any = {
+    id_cuarto:null,
+    imgPrincipal:null,
+    imgs:null,
   }
 
-  formInfoBoleto:FormGroup;
+  infoOferta:any = {
+    id_cuarto:null,
+    id_semestre:null,
+    nombre_cuarto:null,
+    descripcion_cuarto:null,
+  }
   constructor(private activatedRoute:ActivatedRoute,
-              private boletosService:BoletosService,
+              private cuartosService:CuartosService,
               private fb:FormBuilder,
               private eventosService:CasasService) { }
 
   ngOnInit() {
-    this.getEventos();
-    this.formInfoBoletoInit();
-    this.formPromoFechasInit();
-    this.formPromoCodigoInit();
-    this.formPromoReferenciaInit();
-    console.log(this.formPromoReferencia.value);
+    this.getSemestres();
+    this.formInfoCuartoInit();
+    this.formImgInit();
     this.activatedRoute.params.subscribe( params => {
-      this.boletosService.getBoleto(params['id']).subscribe( resultado => {
+      this.cuartosService.getCuarto(params['id']).subscribe( resultado => {
 
-        this.boleto = resultado[0];
+        this.cuarto = resultado[0];
 
-        this.infoPromoFechas.id_evento = this.boleto.fk_evento_bol
-
-        this.formInfoBoleto.setValue({
-          nombre:this.boleto.nom_bol,
-          desc:this.boleto.descripcion_boleto,
-          inventario:this.boleto.stock_act_boleto,
-          precio:this.boleto.precio_bol
+        this.formInfoCuarto.setValue({
+          nombre_cuarto:this.cuarto.nombre_cuarto,
+          descripcion_cuarto:this.cuarto.descripcion_cuarto,
         });
       });
 
-      this.boletosService.getPromosCodigo(params['id']).subscribe(resultado => this.promosCodigo = resultado);
-      this.boletosService.getPromosFechas(params['id']).subscribe(resultado => this.promosFechas = resultado);
-      this.boletosService.getPromosReferencia(params['id']).subscribe(resultado => this.promosReferencia = resultado);
+      this.infoCuarto.id = params['id'];
 
-      this.formPromoReferencia.addControl('boleto', this.fb.control(null));
-      this.formPromoReferencia.get('boleto').setValue(params['id']);
-      this.infoPromoCodigo.id = params['id'];
-      this.infoBoleto.id = params['id'];
-      this.infoPromoFechas.id_boleto = params['id'];
+      this.infoOferta.id_cuarto = params['id'];
+      this.imgsCuarto.id_cuarto = params['id'];
 
     });
 
   }
 
-  formInfoBoletoInit(){
-    this.formInfoBoleto = this.fb.group({
-      nombre:['',],
-      desc:['',],
-      inventario:['',],
-      precio:['',]
+  formInfoCuartoInit(){
+    this.formInfoCuarto = this.fb.group({
+      nombre_cuarto:['', [Validators.required]],
+      descripcion_cuarto:['', [Validators.required]],
+    })
+  }
+  formImgInit() {
+    this.formImgCuarto = this.fb.group({
+      imgPrincipalCuarto: ['', RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })],
+      imgsCuarto: ['', RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })]
+    })
+  }
+  formOfertaInit(){
+    this.formOferta = this.fb.group({
+      id_semestre:[null],
+      grupo:['', [Validators.required]],
+      precio:['', [Validators.required]],
     })
   }
 
-  formPromoCodigoInit(){
-    this.formPromoCodigo = this.fb.group({
-      codigo:['', [Validators.maxLength(10), Validators.minLength(10)]],
-      inventarioCodigo:['',],
-      precioCodigo:['',]
-    })
+  get validacionNombre() {
+    return this.formInfoCuarto.get('nombre_cuarto').invalid && this.formInfoCuarto.get('nombre_cuarto').touched;
   }
 
-  formPromoFechasInit(){
-    this.formPromoFechas = this.fb.group({
-      fechaInicio:['',],
-      fechaFin:['',],
-      inventarioFechas:['',],
-      precioFechas:['',]
-    })
+  get validacionDesc() {
+    return this.formInfoCuarto.get('descripcion_cuarto').invalid && this.formInfoCuarto.get('descripcion_cuarto').touched;
   }
 
-  formPromoReferenciaInit(){
-    this.formPromoReferencia = this.fb.group({
-      boletoReferencia:[null],
-      inventarioReferencia:[''],
-      precioReferencia:['']
-    });
+  get validacionTamImgPCuarto() {
+    return this.formImgCuarto.get('imgPrincipalCuarto').invalid && this.formImgCuarto.get('imgPrincipal').dirty
   }
 
-  get codigoValidacion(){
-    return this.formPromoCodigo.get('codigo').invalid
+  get validacionTamImgsCuarto() {
+    return this.formImgCuarto.get('imgsCuarto').invalid
   }
-  compararFechas(){
-    let inicio = new Date(this.formPromoFechas.get('fechaInicio').value);
-    inicio.setMinutes(inicio.getMinutes() + inicio.getTimezoneOffset())
+  get validacionPrecio() {
+    return this.formOferta.get('precio').invalid && this.formOferta.get('precio').touched;
+  }
 
-    let cierre = new Date(this.formPromoFechas.get('fechaFin').value);
-    cierre.setMinutes(cierre.getMinutes() + cierre.getTimezoneOffset())
-
-    let hoy = new Date();
-    hoy.setSeconds(0);
-    hoy.setMinutes(0);
-    hoy.setHours(0);
-
-    if(inicio > cierre){
-      this.mensajeError = "El evento no puede terminar antes de empezar."
-      this.formPromoFechas.setErrors({'incorrect':true});
-      return true
-    }
-    else if( hoy > inicio ){
-      this.mensajeError = "El evento no puede empezar hoy o antes de hoy."
-      this.formPromoFechas.setErrors({'incorrect':true});
-      return true
-    }
-    else if( hoy > cierre ){
-      this.mensajeError = "El evento no puede terminar hoy o antes de hoy."
-      this.formPromoFechas.setErrors({'incorrect':true});
-      return true
-    }
-    else{
-      return false
-    }
+  get validacionGrupo() {
+    return this.formOferta.get('grupo').invalid && this.formOferta.get('grupo').touched;
   }
 
   refresh(){
     this.activatedRoute.params.subscribe( params => {
-      this.boletosService.getBoleto(params['id']).subscribe( resultado => this.boleto = resultado[0]);
-      this.boletosService.getPromosCodigo(params['id']).subscribe(resultado => this.promosCodigo = resultado);
-      this.boletosService.getPromosFechas(params['id']).subscribe(resultado => this.promosFechas = resultado);
-      this.boletosService.getPromosReferencia(params['id']).subscribe(resultado => this.promosReferencia = resultado);
+      this.cuartosService.getCuarto(params['id']).subscribe( resultado => this.cuarto = resultado[0]);
     });
   }
 
-  getEventos(){
-    this.eventosService.getCasas().subscribe( resultado => {
-      this.eventos = resultado
-      console.log(this.eventos );
-    });
-  }
-
-  getBoletos( event:any ){
-    this.id_evento = event.target.value
-    if(this.id_evento != null){
-      this.boletosService.getBoletos(this.id_evento).subscribe( resultado => this.boletos = resultado)
-    }
-    else{
-      return
-    }
-  }
-
-  guardarInfo(){
-    this.infoBoleto.nombre = this.formInfoBoleto.get('nombre').value;
-    this.infoBoleto.desc = this.formInfoBoleto.get('desc').value;
-    this.infoBoleto.inventario = this.formInfoBoleto.get('inventario').value;
-    this.infoBoleto.precio = this.formInfoBoleto.get('precio').value;
-
-
-    this.boletosService.buscarNombre(this.infoBoleto.nombre, this.infoBoleto.id).subscribe(datos => {
-      if(datos['estado'] == 0){
-        window.confirm(datos['mensaje']);
-        return
-      }
-      else if(datos['estado'] == 1){
-        this.boletosService.modificarBoleto(this.infoBoleto).subscribe( datos => {
+  guardarInfoCuarto(){
+    this.infoCuarto.nombre_cuarto = this.formInfoCuarto.get('nombre_cuarto').value;
+    this.infoCuarto.descripcion_cuarto = this.formInfoCuarto.get('descripcion_cuarto').value;
+        this.cuartosService.modificarInfoCuarto(this.infoCuarto).subscribe( datos => {
           if(datos['resultado'] == "ERROR"){
             console.log("ERROR");
             return
           }
           else if(datos['resultado'] == "OK"){
             this.refresh();
-            window.confirm("Boleto modificado con éxito");
+            window.confirm("Cuarto Modificado con exito modificado con éxito");
           }
         })
-      }
+  }
+
+  getSemestres(){
+    this.cuartosService.getSemestres().subscribe( resultado => {
+      this.semestres = resultado
+      console.log(this.semestres );
     });
-
   }
 
-  crearPromoFecha(){
-    this.infoPromoFechas.fechaInicio = this.formPromoFechas.get('fechaInicio').value
-    this.infoPromoFechas.fechaFin = this.formPromoFechas.get('fechaFin').value
-    this.infoPromoFechas.inventario = this.formPromoFechas.get('inventarioFechas').value
-    this.infoPromoFechas.precio = this.formPromoFechas.get('precioFechas').value
-
-    this.boletosService.crearPromoFecha(this.infoPromoFechas).subscribe( datos => {
-      if(datos['estado'] == -1){
-        window.confirm(datos['mensaje']);
-        return
-      }
-      else if(datos['estado'] == 0){
-        window.confirm(datos['mensaje']);
-        return
-      }
-      else{
-        if(datos['resultado'] == "ERROR"){
-          window.confirm("Ha habido un error.");
-          return
-        }
-        else if(datos['resultado'] == "OK"){
-          this.refresh();
-          this.formPromoFechas.reset();
-          window.confirm("Promoción creada con éxito.");
-          this.cerrarFechas.nativeElement.click();
-        }
-      }
-    })
-  }
-
-  crearPromoCodigo(){
-    this.infoPromoCodigo.codigo = this.formPromoCodigo.get('codigo').value;
-    this.infoPromoCodigo.inventario = this.formPromoCodigo.get('inventarioCodigo').value;
-    this.infoPromoCodigo.precio = this.formPromoCodigo.get('precioCodigo').value;
-
-    this.boletosService.buscarCodigo(this.infoPromoCodigo.codigo).subscribe(datos => {
-      if(datos['estado'] == 0){
-        this.errorCodigo = datos['mensaje'];
-        window.confirm(this.errorCodigo);
-      }
-      else if(datos['estado'] == 1){
-        this.boletosService.crearPromoCodigo(this.infoPromoCodigo).subscribe( datos => {
-          if(datos['resultado'] == "ERROR"){
-            console.log("ERROR");
-            return
-          }
-          else if(datos['resultado'] == "OK"){
-            this.refresh();
-            this.formPromoCodigo.reset()
-            window.confirm("Promocion creada con éxito");
-            this.cerrarCodigo.nativeElement.click();
-          }
-        });
+  guardarOferta() {
+    this.infoOferta.precio = this.formOferta.get('precio').value;
+    this.infoOferta.grupo = this.formOferta.get('grupo').value;
+    this.infoOferta.id_semestre = this.formOferta.get('id_semestre').value;
+    this.cuartosService.crearOferta(this.infoOferta).subscribe(datos => {
+      if (datos['resultado'] == 'OK') {
+        this.formOferta.reset();
       }
     });
   }
 
-  crearPromoReferecnia(){
-    if(this.formPromoReferencia.get('boleto').value == this.formPromoReferencia.get('boletoReferencia').value ){
-      window.confirm("No puede elegir el mismo boleto dos veces.");
-      return
-    }
-    else{
-      this.boletosService.crearPromoReferencia(this.formPromoReferencia.value).subscribe( datos => {
+  eliminarOferta( id_oferta:number ){
+    if(window.confirm("Seguro que quiere eliminar ésta oferta?")){
+      this.cuartosService.eliminarOferta(id_oferta).subscribe( datos => {
         if(datos['resultado'] == "ERROR"){
           console.log("ERROR");
           return
         }
         else if(datos['resultado'] == "OK"){
           this.refresh();
-          this.formPromoReferencia.reset();
-          window.confirm("Promocion creada con éxito");
-          this.cerrarReferencia.nativeElement.click();
+        }
+      })
+    }
+  }
+  eliminarImgCuarto(id: number) {
+    console.log(id)
+    if (confirm("Está seguro de querer eliminar esta imagen?")) {
+      this.cuartosService.eliminarImgCuarto(id).subscribe(datos => {
+		    if (datos['resultado'] == "OK") {
+          this.refresh();
+		      window.confirm("Imagen eliminada con éxito");
         }
       })
     }
   }
 
-  eliminarPromoFechas( id_promo:number ){
-    if(window.confirm("Seguro de querer eliminar ésta promoción?")){
-      this.boletosService.eliminarPromoFechas(id_promo).subscribe( datos => {
-        if(datos['resultado'] == "ERROR"){
-          console.log("ERROR");
-          return
-        }
-        else if(datos['resultado'] == "OK"){
-          this.refresh();
-        }
-      })
+  imgPrincipalCuarto(event) {
+    this.imgPrincipalSeleccionadaCuarto = <File>event.target.files[0];
+    this.formImgCuarto.controls['imgPrincipalCuarto'].setValue(this.imgPrincipalSeleccionadaCuarto);
+
+    if (event.target.files && event.target.files[0]) {
+      var reader = new FileReader();
+      reader.readAsDataURL(event.target.files[0]);
+
+      reader.onload = (event: any) => {
+        console.log(event.target.result);
+        this.urlPrincipalCuarto = event.target.result;
+      }
     }
   }
 
-  eliminarPromoCodigo( id_promo:number ){
-    if(window.confirm("Seguro de querer eliminar ésta promoción?")){
-      this.boletosService.eliminarPromoCodigo(id_promo).subscribe( datos => {
-        if(datos['resultado'] == "ERROR"){
-          console.log("ERROR");
-          return
+  multiImgCuarto(event) {
+
+    if (event.target.files && event.target.files[0]) {
+      for (let i = 0; i < event.target.files.length; i++) {
+        var reader = new FileReader();
+
+        reader.readAsDataURL(event.target.files[i]);
+        reader.onload = (event: any) => {
+          if (!this.validacionTamImgsCuarto) {
+            this.urlsCuarto.push(event.target.result);
+          }
         }
-        else if(datos['resultado'] == "OK"){
-          this.refresh();
+
+        var selectedFile = event.target.files[i];
+
+        if (!this.validacionTamImgsCuarto) {
+          this.imgsSeleccionadasCuarto.push(selectedFile);
         }
-      })
+      }
     }
+    console.log(this.imgsSeleccionadasCuarto);
+    // this.formImgE.controls['imgsCasa'].setValue(this.imgsSeleccionadas);
+  }
+  borrarImgPrincipalCuarto() {
+    this.urlPrincipalCuarto = null;
+    this.formImgCuarto.controls['imgPrincipal'].setValue("");
+    this.imgInputPriCua.nativeElement.value = null;
+  }
+  guardarImg() {
+    this.imgsCuarto.imgPrincipal = this.imgPrincipalSeleccionadaCuarto;
+    this.imgsCuarto.imgs = this.imgsSeleccionadasCuarto;
+    this.cuartosService.modificarImgsCuarto(this.imgsCuarto).subscribe(datos => {
+      if (datos['resultado'] == "ERROR") {
+        console.log("ERROR");
+        return
+      } else if (datos['resultado'] == "OK") {
+        this.refresh();
+
+        this.borrarImgPrincipalCuarto();
+        this.urlsCuarto = [];
+        this.imgsSeleccionadasCuarto = [];
+        this.imgsInputCua.nativeElement.value = null;
+        window.confirm("Imagen(es) modificada(s) con éxito");
+      }
+    });
   }
 
-  eliminarPromoReferencia( id_promo:number ){
-    if(window.confirm("Seguro de querer eliminar ésta promoción?")){
-      this.boletosService.eliminarPromoReferencia(id_promo).subscribe( datos => {
-        if(datos['resultado'] == "ERROR"){
-          console.log("ERROR");
-          return
-        }
-        else if(datos['resultado'] == "OK"){
-          this.refresh();
-        }
-      })
-    }
-  }
 }

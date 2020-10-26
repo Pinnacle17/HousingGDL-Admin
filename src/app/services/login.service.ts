@@ -14,6 +14,6 @@ export class LoginService {
   login( credenciales:any ){
     const CRED = serialize(credenciales);
     // return this.http.post(`https://proyectotapatio.com/PT-API-P/login/login.php`, CRED).pipe(retry(3))
-    return this.http.post(`http://localhost:8080/PT-API/login/login.php`, CRED).pipe(retry(3))
+    return this.http.post(`http://localhost/PT-API/login/login.php`, CRED).pipe(retry(3))
   }
 }
