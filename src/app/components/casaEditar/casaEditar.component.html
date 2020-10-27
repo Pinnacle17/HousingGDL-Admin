@@ -57,9 +57,9 @@
                             </div>
                             <div class="col-md-6">
                               <button class="btn btn-success ml-lg-2" type="button" (click)="activarCuarto( cuarto.id_cuarto )"
-                              *ngIf="cuarto.estado_cuarto==1">Activar</button>
+                              *ngIf="cuarto.estado_cuarto==0">Activar</button>
                           <button class="btn btn-danger ml-lg-2" type="button" (click)="desactivarCuarto( cuarto.id_cuarto )"
-                              *ngIf="cuarto.estado_cuarto==0">Desactivar</button>
+                              *ngIf="cuarto.estado_cuarto==1">Desactivar</button>
                                 <button class="btn btn-success float-right m-1" (click)="editarBoleto( cuarto.id_cuarto )">Editar</button>
                             </div>
                         </div>

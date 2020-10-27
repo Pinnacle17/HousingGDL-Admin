@@ -40,33 +40,6 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header">
-            <h4>Comentarios.</h4>
-        </div>
-        <div class="card-body">
-            <h5 class="text-danger" *ngIf="sinComentarios == true"> No hay comentarios. </h5>
-            <ng-container *ngIf="sinComentarios == false">
-                <div class="card" *ngFor="let comentario of comentarios">
-                    <div class="card-body">
-                        <div class="row h-100">
-                            <div class="col-md-2 text-center my-auto">
-                                <h6>{{ comentario.nombre_usuario }}</h6>
-                                <h5>{{ comentario.num_calificacion }} Puntos</h5>
-                            </div>
-                            <div class="col-md-8 text-left">
-                                <p>{{ comentario.opinion }}</p>
-                            </div>
-                            <div class="col-md-2 my-auto">
-                                <button type="button" class="btn btn-danger mx-auto my-auto d-block" (click)="eliminarComentario(comentario.id_calificacion)">Eliminar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </ng-container>
-        </div>
-    </div>
-
     <div class="card mb-3 border-primary">
         <div class="card-header border-primary">
             <h4>Opciones de edición</h4>
