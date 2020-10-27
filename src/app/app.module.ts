@@ -28,7 +28,7 @@ import es from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
 import { BoletoEditarComponent } from './components/boleto-editar/boleto-editar.component';
 import { RepartidorEditarComponent } from './components/repartidor-editar/repartidor-editar.component';
-import { BoletosService } from './services/boletos.service';
+import { CuartosService } from './services/cuartos.service';
 import { RepartidoresService } from './services/repartidores.service';
 import { LoginComponent } from './login/login.component';
 import { LayoutComponent } from './layout/layout.component';
@@ -70,7 +70,7 @@ registerLocaleData(es)
     UsuariosService,
     CasasService,
     PublicacionesService,
-    BoletosService,
+    CuartosService,
     RepartidoresService,
     { provide: LOCALE_ID, useValue: 'es-Mx' },
     {provide: LocationStrategy, useClass: HashLocationStrategy}

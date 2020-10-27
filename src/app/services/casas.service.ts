@@ -49,11 +49,6 @@ export class CasasService {
     return this.http.post(`${this.url}modificarInfoCasa.php`, INFOEVENTO_FD)//.pipe(retry(3))
   }
 
-  modificarHorarioCasa( horario:any ){
-    const HORARIOEVENTO_FD = serialize(horario);
-    return this.http.post(`${this.url}modificarHorarioCasa.php`, HORARIOEVENTO_FD)//.pipe(retry(3))
-  }
-
   modificarImgsCasa( imgs:any , id_casa:string){
     const IMGSEVENTO_FD = serialize(imgs);
     IMGSEVENTO_FD.append('id_casa',id_casa)
@@ -84,27 +79,18 @@ export class CasasService {
     return this.http.get(`${this.url}liberarLugar.php?orden_anuncio=${orden}&id_casa=${id}`)//.pipe(retry(3))
   }
 
-  getVentasEdad( id_casa:number){
-    return this.http.get(`${this.url}EdadCasa.php?id_casa=${id_casa}`)//.pipe(retry(3))
-  }
-
-  getVentasTotales( id_casa:number ){
-    return this.http.get(`${this.url}VentasTotales.php?id_casa=${id_casa}`)//.pipe(retry(3))
-  }
-
-  getVentasDia( fecha:any, id_casa:number ){
-    return this.http.get(`${this.url}VentasDia.php?id_casa=${id_casa}&fecha=${fecha}`)
-  }
-
-  getVentasR( fecha_1:any, fecha_2:any, id_casa:number ){
-    return this.http.get(`${this.url}VentasRango.php?id_casa=${id_casa}&fecha_i=${fecha_1}&fecha_f=${fecha_2}`)//.pipe(retry(3))
-  }
-
   getComentarios(id_casa:Number){
-    return this.http.get(`${this.url}VerComentarios.php?id_casa=${id_casa}`)//.pipe(retry(3))
+    return this.http.get(`${this.url}comentarios/verComentarios.php?id_casa=${id_casa}`)//.pipe(retry(3))
+  }
+  getComentariosNotificacion(id_casa:Number){
+    return this.http.get(`${this.url}comentarios/VerComentariosNotificacion.php?id_casa=${id_casa}`)//.pipe(retry(3))
+  }
+  DesactivarComentario(id_cal:number){
+    return this.http.get(`${this.url}comentarios/desactivarComentario.php?id_calificacion=${id_cal}`)//.pipe(retry(3))
   }
 
-  eliminarComentrio(id_cal:number){
-    return this.http.get(`${this.url}EliminarComentario.php?id_cal=${id_cal}`)//.pipe(retry(3))
+  ActivarComentario(id_cal:number){
+    return this.http.get(`${this.url}comentarios/activarComentario.php?id_calificacion=${id_cal}`)//.pipe(retry(3))
   }
+
 }

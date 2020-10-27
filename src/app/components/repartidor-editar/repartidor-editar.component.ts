@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RepartidoresService } from '../../services/repartidores.service';
-import { BoletosService } from 'src/app/services/boletos.service';
+import { CuartosService } from 'src/app/services/cuartos.service';
 import { CasasService } from 'src/app/services/casas.service';
 
 @Component({
@@ -30,13 +30,13 @@ export class RepartidorEditarComponent implements OnInit {
   constructor(private fb:FormBuilder,
               private activatedRoute:ActivatedRoute,
               private repartidoresService:RepartidoresService,
-              private boletosService:BoletosService,
+              private boletosService:CuartosService,
               private eventosService:CasasService
               ) { }
 
   ngOnInit() {
     this.getEventos();
-    this.getBoletosTodos();
+    //this.getBoletosTodos();
     this.formInfoInit();
     this.formsStockInit();
     this.activatedRoute.params.subscribe( params => {
@@ -89,9 +89,9 @@ export class RepartidorEditarComponent implements OnInit {
     });
   }
 
-  getBoletosTodos(){
+  /*getBoletosTodos(){
     this.boletosService.getBoletosTodos().subscribe(resultado => this.boletosTodos = resultado)
-  }
+  }*/
 
   get validacionCorreo(){
     return this.formInfo.get('correo').invalid && this.formInfo.get('correo').touched
@@ -156,7 +156,7 @@ export class RepartidorEditarComponent implements OnInit {
     });
   }
 
-  getBoletos( event:any ){
+  /*getBoletos( event:any ){
     this.id_evento = event.target.value
     if(this.id_evento != null){
       this.boletosService.getBoletos(this.id_evento).subscribe( resultado => this.boletos = resultado)
@@ -164,10 +164,10 @@ export class RepartidorEditarComponent implements OnInit {
     else{
       return
     }
-  }
+  }*/
 
   refresh(){
-    this.getBoletosTodos();
+    //this.getBoletosTodos();
     this.getEventos();
     this.activatedRoute.params.subscribe( params => {
       this.repartidoresService.getHistorial(params['id']).subscribe( resultado => this.historial = resultado);

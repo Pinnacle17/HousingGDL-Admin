@@ -4,7 +4,7 @@ import { OwlOptions } from 'ngx-owl-carousel-o';
 import { async, RxwebValidators } from '@rxweb/reactive-form-validators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CasasService } from '../../services/casas.service';
-import { BoletosService } from '../../services/boletos.service';
+import { CuartosService } from '../../services/cuartos.service';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 import { environment } from 'src/environments/environment'
@@ -16,17 +16,24 @@ import { environment } from 'src/environments/environment'
 export class CasaEditarComponent implements OnInit {
   imgUrl = environment.imgUrl
   formInfoE: FormGroup;
-  formFechas: FormGroup;
   formImgE: FormGroup;
-  formBoletos: FormGroup;
+  formCuartos: FormGroup;
 
   urls = [];
   urlPrincipal = null;
   urlCarousel = null;
 
+  urlsCuarto = [];
+  urlPrincipalCuarto = null;
+
+  cuarto: any = {};
+  id_cuarto: number = null;
   casa: any = {};
   id_casa: number = null;
 
+  imgPrincipalSeleccionadaCuarto: File = null;
+  imgsSeleccionadasCuarto: File[] = [];
+  listaImgCuarto: any[] = [];
   imgSeleccionada: File = null;
   imgCarouselSeleccionada: File = null;
   imgsSeleccionadas: File[] = [];
@@ -35,24 +42,18 @@ export class CasaEditarComponent implements OnInit {
   errorNombre: string = "";
 
   imgs: any = null;
-  boletos: any = null;
+  cuartos: any = null;
   mensajeError = null;
   errorOrden: string = null;
-  noBoletos: boolean = null;
-
-  edadData: any = null;
+  noCuartos: boolean = null;
 
   chartLabels: string[] = [];
   chartData: number[] = [];
 
-  ventasTotales: any = null;
-  ventasDia: any = null;
-  ventasRango: any = null;
-  hayVentasDia: boolean = null;
-  hayVentasRango: boolean = null;
-
   comentarios: any = null;
   sinComentarios: boolean = false;
+  comentariosNotificacion: any = null;
+  sinComentariosNotificacion: boolean = false;
 
   infoCasa: any = {
     id: null,
@@ -63,28 +64,26 @@ export class CasaEditarComponent implements OnInit {
     enlace: null
   };
 
-  fechasCasa: any = {
-    id: null,
-    diaInicio: null,
-    diaFin: null,
-    horaInicio: null,
-    horaFin: null
-  };
-
   imgsCasa: any = {
     id: null,
     imgPrincipal: null,
     imgCarousel: null,
     imgs: null
   };
-
-  boletoCasa: any = {
+  Cuarto: any = {
+    id_casa: null,
+    nombre_cuarto: null,
+    descripcion_cuarto: null,
+    imgPrincipalCuarto: null,
+    imgsCuarto: null
+  };
+  /*boletoCasa: any = {
     id: null,
     nombre: null,
     desc: null,
     inventario: null,
     precio: null
-  }
+  }*/
 
   public customOptions: OwlOptions = {
     loop: true,
@@ -114,21 +113,23 @@ export class CasaEditarComponent implements OnInit {
   @ViewChild('imgInputP') imgInputP: ElementRef;
   @ViewChild('imgInputC') imgInputC: ElementRef;
   @ViewChild('imgsInput') imgsInput: ElementRef;
+  @ViewChild('imgInputPriCua') imgInputPriCua: ElementRef;
+  @ViewChild('imgsInputCua') imgsInputCua: ElementRef;
   @ViewChild('modalError') modalError;
   @ViewChild('cerrarModalError') cerrarModalError;
+  @ViewChild('cerrar') cerrar;
 
 
   constructor(private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private casasService: CasasService,
-    private boletosService: BoletosService,
+    private cuartosService: CuartosService,
     private router: Router) { }
 
   ngOnInit() {
     this.formInfoInit();
-    this.formFechasInit();
     this.formImgInit();
-    this.formBoletosInit();
+    this.formCuartoInit();
     this.activatedRoute.params.subscribe(params => {
       this.casasService.getCasa(params['id']).subscribe(resultado => {
         console.log(resultado)
@@ -142,31 +143,24 @@ export class CasaEditarComponent implements OnInit {
           direccion_casa: this.casa.direccion_casa,
         });
 
-        this.formFechas.setValue({
-          diaInicio: this.casa.dia_inicio_casa,
-          diaFin: this.casa.dia_conclusion_casa,
-          horaInicio: this.casa.hora_inicio_casa,
-          horaFin: this.casa.hora_conclusion_casa
-        });
-
       });
       this.casasService.getImgs(params['id']).subscribe(resultado => this.imgs = resultado);
-      this.boletosService.getBoletos(params['id']).subscribe(resultado => {
+      this.cuartosService.getCuartos(params['id']).subscribe(resultado => {
         if (resultado == null) {
-          this.noBoletos = true;
+          this.noCuartos = true;
         } else {
-          this.noBoletos = false;
-          this.boletos = resultado;
+          this.noCuartos = false;
+          this.cuartos = resultado;
         }
       });
 
       this.id_casa = params['id'];
       this.getComentarios(params['id']);
-      this.getVentasTotales(params['id']);
+      this.getComentariosNotificacion(params['id']);
       this.infoCasa.id = params['id'];
-      this.fechasCasa.id = params['id'];
       this.imgsCasa.id = params['id'];
-      this.boletoCasa.id = params['id'];
+      this.Cuarto.id_casa = params['id'];
+      //this.boletoCasa.id = params['id'];
 
     });
   }
@@ -182,71 +176,49 @@ export class CasaEditarComponent implements OnInit {
       }
     })
   }
-
+  getComentariosNotificacion(id_casa) {
+    this.casasService.getComentariosNotificacion(id_casa).subscribe(resultado => {
+      this.comentariosNotificacion = resultado;
+      if (this.comentariosNotificacion == null) {
+        this.sinComentariosNotificacion = true;
+      }
+      else {
+        this.sinComentariosNotificacion = false;
+      }
+    })
+  }
   eliminarComentario(id_calificacion: number) {
-    if (window.confirm("Está seguro de querer eliminar el comentario?")) {
-      this.casasService.eliminarComentrio(id_calificacion).subscribe(() => {
+    if (window.confirm("Está seguro de querer desactivar el comentario?")) {
+      this.casasService.DesactivarComentario(id_calificacion).subscribe(() => {
         this.activatedRoute.params.subscribe(() => {
           this.activatedRoute.params.subscribe(params => {
             this.getComentarios(params['id']);
+            this.getComentariosNotificacion(params['id']);
+          });
+        });
+      });
+    }
+  }
+  activarComentario(id_calificacion: number) {
+    if (window.confirm("Está seguro de querer activar el comentario?")) {
+      this.casasService.ActivarComentario(id_calificacion).subscribe(() => {
+        this.activatedRoute.params.subscribe(() => {
+          this.activatedRoute.params.subscribe(params => {
+            this.getComentariosNotificacion(params['id']);
           });
         });
       });
     }
   }
 
-  
-
-  getVentasTotales(id_casa: number) {
-    this.casasService.getVentasTotales(id_casa).subscribe(resultado => {
-      this.ventasTotales = resultado;
-      console.log(this.ventasTotales);
-    })
-  }
-
-  buscarVentasDia(fecha: any) {
-    this.casasService.getVentasDia(fecha, this.id_casa).subscribe(resultado => {
-      if (resultado == null) {
-        this.hayVentasDia = false;
-        return
-      }
-      else {
-        this.hayVentasDia = true;
-        this.ventasDia = resultado;
-        console.log(this.ventasDia);
-      }
-    })
-  }
-
-  getVentasRango(fecha_1: any, fecha_2: any) {
-    this.casasService.getVentasR(fecha_1, fecha_2, this.id_casa).subscribe(resultado => {
-      if (resultado == null) {
-        this.hayVentasRango = false;
-        return
-      }
-      else {
-        this.hayVentasRango = true;
-        this.ventasRango = resultado;
-        console.log(this.ventasRango);
-      }
-    })
-  }
 
   formInfoInit() {
     this.formInfoE = this.fb.group({
       nombre_casa: ['', [Validators.required]],
       ambiente: ['', [Validators.required]],
       descripcion_casa: ['', [Validators.required]],
+      direccion_casa: ['', [Validators.required]],
       orden_anuncio: ['', Validators.required],
-    })
-  }
-
-  formFechasInit() {
-    this.formFechas = this.fb.group({
-      diaInicio: ['',],
-      diaFin: ['',],
-      horaInicio: ['',],
-      horaFin: ['',],
     })
   }
 
@@ -258,78 +230,62 @@ export class CasaEditarComponent implements OnInit {
     })
   }
 
-  formBoletosInit() {
-    this.formBoletos = this.fb.group({
-      nombre: ['', Validators.required],
-      desc: ['', Validators.required],
-      inventario: ['', Validators.required],
-      precio: ['', Validators.required]
+  formCuartoInit() {
+    this.formCuartos = this.fb.group({
+      nombre_cuarto: ['', [Validators.required]],
+      descripcion_cuarto: ['', [Validators.required]],
+      imgPrincipalCuarto: ['', [Validators.required, RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })]],
+      imgsCuarto: ['', [Validators.required, RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })]]
     })
   }
 
-  compararFechas() {
-    let inicio = new Date(this.formFechas.get('diaInicio').value);
-    inicio.setMinutes(inicio.getMinutes() + inicio.getTimezoneOffset())
-
-    let cierre = new Date(this.formFechas.get('diaFin').value);
-    cierre.setMinutes(cierre.getMinutes() + cierre.getTimezoneOffset())
-
-    let hoy = new Date();
-    hoy.setSeconds(0);
-    hoy.setMinutes(0);
-    hoy.setHours(0);
-
-    if (inicio > cierre) {
-      this.mensajeError = "El casa no puede terminar antes de empezar."
-      this.formFechas.setErrors({ 'incorrect': true });
-      return true
-    }
-    else if (hoy > inicio) {
-      this.mensajeError = "El casa no puede empezar hoy o antes de hoy."
-      this.formFechas.setErrors({ 'incorrect': true });
-      return true
-    }
-    else if (hoy > cierre) {
-      this.mensajeError = "El casa no puede terminar hoy o antes de hoy."
-      this.formFechas.setErrors({ 'incorrect': true });
-      return true
-    }
-    else {
-      return false
-    }
+  get validacionNombre() {
+    return false//return this.formInfoE.get('nombre_casa').invalid && this.formInfoE.get('nombre_casa').touched;
   }
 
-  compararHorarios() {
-    let inicio = new Date(this.formFechas.get('diaInicio').value);
-    let cierre = new Date(this.formFechas.get('diaFin').value);
+  get nombreExistente() {
+    return false//return this.formInfoE.get('nombre_casa').invalid && this.formInfoE.get('nombre_casa').value != '' && !this.formInfoE.get('nombre_casa').pristine;
+  }
+
+  get validacionAmbiente() {
+    return false//return this.formInfoE.get('ambiente').invalid && this.formInfoE.get('ambiente').touched;
+  }
 
 
-    if (inicio.getTime() === cierre.getTime()) {
+  get validacionDesc() {
+    return false//return this.formInfoE.get('descripcion_casa').invalid && this.formInfoE.get('descripcion_casa').touched;
+  }
 
-      let horarioInicio = this.formFechas.get('horaInicio');
-      let horarioCierre = this.formFechas.get('horaFin');
-
-      if (horarioInicio.value >= horarioCierre.value) {
-        this.formFechas.setErrors({ 'incorrect': true })
-        return true
-      }
-      else {
-        return false
-
-      }
-    }
+  get validacionOrden() {
+    return false//return this.formInfoE.get('orden_anuncio').invalid && this.formInfoE.get('orden_anuncio').touched;
   }
 
   get validacionTamImg() {
-    return this.formImgE.get('imgPrincipal').invalid && this.formImgE.get('imgPrincipal').dirty
+    return false//return this.formImgE.get('imgPrincipal').invalid && this.formImgE.get('imgPrincipal').dirty
   }
 
   get validacionTamImgs() {
-    return this.formImgE.get('imgsCasa').invalid
+    return false//return this.formImgE.get('imgsCasa').invalid
   }
 
   get validacionTamImgCarousel() {
-    return this.formImgE.get('imgCarousel').invalid && this.formImgE.get('imgCarousel').dirty
+    return false//return this.formImgE.get('imgCarousel').invalid && this.formImgE.get('imgCarousel').dirty
+  }
+
+  get validacionImgCuarto() {
+    return false//return this.formCuartos.get('imgPrincipalCuarto').invalid && this.formCuartos.get('imgPrincipalCuarto').touched && this.formCuartos.get('imgPrincipalCuarto').value == '';
+  }
+
+  get validacionTamImgPCuarto() {
+    return false//return this.formCuartos.get('imgPrincipalCuarto').invalid && this.formImgE.get('imgPrincipalCuarto').dirty
+  }
+
+  get validacionImgsCuarto() {
+    return false//return this.formCuartos.get('imgsCuarto').invalid && this.formCuartos.get('imgsCuarto').touched && this.formCuartos.get('imgsCuarto').value == '';
+  }
+
+  get validacionTamImgsCuarto() {
+    return false//return this.formCuartos.get('imgsCuarto').invalid
   }
 
   editarBoleto(id: number) {
@@ -340,12 +296,12 @@ export class CasaEditarComponent implements OnInit {
     this.activatedRoute.params.subscribe(params => {
       this.casasService.getCasa(params['id']).subscribe(resultado => this.casa = resultado[0]);
       this.casasService.getImgs(params['id']).subscribe(resultado => this.imgs = resultado);
-      this.boletosService.getBoletos(params['id']).subscribe(resultado => {
+      this.cuartosService.getCuartos(params['id']).subscribe(resultado => {
         if (resultado == null) {
-          this.noBoletos = true;
+          this.noCuartos = false;
         } else {
-          this.noBoletos = false;
-          this.boletos = resultado;
+          this.noCuartos = true;
+          this.cuartos = resultado;
         }
       });
     });
@@ -398,77 +354,16 @@ export class CasaEditarComponent implements OnInit {
     })
   }
 
-  guardarFechas() {
-    this.fechasCasa.diaInicio = this.formFechas.get('diaInicio').value;
-    this.fechasCasa.diaFin = this.formFechas.get('diaFin').value;
-    this.fechasCasa.horaInicio = this.formFechas.get('horaInicio').value;
-    this.fechasCasa.horaFin = this.formFechas.get('horaFin').value;
-    console.log(this.fechasCasa.horarioInicio);
-    console.log(this.fechasCasa.horarioFin);
-
-    console.log(this.fechasCasa);
-
-    this.casasService.modificarHorarioCasa(this.fechasCasa).subscribe(datos => {
-      if (datos['resultado'] == "ERROR") {
-        console.log("ERROR");
-        return
-      } else if (datos['resultado'] == "OK") {
-        this.refresh();
-        window.confirm("Horario modificado con éxito");
-      }
-    })
-  }
-
-  guardarImg() {
-    this.imgsCasa.imgPrincipal = this.imgSeleccionada;
-    this.imgsCasa.imgCarousel = this.imgCarouselSeleccionada;
-    this.imgsCasa.imgs = this.imgsSeleccionadas;
-    this.casasService.modificarImgsCasa(this.imgsCasa,this.casa.id_casa.toString()).subscribe(datos => {
-      if (datos['resultado'] == "ERROR") {
-        console.log("ERROR");
-        return
-      } else if (datos['resultado'] == "OK") {
-        this.refresh();
-
-        this.borrarImgPrincipal();
-        this.borrarImgCarousel();
-
-        this.urls = [];
-        this.imgsSeleccionadas = [];
-        this.imgsInput.nativeElement.value = null;
-        window.confirm("Imagen(es) modificada(s) con éxito");
-      }
-    });
-  }
-
-  guardarBoletos() {
-    this.boletoCasa.nombre = this.formBoletos.get('nombre').value;
-    this.boletoCasa.desc = this.formBoletos.get('desc').value;
-    this.boletoCasa.inventario = this.formBoletos.get('inventario').value;
-    this.boletoCasa.precio = this.formBoletos.get('precio').value;
-
-    this.boletosService.buscarNombre(this.boletoCasa.nombre, this.boletoCasa.id).subscribe(datos => {
-      if (datos['estado'] == 0) {
-        this.errorNombre = datos['mensaje'];
-        window.confirm(this.errorNombre);
-        return
-      }
-      else if (datos['estado'] == 1) {
-        this.boletosService.crearBoleto(this.boletoCasa).subscribe(datos => {
-          if (datos['resultado'] == "ERROR") {
-            console.log("ERROR");
-            return
-          }
-          else if (datos['resultado'] == "OK") {
-            this.refresh();
-            window.confirm("Boleto creado con éxito");
-            this.formBoletos.reset();
-          }
-        })
-      }
-    });
-
-
+  eliminarImgCasa(id: number) {
+    console.log(id)
+    if (confirm("Está seguro de querer eliminar esta imagen?")) {
+      this.casasService.eliminarImgCasa(id).subscribe(datos => {
+		    if (datos['resultado'] == "OK") {
+          this.refresh();
+		      window.confirm("Imagen eliminada con éxito");
+        }
+      })
+    }
   }
 
   imgPrincipal(event) {
@@ -527,8 +422,8 @@ export class CasaEditarComponent implements OnInit {
 
   borrarImgPrincipal() {
     this.urlPrincipal = null;
-    this.formImgE.controls['imgPrincipal'].setValue("");
-    this.imgInputP.nativeElement.value = null;
+    this.formCuartos.controls['imgPrincipalCuarto'].setValue("");
+    this.imgInputPriCua.nativeElement.value = null;
   }
 
   borrarImgCarousel() {
@@ -552,22 +447,114 @@ export class CasaEditarComponent implements OnInit {
 
     console.log(this.formImgE);
   }
+  guardarImg() {
+    this.imgsCasa.imgPrincipal = this.imgSeleccionada;
+    this.imgsCasa.imgCarousel = this.imgCarouselSeleccionada;
+    this.imgsCasa.imgs = this.imgsSeleccionadas;
+    this.casasService.modificarImgsCasa(this.imgsCasa,this.casa.id_casa.toString()).subscribe(datos => {
+      if (datos['resultado'] == "ERROR") {
+        console.log("ERROR");
+        return
+      } else if (datos['resultado'] == "OK") {
+        this.refresh();
 
-  eliminarImgCasa(id: number) {
-    console.log(id)
-    if (confirm("Está seguro de querer eliminar esta imagen?")) {
-      this.casasService.eliminarImgCasa(id).subscribe(datos => {
-        if (datos['resultado'] == "OK") {
-          this.refresh();
-          window.confirm("Imagen eliminada con éxito");
-        }
-      })
+        this.borrarImgPrincipal();
+        this.borrarImgCarousel();
+
+        this.urls = [];
+        this.imgsSeleccionadas = [];
+        this.imgsInput.nativeElement.value = null;
+        window.confirm("Imagen(es) modificada(s) con éxito");
+      }
+    });
+  }
+
+  imgPrincipalCuarto(event) {
+    this.imgPrincipalSeleccionadaCuarto = <File>event.target.files[0];
+    this.formCuartos.controls['imgPrincipalCuarto'].setValue(this.imgPrincipalSeleccionadaCuarto);
+
+    if (event.target.files && event.target.files[0]) {
+      var reader = new FileReader();
+      reader.readAsDataURL(event.target.files[0]);
+
+      reader.onload = (event: any) => {
+        console.log(event.target.result);
+        this.urlPrincipalCuarto = event.target.result;
+      }
     }
   }
 
-  eliminarBoleto(id_boleto: number) {
-    if (window.confirm("Está seguro de querer eliminar este boleto?")) {
-      this.boletosService.eliminarBoleto(id_boleto).subscribe(datos => {
+  multiImgCuarto(event) {
+
+    if (event.target.files && event.target.files[0]) {
+      for (let i = 0; i < event.target.files.length; i++) {
+        var reader = new FileReader();
+
+        reader.readAsDataURL(event.target.files[i]);
+        reader.onload = (event: any) => {
+          if (!this.validacionTamImgsCuarto) {
+            this.urlsCuarto.push(event.target.result);
+          }
+        }
+
+        var selectedFile = event.target.files[i];
+
+        if (!this.validacionTamImgsCuarto) {
+          this.imgsSeleccionadasCuarto.push(selectedFile);
+        }
+      }
+    }
+    console.log(this.imgsSeleccionadasCuarto);
+    // this.formImgE.controls['imgsCasa'].setValue(this.imgsSeleccionadas);
+  }
+
+  borrarImgPrincipalCuarto() {
+    this.urlPrincipalCuarto = null;
+    this.formCuartos.controls['imgPrincipalCuarto'].setValue("");
+    this.imgInputPriCua.nativeElement.value = null;
+  }
+
+  borrarImgsCuarto(url: any, index: number) {
+    this.urlsCuarto = this.urlsCuarto.filter((a) => a !== url);
+    this.listaImgCuarto.splice(index, 1);
+    this.imgsSeleccionadasCuarto.splice(index, 1);
+
+    this.formCuartos.controls['imgsCuarto'].reset();
+
+    console.log(this.formCuartos.get('imgsCuarto').value);
+    if (this.imgsSeleccionadasCuarto.length == 0) {
+      this.formCuartos.controls['imgsCuarto'].setValue("");
+      this.imgsInputCua.nativeElement.value = null;
+    }
+
+    console.log(this.formCuartos);
+  }
+
+  guardarCuarto() {
+    this.cuartosService.crearCuarto(this.formCuartos.value, this.casa.id_casa.toString()).subscribe(datos => {
+      if (datos['resultado'] == 'OK') {
+        this.activatedRoute.params.subscribe(params => {
+          this.cuartosService.getCuartos(params['id']).subscribe(resultado => {
+              this.cuartos = resultado;
+          });
+        });
+        this.formCuartos.reset();
+
+        this.borrarImgPrincipalCuarto();
+
+        this.urlsCuarto = [];
+        this.urlPrincipalCuarto = [];
+        this.imgsInputCua.nativeElement.value = null;
+        this.cerrar.nativeElement.click();
+      }
+    });
+
+
+  }
+
+  desactivarCuarto(id_cuarto: number) {
+    if (window.confirm("Está seguro de querer desactivar este cuarto")) {
+      this.cuartosService.desactivarCuarto(id_cuarto).subscribe(datos => {
         if (datos['resultado'] == "OK") {
           this.refresh();
           window.confirm("Boleto eliminado con éxito");
@@ -575,4 +562,16 @@ export class CasaEditarComponent implements OnInit {
       })
     }
   }
+
+  activarCuarto(id_cuarto: number) {
+    if (window.confirm("Está seguro de querer activar este cuarto?")) {
+      this.cuartosService.activarCuarto(id_cuarto).subscribe(datos => {
+        if (datos['resultado'] == "OK") {
+          this.refresh();
+          window.confirm("Boleto eliminado con éxito");
+        }
+      })
+    }
+  }
+
 }
