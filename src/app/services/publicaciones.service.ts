@@ -9,7 +9,7 @@ import { serialize } from 'object-to-formdata';
 export class PublicacionesService {
 
   // url = "https://proyectotapatio.com/PT-API-P/publicaciones/";
-  url = "http://localhost:8080/PT-API/publicaciones/";
+  url = "http://localhost/casas-php/PT-API-P/admin/publicaciones/";
 
   constructor(private http:HttpClient) { }
 
@@ -53,6 +53,6 @@ export class PublicacionesService {
   }
 
   buscarNombre( nombre:string, id:number = null ){
-    return this.http.get(`${this.url}consultaNombre.php?nombre=${nombre}&id=${id}`).pipe(retry(3))
+    return this.http.get(`${this.url}consultaNombre.php?titulo=${nombre}`).pipe(retry(3))
   }
 }

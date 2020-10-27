@@ -288,19 +288,6 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
   }
 
   guardarPublicacion() {
-    console.log(this.formPublicaciones);
-    if (this.formPublicaciones.invalid) {
-      Object.values(this.formPublicaciones.controls).forEach(control => {
-
-        if (control instanceof FormGroup) {
-          Object.values(control.controls).forEach(control => control.markAllAsTouched());
-        } else {
-          control.markAllAsTouched();
-        }
-      });
-      return;
-    } else {
-
       this.publicacionesService.buscarNombre(this.formPublicaciones.get('titulo').value).subscribe(datos => {
         if (datos['estado'] == 0) {
           this.errorNombre = datos['mensaje'];
@@ -324,5 +311,4 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
         }
       });
     }
-  }
 }
