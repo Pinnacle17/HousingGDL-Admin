@@ -302,11 +302,9 @@
                                             <label for="imgsCuarto">Imagenes de el cuarto: <small class="text-danger">*</small></label>
                                             <input #imgsInputCua [writeFile]="true" type='file' id="imgsCuarto" accept=".jpg"
                                                 (change)="multiImgCuarto($event)" multiple formControlName="imgsCuarto">
-                                            <small *ngIf="validacionImgsCuarto" class="form-text text-danger">Mínimo una imágen.</small>
-                                            <small *ngIf="validacionTamImgsCuarto && formCuartos.invalid" class="form-text text-danger">Error:
-                                                Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
                                             <div class="row" *ngFor='let url of urlsCuarto; let i = index'>
                                                 <div class="col-md-9">
+                                                    <h6 class="text-center">{{ listaImgCuarto[i] }}</h6>
                                                     <img [src]="url" height="200" class="float-right"><br>
                                                 </div>
                                                 <div class="col-md-3">
@@ -315,9 +313,13 @@
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
+
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row mb-3 mt-3" *ngFor='let url of badUrls; let i = index'>
+                                      <small *ngIf="errorTamImgs && sinImagen == false" class="form-text text-danger ml-4">La imagen {{ badUrls[i] }} no puede ser ingresada. Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
+                                  </div>
 
                                 <button class="btn btn-success btn-block mx-auto" style="width: 25%; display: block;" type="submit">Crear Cuarto</button>
                             </form>

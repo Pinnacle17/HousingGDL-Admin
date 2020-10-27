@@ -55,6 +55,11 @@ export class CasaEditarComponent implements OnInit {
   comentariosNotificacion: any = null;
   sinComentariosNotificacion: boolean = false;
 
+  errorTamImgs: boolean = false;
+  badUrls: any = [];
+  sinImagen: boolean = false;
+
+
   infoCasa: any = {
     id: null,
     nombre: null,
@@ -485,7 +490,7 @@ export class CasaEditarComponent implements OnInit {
   }
 
   multiImgCuarto(event) {
-
+/*
     if (event.target.files && event.target.files[0]) {
       for (let i = 0; i < event.target.files.length; i++) {
         var reader = new FileReader();
@@ -506,6 +511,46 @@ export class CasaEditarComponent implements OnInit {
     }
     console.log(this.imgsSeleccionadasCuarto);
     // this.formImgE.controls['imgsCasa'].setValue(this.imgsSeleccionadas);
+    */
+    if(event.target.files && event.target.files.length) {
+      for (let i = 0; i < event.target.files.length; i++) {
+
+        var reader = new FileReader();
+        let file = event.target.files[i];
+        let img = new Image();
+
+        img.src = window.URL.createObjectURL(file);
+
+        reader.readAsDataURL(event.target.files[i]);
+        reader.onload = (event: any) => {
+
+          const alto = img.naturalHeight;
+          const ancho = img.naturalWidth;
+
+          window.URL.revokeObjectURL(file);
+
+          if(alto < 690 || alto > 2160 || ancho < 950 ||ancho > 4096){
+            this.errorTamImgs = true;
+            this.badUrls.push(file.name)
+          }
+          else{
+            this.urlsCuarto.push(event.target.result);
+            this.imgsSeleccionadasCuarto.push(file);
+            this.listaImgCuarto.push(file.name);
+            this.formCuartos.controls['imgsCuarto'].setValue(this.imgsSeleccionadasCuarto);
+          }
+        };
+
+        this.sinImagen = false;
+      }
+    }
+    else{
+      this.sinImagen = true;
+      return
+    }
+    console.log(this.formCuartos.get('imgsCuarto').value);
+    console.log(this.formCuartos);
+
   }
 
   borrarImgPrincipalCuarto() {
