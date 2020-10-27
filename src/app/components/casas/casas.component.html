@@ -117,8 +117,8 @@
                             <label for="direccionCasa">Direccion: <small class="text-danger">*</small></label>
                             <input type="text" class="form-control" id="direccionCasa"
                                 placeholder="Ingrese la direccion de la Casa" formControlName="direccion_casa"
-                                [class.is-invalid]="validacionNombre || nombreExistente">
-                            <small *ngIf="validacionNombre" class="form-text text-danger">Obligatorio.</small>
+                                [class.is-invalid]="validacionDireccion">
+                            <small *ngIf="validacionDireccion" class="form-text text-danger">Obligatorio.</small>
                         </div>
                     </div>
                     <div class="input-group mb-3">

@@ -174,7 +174,7 @@ export class CasasComponent implements OnInit, OnDestroy {
   activarCasa(id_casa: number) {
     if (confirm('Está seguro de querer activar esta casa?')) {
       this.casasService.activarCasa(id_casa).subscribe(()=>this.getCasas())
-      
+
     }
   }
 
@@ -219,6 +219,9 @@ export class CasasComponent implements OnInit, OnDestroy {
     return this.formCasas.get('ambiente').invalid && this.formCasas.get('ambiente').touched;
   }
 
+  get validacionDireccion() {
+    return this.formCasas.get('direccion_casa').invalid && this.formCasas.get('direccion_casa').touched;
+  }
 
   get validacionDesc() {
     return this.formCasas.get('descripcion_casa').invalid && this.formCasas.get('descripcion_casa').touched;
