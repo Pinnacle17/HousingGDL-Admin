@@ -7,33 +7,27 @@
         <div class="card-body">
             <div class="card mb-3 border-primary">
                 <div class="card-header border-primary text-center">
-                    <h4> {{ casa.nombre_casa}} </h4>
+                    <h4> {{ cuarto.nombre_cuarto}} </h4>
                 </div>
                 <div class="pt-4 text-center mb-3">
                     <h4>Imagen Principal.</h4>
-                    <img [src]="imgUrl+casa.principal_img" alt="img_principal" class="figure-img img-fluid rounded mx-auto" width="950" height="650">
+                    <img [src]="imgUrl+cuarto.principal_img" alt="img_principal" class="figure-img img-fluid rounded mx-auto" width="950" height="650">
                 </div>
                 <div class="card-body text-center">
                     <h4>Imágenes Generales.</h4>
                     <owl-carousel-o [options]="customOptions">
                         <ng-template carouselSlide *ngFor="let img of imgs">
                             <div class="slide">
-                                <img [src]="imgUrl+img.ruta_imagen_casa" alt="imgs" width="300" height="300" class="p-1 figure-img rounded">
+                                <img [src]="imgUrl+img.ruta_imagen_cuarto" alt="imgs" width="300" height="300" class="p-1 figure-img rounded">
                             </div>
                         </ng-template>
                     </owl-carousel-o>
                     <hr>
                     <div class="container-fluid text-left">
                         <h4>Descripción.</h4>
-                        <p> {{casa.descripcion_casa}} </p>
+                        <p> {{cuarto.descripcion_cuarto}} </p>
                     </div>
                     <hr>
-                </div>
-                <div class="card-footer">
-                    <p class="card-text">
-                        <small class="text-muted"> Direccion: {{casa.direccion_casa}} </small><br>
-
-                    </p>
                 </div>
             </div>
 
@@ -57,47 +51,27 @@
 
                     <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                         <div class="card-body">
-                            <form [formGroup]="formInfoE" (ngSubmit)="guardarInfo()">
+                            <form [formGroup]="formInfoCuarto" (ngSubmit)="guardarInfoCuarto()">
                                 <div class="form-row mb-3">
                                     <div class="col-md-12">
-                                        <label for="nombreCasa">Nombre: <small class="text-danger">*</small></label>
-                                        <input type="text" class="form-control" id="nombreCasa" placeholder="Ingrese el Nombre de la Casa" formControlName="nombre_casa" [class.is-invalid]="validacionNombre || nombreExistente">
+                                        <label for="nombreCuarto">Nombre: <small class="text-danger">*</small></label>
+                                        <input type="text" class="form-control" id="nombreCuarto" placeholder="Ingrese el nombre del cuarto" formControlName="nombre_cuarto" [class.is-invalid]="validacionNombre || nombreExistente">
                                         <small *ngIf="validacionNombre" class="form-text text-danger">Obligatorio.</small>
-                                    </div>
-                                </div>
-
-                                <div class="input-group form-row mb-3">
-                                    <label for="ambiente-col">Ambiente: <small class="text-danger">*</small></label><br>
-                                    <div class="col-md-12" id="ambiente-col">
-                                        <input type="radio" id="ambiente1" value="0" formControlName="ambiente" [class.is-invalid]="validacionAmbiente">
-                                        <label for="ambiente1" class="form-check-label"> Fiesta</label><br>
-
-                                        <input type="radio" id="ambiente2" value="1" formControlName="ambiente" [class.is-invalid]="validacionAmbiente">
-                                        <label for="ambiente2" class="form-check-label"> Relax</label>
-                                        <small *ngIf="validacionAmbiente" class="form-text text-danger">Obligatorio.</small>
                                     </div>
                                 </div>
 
                                 <div class="input-group form-row mb-3">
                                     <div class="col-md-12">
                                         <label for="descCasa">Descripción: <small class="text-danger">*</small></label>
-                                        <textarea id="descCasa" class="form-control" rows="5" formControlName="descripcion_casa" [class.is-invalid]="validacionDesc"></textarea>
+                                        <textarea id="descCasa" class="form-control" rows="5" formControlName="descripcion_cuarto" [class.is-invalid]="validacionDesc"></textarea>
                                         <small *ngIf="validacionDesc" class="form-text text-danger">Breve Descripción Obligatoria.</small>
-                                    </div>
-                                </div>
-
-                                <div class="input-group form-row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="ordenImg">Orden de Casa: <small class="text-danger">*</small> <small>(Posición de imagen principal en el carousel de casas)</small></label>
-                                        <input type="number" class="form-control" id="ordenImg" min="1" max="15" step="1" value="1" formControlName="orden_anuncio" [class.is-invalid]="validacionOrden">
-                                        <small *ngIf="validacionOrden" class="form-text text-danger">Orden Obligatorio.</small>
                                     </div>
                                 </div>
 
                                 <hr>
                                 <div class="input-group form-row mb-3">
                                     <div class="col-md-12 text-center">
-                                        <button [disabled]="formInfoE.invalid" class="btn btn-success" type="submit">Guardar</button>
+                                        <button [disabled]="formInfoCuarto.invalid" class="btn btn-success" type="submit">Guardar</button>
                                     </div>
                                     <button #modalError type="button" class="invisible" data-toggle="modal" data-target="#modalError"></button>
                                 </div>
@@ -116,11 +90,11 @@
                     </div>
                     <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                         <div class="card-body">
-                            <form [formGroup]="formImgE" (ngSubmit)="guardarImg()">
+                            <form [formGroup]="formImgCuarto" (ngSubmit)="guardarImg()">
                                 <div class="input-group form-row mb-3">
                                     <div class="col-md-6">
-                                        <label for="imgPrincipal">Imagen Principal del Casa:</label><br>
-                                        <input #imgInputP type="file" id="imgPrincipal" accept=".jpg" (change)="imgPrincipal($event)" formControlName="imgPrincipal">
+                                        <label for="imgPrincipal">Imagen Principal del Cuarto:</label><br>
+                                        <input #imgInputPriCua type="file" id="imgPrincipal" accept=".jpg" (change)="imgPrincipalCuarto($event)" formControlName="imgPrincipal">
                                         <small *ngIf="validacionTamImg" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
                                         <div class="row border" *ngIf="(urlPrincipal != null) && (!validacionTamImg)">
                                             <div class="col-md-12">
@@ -133,8 +107,8 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="imgCasa">Imagenes de la Casa:</label><br>
-                                        <input #imgsInput type='file' id="imgCasa" accept=".jpg" (change)="multiImg($event)" multiple formControlName="imgsCasa">
+                                        <label for="imgCasa">Imagenes del Cuarto:</label><br>
+                                        <input #imgsInputCua type='file' id="imgCasa" accept=".jpg" (change)="multiImg($event)" multiple formControlName="imgsCuarto">
                                         <small *ngIf="validacionTamImgs" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
                                         <ng-container *ngIf="(urls != null) && (!validacionTamImgs)">
                                             <div class="row border" *ngFor='let url of urls; let i = index'>
@@ -151,24 +125,8 @@
                                         </div>
                                         <div class="row mt-3 border" *ngFor='let img of imgs'>
                                             <div class="col-md-12 text-center">
-                                                <img [src]="imgUrl+img.ruta_imagen_casa " height="300" width="400"><br>
-                                                <button type="button" class="btn btn-danger" (click)="eliminarImgCasa( img.id_imagen_casa )">Eliminar</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-row mb-3">
-
-                                    <div class="col-md-6">
-                                        <label for="imgCarousel">Imagen de Carousel:</label><br>
-                                        <input #imgInputC type="file" id="imgCarousel" accept=".jpg" (change)="imgCarousel($event)" formControlName="imgCarousel">
-                                        <small *ngIf="validacionTamImgCarousel" class="form-text text-danger">Error: Tamaño mínimo 1250x690. Tamaño Máximo: 4096x2160</small>
-                                        <div class="row" *ngIf="(urlCarousel != null) && (!validacionTamImgCarousel)">
-                                            <div class="col-md-12">
-                                                <img [src]="urlCarousel" height="300" width="400">
-                                                <button type="button" aria-label="Close" class="btn btn-danger" (click)="borrarImgCarousel()">
-                                                  <span aria-hidden="true">&times;</span>
-                                                </button>
+                                                <img [src]="imgUrl+img.ruta_imagen_cuarto " height="300" width="400"><br>
+                                                <button type="button" class="btn btn-danger" (click)="eliminarImgCuarto( img.id_imagen_cuarto )">Eliminar</button>
                                             </div>
                                         </div>
                                     </div>
@@ -176,7 +134,7 @@
 
                                 <div class="input-group form-row mb-3">
                                     <div class="col-md-12 text-center">
-                                        <button class="btn btn-success" type="submit" [disabled]="formImgE.invalid">Guardar cambios</button>
+                                        <button class="btn btn-success" type="submit" >Guardar cambios</button>
                                     </div>
                                 </div>
 

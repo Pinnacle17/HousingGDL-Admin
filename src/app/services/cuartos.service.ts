@@ -8,7 +8,7 @@ import {environment} from 'src/environments/environment'
   providedIn: 'root'
 })
 export class CuartosService{
-
+  imgUrl = environment.imgUrl
   url = environment.apiUrl+"casas/cuartos/";
 
   constructor(private http:HttpClient) { }
@@ -49,6 +49,9 @@ export class CuartosService{
   }
   getCuartos( id_casa:number ){
     return this.http.get(`${this.url}VerCuartos.php?id_casa=${id_casa}`)//.pipe(retry(3))
+  }
+  getImgs( id:number ){
+    return this.http.get(`${this.url}verImagenesCuarto.php?id_cuarto=${id}`)//.pipe(retry(3))
   }
   getSemestres(){
     return this.http.get(`${this.url}VerSemestres.php`)

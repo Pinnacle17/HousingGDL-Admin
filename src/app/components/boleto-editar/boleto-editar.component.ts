@@ -26,6 +26,7 @@ export class BoletoEditarComponent implements OnInit {
   formInfoCuarto: FormGroup;
   formImgCuarto: FormGroup;
   formOferta: FormGroup;
+  formImgE: FormGroup;
   //
   imgPrincipalSeleccionadaCuarto: File = null;
   imgsSeleccionadasCuarto: File[] = [];
@@ -75,6 +76,12 @@ export class BoletoEditarComponent implements OnInit {
     nombre_cuarto:null,
     descripcion_cuarto:null,
   }
+
+  imgs:any={
+    id:null,
+    imgRuta:null
+  }
+
   constructor(private activatedRoute:ActivatedRoute,
               private cuartosService:CuartosService,
               private fb:FormBuilder,
@@ -88,18 +95,25 @@ export class BoletoEditarComponent implements OnInit {
       this.cuartosService.getCuarto(params['id']).subscribe( resultado => {
 
         this.cuarto = resultado[0];
+        console.log(this.cuarto.descripcion_cuarto)
 
-        this.formInfoCuarto.setValue({
+        this.formInfoCuarto.patchValue({
           nombre_cuarto:this.cuarto.nombre_cuarto,
           descripcion_cuarto:this.cuarto.descripcion_cuarto,
         });
+
+        console.log(this.formInfoCuarto.get('nombre_cuarto').value)
+      });
+      this.cuartosService.getImgs(params['id']).subscribe(resultado => {
+        this.imgs = resultado
+        console.log(this.imgs)
+
       });
 
       this.infoCuarto.id = params['id'];
-
+      this.infoCuarto.id_cuarto = params['id'];
       this.infoOferta.id_cuarto = params['id'];
       this.imgsCuarto.id_cuarto = params['id'];
-
     });
 
   }
@@ -156,6 +170,7 @@ export class BoletoEditarComponent implements OnInit {
   guardarInfoCuarto(){
     this.infoCuarto.nombre_cuarto = this.formInfoCuarto.get('nombre_cuarto').value;
     this.infoCuarto.descripcion_cuarto = this.formInfoCuarto.get('descripcion_cuarto').value;
+    console.log(this.infoCuarto)
         this.cuartosService.modificarInfoCuarto(this.infoCuarto).subscribe( datos => {
           if(datos['resultado'] == "ERROR"){
             console.log("ERROR");
@@ -163,7 +178,7 @@ export class BoletoEditarComponent implements OnInit {
           }
           else if(datos['resultado'] == "OK"){
             this.refresh();
-            window.confirm("Cuarto Modificado con exito modificado con éxito");
+            window.confirm("Cuarto modificado con éxito");
           }
         })
   }
@@ -213,14 +228,14 @@ export class BoletoEditarComponent implements OnInit {
 
   imgPrincipalCuarto(event) {
     this.imgPrincipalSeleccionadaCuarto = <File>event.target.files[0];
-    this.formImgCuarto.controls['imgPrincipalCuarto'].setValue(this.imgPrincipalSeleccionadaCuarto);
+    this.formImgCuarto.controls['imgPrincipalCuarto'].patchValue(this.imgPrincipalSeleccionadaCuarto);
 
     if (event.target.files && event.target.files[0]) {
       var reader = new FileReader();
       reader.readAsDataURL(event.target.files[0]);
 
       reader.onload = (event: any) => {
-        console.log(event.target.result);
+        //console.log(event.target.result);
         this.urlPrincipalCuarto = event.target.result;
       }
     }
@@ -251,12 +266,14 @@ export class BoletoEditarComponent implements OnInit {
   }
   borrarImgPrincipalCuarto() {
     this.urlPrincipalCuarto = null;
-    this.formImgCuarto.controls['imgPrincipal'].setValue("");
+    this.formImgCuarto.controls['imgPrincipalCuarto'].setValue("");
     this.imgInputPriCua.nativeElement.value = null;
   }
   guardarImg() {
     this.imgsCuarto.imgPrincipal = this.imgPrincipalSeleccionadaCuarto;
     this.imgsCuarto.imgs = this.imgsSeleccionadasCuarto;
+    this.imgsCuarto.id_cuarto=this.cuarto.id_cuarto;
+    console.log(this.imgsCuarto)
     this.cuartosService.modificarImgsCuarto(this.imgsCuarto).subscribe(datos => {
       if (datos['resultado'] == "ERROR") {
         console.log("ERROR");
