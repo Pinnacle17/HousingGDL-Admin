@@ -48,6 +48,7 @@
 
                 </div>
             </div>
+
             <ng-container *ngIf="!noCuartos">
                 <div class="card mb-3 border-success" *ngFor="let cuarto of cuartos">
                     <div class="card-header border-success">
@@ -304,7 +305,7 @@
                                                 (change)="multiImgCuarto($event)" multiple formControlName="imgsCuarto">
                                             <div class="row" *ngFor='let url of urlsCuarto; let i = index'>
                                                 <div class="col-md-9">
-                                                    <h6 class="text-center">{{ listaImgCuarto[i] }}</h6>
+
                                                     <img [src]="url" height="200" class="float-right"><br>
                                                 </div>
                                                 <div class="col-md-3">
@@ -317,9 +318,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row mb-3 mt-3" *ngFor='let url of badUrls; let i = index'>
-                                      <small *ngIf="errorTamImgs && sinImagen == false" class="form-text text-danger ml-4">La imagen {{ badUrls[i] }} no puede ser ingresada. Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
-                                  </div>
+
 
                                 <button class="btn btn-success btn-block mx-auto" style="width: 25%; display: block;" type="submit">Crear Cuarto</button>
                             </form>
@@ -349,3 +348,11 @@
         </div>
     </div>
 </div>
+<!--<h6 class="text-center">{{ listaImgCuarto[i] }}</h6>-->
+<!--<div class="col-md-9">
+                                                    <h6 class="text-center">{{ listaImgCuarto[i] }}</h6>
+                                                    <img [src]="url" height="200" class="float-right"><br>
+                                                </div>-->
+<!--<div class="row mb-3 mt-3" *ngFor='let url of badUrls; let i = index'>
+                                      <small *ngIf="errorTamImgs && sinImagen == false" class="form-text text-danger ml-4">La imagen {{ badUrls[i] }} no puede ser ingresada. Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
+                                  </div>-->

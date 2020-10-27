@@ -190,10 +190,6 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
     return this.formPublicaciones.get('titulo').invalid && this.formPublicaciones.get('titulo').touched;
   }
 
-  get tituloExistente() {
-    return this.formPublicaciones.get('titulo').invalid && this.formPublicaciones.get('titulo').value != '' && !this.formPublicaciones.get('titulo').pristine;
-  }
-
   get validacionArticulo() {
     return this.formPublicaciones.get('articulo').invalid && this.formPublicaciones.get('articulo').touched;
   }
@@ -288,12 +284,6 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
   }
 
   guardarPublicacion() {
-      this.publicacionesService.buscarNombre(this.formPublicaciones.get('titulo').value).subscribe(datos => {
-        if (datos['estado'] == 0) {
-          this.errorNombre = datos['mensaje'];
-          window.confirm(this.errorNombre);
-          return;
-        } else if (datos['estado'] == 1) {
           this.publicacionesService.crearPublicacion(this.formPublicaciones.value).subscribe(datos => {
             if (datos['resultado'] == 'OK') {
               this.getPublicaciones();
@@ -308,7 +298,6 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
               console.log('ERROR');
             }
           });
-        }
-      });
+
     }
 }

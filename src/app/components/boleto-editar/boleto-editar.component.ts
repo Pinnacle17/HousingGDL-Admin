@@ -161,6 +161,7 @@ export class BoletoEditarComponent implements OnInit {
     return this.formOferta.get('grupo').invalid && this.formOferta.get('grupo').touched;
   }
 
+
   refresh(){
     this.activatedRoute.params.subscribe( params => {
       this.cuartosService.getCuarto(params['id']).subscribe( resultado => this.cuarto = resultado[0]);
