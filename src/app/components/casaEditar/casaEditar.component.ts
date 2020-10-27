@@ -295,8 +295,8 @@ export class CasaEditarComponent implements OnInit {
     return this.formCuartos.get('imgsCuarto').invalid
   }
 
-  editarBoleto(id: number) {
-    this.router.navigate(['editar-boleto', id])
+  editarCuarto(id: number) {
+    this.router.navigate(['editar-cuarto', id])
   }
 
   refresh() {

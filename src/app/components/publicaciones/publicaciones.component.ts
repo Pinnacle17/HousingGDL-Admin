@@ -3,6 +3,7 @@ import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {RxwebValidators} from '@rxweb/reactive-form-validators';
 import {PublicacionesService} from '../../services/publicaciones.service';
+import { environment } from 'src/environments/environment'
 
 declare var webkitSpeechRecognition;
 declare var webkitSpeechGrammarList;
@@ -13,7 +14,7 @@ declare var webkitSpeechRecognitionEvent;
   templateUrl: './publicaciones.component.html'
 })
 export class PublicacionesComponent implements OnInit, OnDestroy {
-
+  imgUrlPublicacion = environment.imgUrlPublicacion
   formPublicaciones: FormGroup;
 
   urls = [];

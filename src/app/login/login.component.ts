@@ -34,28 +34,7 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    if (this.formLogin.invalid) {
-      Object.values(this.formLogin.controls).forEach(control => {
-
-        if (control instanceof FormGroup) {
-          Object.values(control.controls).forEach(control => control.markAllAsTouched())
-        }
-        else {
-          control.markAllAsTouched();
-        }
-      });
-      return;
-    }
-    else {
-      // FAKE_LOGIN
-      localStorage.setItem("id_admin", "1")
-      this.router.navigate(['/inicio']);
-      return
-      // FAKE_LOGIN
-
-      this.formLogin.addControl("tipo", this.fb.control(null));
-      this.formLogin.get("tipo").setValue(55);
-      this.loginService.login(this.formLogin.value).subscribe(datos => {
+      /* FAKE_LOGINthis.loginService.login(this.formLogin.value).subscribe(datos => {
         if (datos['estado'] == 0) {
           console.log(datos);
           window.confirm(datos['mensaje']);
@@ -69,7 +48,14 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/inicio']);
         }
       })
-    }
+
+      FAKE_LOGIN*/
+      localStorage.setItem("id_admin", "1")
+      this.router.navigate(['/inicio']);
+      return
+
+
+
   }
 
 }

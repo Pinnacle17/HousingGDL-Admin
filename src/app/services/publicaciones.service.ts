@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { retry } from 'rxjs/operators';
 import { serialize } from 'object-to-formdata';
+import {environment} from 'src/environments/environment'
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { serialize } from 'object-to-formdata';
 export class PublicacionesService {
 
   // url = "https://proyectotapatio.com/PT-API-P/publicaciones/";
-  url = "http://localhost/casas-php/PT-API-P/admin/publicaciones/";
+  url = environment.apiUrl+'publicaciones/';
 
   constructor(private http:HttpClient) { }
 

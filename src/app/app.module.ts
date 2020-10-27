@@ -26,7 +26,7 @@ import { CasasService } from './services/casas.service';
 import { PublicacionesService } from './services/publicaciones.service';
 import es from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
-import { BoletoEditarComponent } from './components/boleto-editar/boleto-editar.component';
+import { CuartoEditarComponent } from './components/cuarto-editar/cuarto-editar.component';
 import { RepartidorEditarComponent } from './components/repartidor-editar/repartidor-editar.component';
 import { CuartosService } from './services/cuartos.service';
 import { RepartidoresService } from './services/repartidores.service';
@@ -48,7 +48,7 @@ registerLocaleData(es)
     CasaEditarComponent,
     PublicacionEditarComponent,
     PerfilComponent,
-    BoletoEditarComponent,
+    CuartoEditarComponent,
     RepartidorEditarComponent,
     LayoutComponent,
     LoginComponent,

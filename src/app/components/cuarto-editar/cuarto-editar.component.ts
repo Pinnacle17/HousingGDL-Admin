@@ -2,15 +2,16 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CuartosService } from '../../services/cuartos.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { OwlOptions } from 'ngx-owl-carousel-o';
 import { CasasService } from '../../services/casas.service';
 import { environment } from 'src/environments/environment'
 import { async, RxwebValidators } from '@rxweb/reactive-form-validators';
 
 @Component({
-  selector: 'app-boleto-editar',
-  templateUrl: './boleto-editar.component.html'
+  selector: 'app-cuarto-editar',
+  templateUrl: './cuarto-editar.component.html'
 })
-export class BoletoEditarComponent implements OnInit {
+export class CuartoEditarComponent implements OnInit {
   imgUrl = environment.imgUrl
 
   @ViewChild('cerrarCodigo') cerrarCodigo;
@@ -80,6 +81,31 @@ export class BoletoEditarComponent implements OnInit {
   imgs:any={
     id:null,
     imgRuta:null
+  }
+
+  public customOptions: OwlOptions = {
+    loop: true,
+    mouseDrag: true,
+    touchDrag: true,
+    pullDrag: false,
+    dots: true,
+    navSpeed: 700,
+    navText: ['Anterior', 'Siguietne'],
+    responsive: {
+      0: {
+        items: 1
+      },
+      400: {
+        items: 2
+      },
+      740: {
+        items: 3
+      },
+      940: {
+        items: 3
+      }
+    },
+    nav: true
   }
 
   constructor(private activatedRoute:ActivatedRoute,
@@ -241,7 +267,21 @@ export class BoletoEditarComponent implements OnInit {
       }
     }
   }
+  borrarImgs(url: any, index: number) {
+    this.urlsCuarto = this.urlsCuarto.filter((a) => a !== url);
+    this.listaImgCuarto.splice(index, 1);
+    this.imgsSeleccionadasCuarto.splice(index, 1);
 
+    this.formImgE.controls['imgsCasa'].reset();
+
+    console.log(this.formImgE.get('imgsCasa').value);
+    if (this.imgsSeleccionadasCuarto.length == 0) {
+      this.formImgE.controls['imgsCasa'].setValue("");
+      this.imgsInputCua.nativeElement.value = null;
+    }
+
+    console.log(this.formImgE);
+  }
   multiImgCuarto(event) {
 
     if (event.target.files && event.target.files[0]) {
@@ -290,5 +330,6 @@ export class BoletoEditarComponent implements OnInit {
       }
     });
   }
+
 
 }

@@ -93,7 +93,6 @@
                             <label for="titulo">Título: <small class="text-danger">*</small></label>
                             <input type="text" class="form-control" id="nombreEvento" placeholder="Ingrese el Titulo" formControlName="titulo" [class.is-invalid]="validacionTitulo">
                             <small *ngIf="validacionTitulo" class="form-text text-danger">Título Obligatorio.</small>
-                            <small *ngIf="tituloExistente" class="form-text text-danger">Ya existe una publicacion con este título.</small>
                         </div>
                     </div>
 
