@@ -1,98 +1,72 @@
 <div class="container-fluid animated fadeIn fast mt-2">
-    <div class="card mb-3 border-success">
-        <div class="card-header border-success">
-            <h4> {{boleto.nom_bol}} </h4>
+
+    <div class="card mb-3">
+        <div class="card-header text-center">
+            <h4>Vista Previa</h4>
         </div>
         <div class="card-body">
-            <div class="row h-100">
-                <div class="col-md-9">
-                    <h5>Descripción</h5>
-                    <p>{{boleto.descripcion_boleto}}</p>
+            <div class="card mb-3 border-primary">
+                <div class="card-header border-primary text-center">
+                    <h4> {{ casa.nombre_casa}} </h4>
+                </div>
+                <div class="pt-4 text-center mb-3">
+                    <h4>Imagen Principal.</h4>
+                    <img [src]="imgUrl+casa.principal_img" alt="img_principal" class="figure-img img-fluid rounded mx-auto" width="950" height="650">
+                </div>
+                <div class="card-body text-center">
+                    <h4>Imágenes Generales.</h4>
+                    <owl-carousel-o [options]="customOptions">
+                        <ng-template carouselSlide *ngFor="let img of imgs">
+                            <div class="slide">
+                                <img [src]="imgUrl+img.ruta_imagen_casa" alt="imgs" width="300" height="300" class="p-1 figure-img rounded">
+                            </div>
+                        </ng-template>
+                    </owl-carousel-o>
+                    <hr>
+                    <div class="container-fluid text-left">
+                        <h4>Descripción.</h4>
+                        <p> {{casa.descripcion_casa}} </p>
+                    </div>
+                    <hr>
+                </div>
+                <div class="card-footer">
+                    <p class="card-text">
+                        <small class="text-muted"> Direccion: {{casa.direccion_casa}} </small><br>
+
+                    </p>
                 </div>
             </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-3 text-center">
-                    <h5>Inventario Inicial</h5>
-                    <h6> {{boleto.stock_boleto}} </h6>
-                </div>
-                <div class="col-md-3 text-center">
-                    <h5>Inventario Actual</h5>
-                    <h6> {{boleto.stock_act_boleto}} </h6>
-                </div>
-                <div class="col-md-3 text-center">
-                    <h5>Inventario de Repartidores</h5>
-                    <h6> {{boleto.stock_repartidor}} </h6>
-                </div>
-                <div class="col-md-3 text-center">
-                    <h5>Precio por boleto.</h5>
-                    <h6> {{boleto.precio_bol | currency:'MXN':'symbol'}}</h6>
-                </div>
-            </div>
-        </div>
-        <div class="card-footer">
-            <h5 class="text-center">Promociones</h5>
-            <div class="row">
-                <div class="col-md-10 d-block mx-auto">
-                    <table class="table table-bordered">
-                        <thead class="text-center">
-                            <tr>
-                                <th scope="col" style="width: 20%;">Tipo</th>
-                                <th scope="col" style="width: 30%;">Parametros</th>
-                                <th scope="col" style="width: 15%;">Stock Inicial</th>
-                                <th scope="col" style="width: 15%;">Stock Actual</th>
-                                <th scope="col" style="width: 10%;">Precio</th>
-                                <th scope="col" style="width: 10%;">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-center">
-                            <tr *ngFor="let promo of promosFechas">
-                                <td class="align-middle">Por Fechas</td>
-                                <td class="align-middle">({{ promo.fec_ini_pro }}) - ({{ promo.fec_fin_pro }})</td>
-                                <td class="align-middle"> {{promo.cantidad_fec}} </td>
-                                <td class="align-middle"> {{promo.cantidad_act_fec}} </td>
-                                <td class="align-middle">{{promo.precio_fec | currency:'MXN':'symbol'}}</td>
-                                <td class="align-middle">
-                                    <button type="button" class="btn btn-danger" (click)="eliminarPromoFechas( promo.id_promo_fec )">Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr *ngFor="let promo of promosReferencia">
-                                <td class=" align-middle">Por Evento Relacionado</td>
-                                <td class="align-middle">
-                                    <h6>Boleto de referencia:</h6>
-                                    {{promo.fk_boleto_ref}}
-                                </td>
-                                <td class="align-middle"> {{promo.cantidad_eve}} </td>
-                                <td class="align-middle"> {{promo.cantidad_act_eve}} </td>
-                                <td class="align-middle"> {{promo.precio_eve | currency:'MXN':'symbol'}}</td>
-                                <td class="align-middle">
-                                    <button type="button" class="btn btn-danger" (click)="eliminarPromoReferencia( promo.id_promo_eve )">Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr *ngFor="let promo of promosCodigo">
-                                <td class="align-middle">Por Codigo</td>
-                                <td class="align-middle">Código: {{promo.codigo}}</td>
-                                <td class="align-middle"> {{promo.cantidad_cod}} </td>
-                                <td class="align-middle"> {{promo.cantidad_act_cod}} </td>
-                                <td class="align-middle">{{promo.precio_cod | currency:'MXN':'symbol'}}</td>
-                                <td class="align-middle">
-                                    <button type="button" class="btn btn-danger" (click)="eliminarPromoCodigo( promo.id_pro_cod )">Eliminar</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <h5 class="text-center">Agregar Promociones.</h5>
-            <div class="row mt-3">
-                <div class="col-md-4 d-block mx-auto">
-                    <button type="button" class="btn btn-outline-success btn-block" data-toggle="modal" data-target="#promoFechas">Promocion por Fechas</button>
-                    <button type="button" class="btn btn-outline-success btn-block" data-toggle="modal" data-target="#promoEvento">Promocion por Evento Relacionado</button>
-                    <button type="button" class="btn btn-outline-success btn-block" data-toggle="modal" data-target="#promoCodigo">Promocion por Codigo</button>
-                </div>
-            </div>
+
         </div>
     </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h4>Comentarios.</h4>
+        </div>
+        <div class="card-body">
+            <h5 class="text-danger" *ngIf="sinComentarios == true"> No hay comentarios. </h5>
+            <ng-container *ngIf="sinComentarios == false">
+                <div class="card" *ngFor="let comentario of comentarios">
+                    <div class="card-body">
+                        <div class="row h-100">
+                            <div class="col-md-2 text-center my-auto">
+                                <h6>{{ comentario.nombre_usuario }}</h6>
+                                <h5>{{ comentario.num_calificacion }} Puntos</h5>
+                            </div>
+                            <div class="col-md-8 text-left">
+                                <p>{{ comentario.opinion }}</p>
+                            </div>
+                            <div class="col-md-2 my-auto">
+                                <button type="button" class="btn btn-danger mx-auto my-auto d-block" (click)="eliminarComentario(comentario.id_calificacion)">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+
     <div class="card mb-3 border-primary">
         <div class="card-header border-primary">
             <h4>Opciones de edición</h4>
@@ -103,183 +77,160 @@
                     <div class="card-header" id="headingOne">
                         <h2 class="mb-0">
                             <button class="btn btn-outline-primary btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                           Información Principal
-                        </button>
+                             Información Principal
+                          </button>
                         </h2>
                     </div>
+
                     <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                         <div class="card-body">
-                            <form [formGroup]="formInfoBoleto" (ngSubmit)="guardarInfo()">
+                            <form [formGroup]="formInfoE" (ngSubmit)="guardarInfo()">
                                 <div class="form-row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="nombreBoleto">Nombre:</label>
-                                        <input type="text" class="form-control mb-3" id="nombreBoleto" placeholder="Ingrese el Nombre del Boleto" formControlName="nombre">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="descEvento">Descripción:</label>
-                                        <textarea id="descEvento" class="form-control" rows="5" formControlName="desc"></textarea>
+                                    <div class="col-md-12">
+                                        <label for="nombreCasa">Nombre: <small class="text-danger">*</small></label>
+                                        <input type="text" class="form-control" id="nombreCasa" placeholder="Ingrese el Nombre de la Casa" formControlName="nombre_casa" [class.is-invalid]="validacionNombre || nombreExistente">
+                                        <small *ngIf="validacionNombre" class="form-text text-danger">Obligatorio.</small>
                                     </div>
                                 </div>
-                                <div class="form-row mb-3">
-                                    <div class="col-md-3">
-                                        <label for="inventarioBol">Inventario:</label>
-                                        <input type="number" class="form-control" id="inventarioBol" min="0" step="1" formControlName="inventario">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="precio">Precio por Boleto:</label>
-                                        <input type="number" min="0" step="1" value="0" id="precio" class="form-control" formControlName="precio">
+
+                                <div class="input-group form-row mb-3">
+                                    <label for="ambiente-col">Ambiente: <small class="text-danger">*</small></label><br>
+                                    <div class="col-md-12" id="ambiente-col">
+                                        <input type="radio" id="ambiente1" value="0" formControlName="ambiente" [class.is-invalid]="validacionAmbiente">
+                                        <label for="ambiente1" class="form-check-label"> Fiesta</label><br>
+
+                                        <input type="radio" id="ambiente2" value="1" formControlName="ambiente" [class.is-invalid]="validacionAmbiente">
+                                        <label for="ambiente2" class="form-check-label"> Relax</label>
+                                        <small *ngIf="validacionAmbiente" class="form-text text-danger">Obligatorio.</small>
                                     </div>
                                 </div>
+
+                                <div class="input-group form-row mb-3">
+                                    <div class="col-md-12">
+                                        <label for="descCasa">Descripción: <small class="text-danger">*</small></label>
+                                        <textarea id="descCasa" class="form-control" rows="5" formControlName="descripcion_casa" [class.is-invalid]="validacionDesc"></textarea>
+                                        <small *ngIf="validacionDesc" class="form-text text-danger">Breve Descripción Obligatoria.</small>
+                                    </div>
+                                </div>
+
+                                <div class="input-group form-row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="ordenImg">Orden de Casa: <small class="text-danger">*</small> <small>(Posición de imagen principal en el carousel de casas)</small></label>
+                                        <input type="number" class="form-control" id="ordenImg" min="1" max="15" step="1" value="1" formControlName="orden_anuncio" [class.is-invalid]="validacionOrden">
+                                        <small *ngIf="validacionOrden" class="form-text text-danger">Orden Obligatorio.</small>
+                                    </div>
+                                </div>
+
+                                <hr>
                                 <div class="input-group form-row mb-3">
                                     <div class="col-md-12 text-center">
-                                        <button class="btn btn-success" type="submit">Guardar cambios</button>
+                                        <button [disabled]="formInfoE.invalid" class="btn btn-success" type="submit">Guardar</button>
+                                    </div>
+                                    <button #modalError type="button" class="invisible" data-toggle="modal" data-target="#modalError"></button>
+                                </div>
+                            </form>
+                            <button #modalError type="button" class="invisible" data-toggle="modal" data-target="#modalError"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                            <button class="btn btn-outline-primary btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Imágenes
+                          </button>
+                        </h2>
+                    </div>
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <form [formGroup]="formImgE" (ngSubmit)="guardarImg()">
+                                <div class="input-group form-row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="imgPrincipal">Imagen Principal del Casa:</label><br>
+                                        <input #imgInputP type="file" id="imgPrincipal" accept=".jpg" (change)="imgPrincipal($event)" formControlName="imgPrincipal">
+                                        <small *ngIf="validacionTamImg" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
+                                        <div class="row border" *ngIf="(urlPrincipal != null) && (!validacionTamImg)">
+                                            <div class="col-md-12">
+                                                <img [src]="urlPrincipal" height="300" width="400">
+                                                <button type="button" aria-label="Close" class="btn btn-danger" (click)="borrarImgPrincipal()">
+                                                <span aria-hidden="true">&times;</span>
+                                              </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="imgCasa">Imagenes de la Casa:</label><br>
+                                        <input #imgsInput type='file' id="imgCasa" accept=".jpg" (change)="multiImg($event)" multiple formControlName="imgsCasa">
+                                        <small *ngIf="validacionTamImgs" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
+                                        <ng-container *ngIf="(urls != null) && (!validacionTamImgs)">
+                                            <div class="row border" *ngFor='let url of urls; let i = index'>
+                                                <div class="col-md-12">
+                                                    <img [src]="url " height="300" width="400">
+                                                    <button type="button" aria-label="Close" class="btn btn-danger" (click)="borrarImgs(url, i)">
+                                                      <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                        <div class="mt-4 text-center">
+                                            <h5>Imágenes Actuales.</h5>
+                                        </div>
+                                        <div class="row mt-3 border" *ngFor='let img of imgs'>
+                                            <div class="col-md-12 text-center">
+                                                <img [src]="imgUrl+img.ruta_imagen_casa " height="300" width="400"><br>
+                                                <button type="button" class="btn btn-danger" (click)="eliminarImgCasa( img.id_imagen_casa )">Eliminar</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="form-row mb-3">
+
+                                    <div class="col-md-6">
+                                        <label for="imgCarousel">Imagen de Carousel:</label><br>
+                                        <input #imgInputC type="file" id="imgCarousel" accept=".jpg" (change)="imgCarousel($event)" formControlName="imgCarousel">
+                                        <small *ngIf="validacionTamImgCarousel" class="form-text text-danger">Error: Tamaño mínimo 1250x690. Tamaño Máximo: 4096x2160</small>
+                                        <div class="row" *ngIf="(urlCarousel != null) && (!validacionTamImgCarousel)">
+                                            <div class="col-md-12">
+                                                <img [src]="urlCarousel" height="300" width="400">
+                                                <button type="button" aria-label="Close" class="btn btn-danger" (click)="borrarImgCarousel()">
+                                                  <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="input-group form-row mb-3">
+                                    <div class="col-md-12 text-center">
+                                        <button class="btn btn-success" type="submit" [disabled]="formImgE.invalid">Guardar cambios</button>
+                                    </div>
+                                </div>
+
                             </form>
                         </div>
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="promoFechas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalError" tabindex="-1" role="dialog" aria-labelledby="modalErrorLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Promocion por Fechas</h5>
-                <button #cerrarFechas type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+                <button #cerrarModalError type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
             </div>
-            <div class="modal-body">
-                <form [formGroup]="formPromoFechas" (ngSubmit)="crearPromoFecha()">
-                    <div class="input-group form-row mb-3">
-                        <div class="col-md-6">
-                            <label for="fechaInicio">Fecha de inicio: </label>
-                            <input type="date" id="fechaInicio" class="form-control" formControlName="fechaInicio">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="fechaCierre">Fecha de cierre: </label>
-                            <input type="date" id="fechaCierre" class="form-control" formControlName="fechaFin">
-                        </div>
-                        <small *ngIf="compararFechas()" class="form-text text-danger text-center ml-1">Fechas no válidas. {{ mensajeError }}</small>
-                    </div>
-                    <div class="input-group form-row mb-3">
-                        <div class="col-md-6">
-                            <label for="inventarioF">Inventario:</label>
-                            <input type="number" min="0" step="1" value="0" id="inventarioF" class="form-control" formControlName="inventarioFechas">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="precioF">Precio por Boleto:</label>
-                            <input type="number" min="0" step="1" value="0" id="precioF" class="form-control" formControlName="precioFechas">
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row pb-2 mt-0">
-                        <div class="col-md-12 text-center">
-                            <button type="button" class="btn btn-secondary mr-1" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-success">Aplicar Promoción</button>
-                        </div>
-                    </div>
-                </form>
+            <div class="modal-body text-center">
+                <h5 class="text-danger"> {{errorOrden}} </h5>
+                <h6>Desea liberar el espacio?</h6>
             </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="promoEvento" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Promoción por Evento Relacionado</h5>
-                <button #cerrarReferencia type="button" class="close" data-dismiss="modal" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-            </div>
-            <div class="modal-body">
-                <form [formGroup]="formPromoReferencia" (ngSubmit)="crearPromoReferecnia()">
-                    <div class="input-group form-row mb-3">
-                        <div class="col-md-12">
-                            <label for="evento">Evento:</label>
-                            <select (change)="getBoletos($event)" id="evento" class="form-control">
-                              <option *ngFor="let evento of eventos" [value]="evento.id_evento"> {{evento.nombre_evento}} </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="input-group form-row mb-3" *ngIf="id_evento != null">
-                        <div class="col-md-12">
-                            <label for="boletoReferencia">Boleto de Referencia:</label>
-                            <select id="boletoReferencia" class="form-control" formControlName="boletoReferencia">
-                                <option *ngFor="let boleto of boletos" [value]="boleto.id_boleto"> {{boleto.nom_bol}}  </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="input-group form-row mb-3">
-                        <div class="col-md-6">
-                            <label for="inventario">Inventario: <small>(Cantidad de Boletos a los que se les aplicará la promoción.)</small></label>
-                            <input type="number" min="0" step="1" value="0" id="inventario" class="form-control" formControlName="inventarioReferencia">
-                        </div>
-                    </div>
-                    <div class="input-group form-row mb-3">
-                        <div class="col-md-6">
-                            <label for="precio">Precio por Boleto:</label>
-                            <input type="number" min="0" step="1" value="0" id="precio" class="form-control" formControlName="precioReferencia">
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row pb-2 mt-0">
-                        <div class="col-md-12 text-center">
-                            <button type="button" class="btn btn-secondary mr-1" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-success">Aplicar Promoción</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="promoCodigo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Promoción por Código</h5>
-                <button #cerrar type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form [formGroup]="formPromoCodigo" (ngSubmit)="crearPromoCodigo()">
-                    <div class="input-group form-row mb-3">
-                        <div class="col-md-8 d-block mx-auto">
-                            <label for="codigo">Código: <small>(Clave única de 10 caracteres.)</small></label>
-                            <input type="text" minlength="10" maxlength="10" id="codigo" class="form-control" placeholder="AAAAAAAAAA" [class.is-invalid]="codigoValidacion" formControlName="codigo">
-                        </div>
-                        <small *ngIf="codigoValidacion" class="form-text text-danger text-center ml-1">Código no válido. Debe contener 10 caracteres.</small>
-
-                    </div>
-                    <div class="input-group form-row mb-3">
-                        <div class="col-md-8 d-block mx-auto">
-                            <label for="inventarioC">Inventario: <small>(Cantidad de Boletos a los que se les aplicará la promoción.)</small></label>
-                            <input type="number" min="0" step="1" value="0" id="inventarioC" class="form-control" formControlName="inventarioCodigo">
-                        </div>
-                    </div>
-                    <div class="input-group form-row mb-3">
-                        <div class="col-md-8 d-block mx-auto">
-                            <label for="precioC">Precio por Boleto:</label>
-                            <input type="number" min="0" step="1" value="0" id="precioC" class="form-control" formControlName="precioCodigo">
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row pb-2 mt-0">
-                        <div class="col-md-12 text-center">
-                            <button type="button" class="btn btn-secondary mr-1" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-success">Crear Promoción</button>
-                        </div>
-                    </div>
-                </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary mx-auto" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary mx-auto" (click)="liberarLugar()">Liberar</button>
             </div>
         </div>
     </div>
