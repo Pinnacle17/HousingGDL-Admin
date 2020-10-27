@@ -245,52 +245,52 @@ export class CasaEditarComponent implements OnInit {
   }
 
   get validacionNombre() {
-    return false//return this.formInfoE.get('nombre_casa').invalid && this.formInfoE.get('nombre_casa').touched;
+    return this.formInfoE.get('nombre_casa').invalid && this.formInfoE.get('nombre_casa').touched;
   }
 
   get nombreExistente() {
-    return false//return this.formInfoE.get('nombre_casa').invalid && this.formInfoE.get('nombre_casa').value != '' && !this.formInfoE.get('nombre_casa').pristine;
+    return this.formInfoE.get('nombre_casa').invalid && this.formInfoE.get('nombre_casa').value != '' && !this.formInfoE.get('nombre_casa').pristine;
   }
 
   get validacionAmbiente() {
-    return false//return this.formInfoE.get('ambiente').invalid && this.formInfoE.get('ambiente').touched;
+    return this.formInfoE.get('ambiente').invalid && this.formInfoE.get('ambiente').touched;
   }
 
 
   get validacionDesc() {
-    return false//return this.formInfoE.get('descripcion_casa').invalid && this.formInfoE.get('descripcion_casa').touched;
+    return this.formInfoE.get('descripcion_casa').invalid && this.formInfoE.get('descripcion_casa').touched;
   }
 
   get validacionOrden() {
-    return false//return this.formInfoE.get('orden_anuncio').invalid && this.formInfoE.get('orden_anuncio').touched;
+    return this.formInfoE.get('orden_anuncio').invalid && this.formInfoE.get('orden_anuncio').touched;
   }
 
   get validacionTamImg() {
-    return false//return this.formImgE.get('imgPrincipal').invalid && this.formImgE.get('imgPrincipal').dirty
+    return this.formImgE.get('imgPrincipal').invalid && this.formImgE.get('imgPrincipal').dirty
   }
 
   get validacionTamImgs() {
-    return false//return this.formImgE.get('imgsCasa').invalid
+    return this.formImgE.get('imgsCasa').invalid
   }
 
   get validacionTamImgCarousel() {
-    return false//return this.formImgE.get('imgCarousel').invalid && this.formImgE.get('imgCarousel').dirty
+    return this.formImgE.get('imgCarousel').invalid && this.formImgE.get('imgCarousel').dirty
   }
 
   get validacionImgCuarto() {
-    return false//return this.formCuartos.get('imgPrincipalCuarto').invalid && this.formCuartos.get('imgPrincipalCuarto').touched && this.formCuartos.get('imgPrincipalCuarto').value == '';
+    return this.formCuartos.get('imgPrincipalCuarto').invalid && this.formCuartos.get('imgPrincipalCuarto').touched && this.formCuartos.get('imgPrincipalCuarto').value == '';
   }
 
   get validacionTamImgPCuarto() {
-    return false//return this.formCuartos.get('imgPrincipalCuarto').invalid && this.formImgE.get('imgPrincipalCuarto').dirty
+    return this.formCuartos.get('imgPrincipalCuarto').invalid && this.formCuartos.get('imgPrincipalCuarto').dirty
   }
 
   get validacionImgsCuarto() {
-    return false//return this.formCuartos.get('imgsCuarto').invalid && this.formCuartos.get('imgsCuarto').touched && this.formCuartos.get('imgsCuarto').value == '';
+    return this.formCuartos.get('imgsCuarto').invalid && this.formCuartos.get('imgsCuarto').touched && this.formCuartos.get('imgsCuarto').value == '';
   }
 
   get validacionTamImgsCuarto() {
-    return false//return this.formCuartos.get('imgsCuarto').invalid
+    return this.formCuartos.get('imgsCuarto').invalid
   }
 
   editarBoleto(id: number) {
@@ -600,10 +600,8 @@ export class CasaEditarComponent implements OnInit {
   desactivarCuarto(id_cuarto: number) {
     if (window.confirm("Está seguro de querer desactivar este cuarto")) {
       this.cuartosService.desactivarCuarto(id_cuarto).subscribe(datos => {
-        if (datos['resultado'] == "OK") {
           this.refresh();
           window.confirm("Boleto eliminado con éxito");
-        }
       })
     }
   }
@@ -611,10 +609,8 @@ export class CasaEditarComponent implements OnInit {
   activarCuarto(id_cuarto: number) {
     if (window.confirm("Está seguro de querer activar este cuarto?")) {
       this.cuartosService.activarCuarto(id_cuarto).subscribe(datos => {
-        if (datos['resultado'] == "OK") {
           this.refresh();
           window.confirm("Boleto eliminado con éxito");
-        }
       })
     }
   }
