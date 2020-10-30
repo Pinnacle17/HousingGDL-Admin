@@ -18,6 +18,7 @@ export class CasasComponent implements OnInit, OnDestroy {
   formCasas: FormGroup;
 
   urls = [];
+  badUrls = [];
   urlPrincipal = null;
   urlCarousel = null;
 
@@ -35,6 +36,8 @@ export class CasasComponent implements OnInit, OnDestroy {
   mensajeError: string = '';
   errorOrden: string = '';
   errorNombre: string = '';
+  sinImagen: boolean = false;
+  errorTamImgs: boolean = false;
 
   recognition: SpeechRecognition;
 
@@ -196,7 +199,7 @@ export class CasasComponent implements OnInit, OnDestroy {
       id_colonia: ['', Validators.required],
       imgPrincipal: ['', [Validators.required, RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })]],
       imgCarousel: ['', [Validators.required, RxwebValidators.image({ minWidth: 1250, maxWidth: 4096, minHeight: 690, maxHeight: 2160 })]],
-      imgsCasa: ['', [Validators.required, RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })]]
+      imgsCasa: ['', Validators.required]
     });
   }
 
@@ -285,20 +288,45 @@ export class CasasComponent implements OnInit, OnDestroy {
   }
 
   multiImg(event) {
-    if (event.target.files && event.target.files[0]) {
+    if(event.target.files && event.target.files.length) {
       for (let i = 0; i < event.target.files.length; i++) {
+
         var reader = new FileReader();
+        let file = event.target.files[i];
+        let img = new Image();
+
+        img.src = window.URL.createObjectURL(file);
 
         reader.readAsDataURL(event.target.files[i]);
         reader.onload = (event: any) => {
-          this.urls.push(event.target.result);
+
+          const alto = img.naturalHeight;
+          const ancho = img.naturalWidth;
+
+          window.URL.revokeObjectURL(file);
+
+          if(alto < 690 || alto > 2160 || ancho < 950 ||ancho > 4096){
+            this.errorTamImgs = true;
+            this.badUrls.push(file.name)
+          }
+          else{
+            this.urls.push(event.target.result);
+            this.imgsSeleccionadas.push(file);
+            this.listaImg.push(file.name);
+            this.formCasas.controls['imgsCasa'].setValue(this.imgsSeleccionadas);
+          }
         };
 
-        var selectedFile = event.target.files[i];
-        this.imgsSeleccionadas.push(selectedFile);
+        this.sinImagen = false;
       }
-      this.formCasas.controls['imgsCasa'].setValue(this.imgsSeleccionadas);
     }
+    else{
+      this.sinImagen = true;
+      return
+    }
+    console.log(this.formCasas.get('imgsCasa').value);
+    console.log(this.formCasas);
+
   }
 
   borrarImgPrincipal() {
@@ -361,7 +389,5 @@ export class CasasComponent implements OnInit, OnDestroy {
         });
       }
     });
-
-
   }
 }

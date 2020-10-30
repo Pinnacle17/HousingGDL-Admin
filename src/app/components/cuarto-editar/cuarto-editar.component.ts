@@ -5,7 +5,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { CasasService } from '../../services/casas.service';
 import { environment } from 'src/environments/environment'
-import { async, RxwebValidators } from '@rxweb/reactive-form-validators';
+import { RxwebValidators } from '@rxweb/reactive-form-validators';
 
 @Component({
   selector: 'app-cuarto-editar',
@@ -34,7 +34,11 @@ export class CuartoEditarComponent implements OnInit {
   listaImgCuarto: any[] = [];
   //
   urlsCuarto = [];
+  badUrls = [];
   urlPrincipalCuarto = null;
+  //
+  sinImagen: boolean = false;
+  errorTamImgs: boolean = false;
   //
   mensajeError:string = null;
   //
@@ -78,10 +82,7 @@ export class CuartoEditarComponent implements OnInit {
     descripcion_cuarto:null,
   }
 
-  imgs:any={
-    id:null,
-    imgRuta:null
-  }
+  imgs:any = null;
 
   public customOptions: OwlOptions = {
     loop: true,
@@ -111,10 +112,10 @@ export class CuartoEditarComponent implements OnInit {
   constructor(private activatedRoute:ActivatedRoute,
               private cuartosService:CuartosService,
               private fb:FormBuilder,
-              private eventosService:CasasService) { }
+              private casasService:CasasService) { }
 
   ngOnInit() {
-    this.getSemestres();
+    // this.getSemestres();
     this.formInfoCuartoInit();
     this.formImgInit();
     this.activatedRoute.params.subscribe( params => {
@@ -133,7 +134,6 @@ export class CuartoEditarComponent implements OnInit {
       this.cuartosService.getImgs(params['id']).subscribe(resultado => {
         this.imgs = resultado
         console.log(this.imgs)
-
       });
 
       this.infoCuarto.id = params['id'];
@@ -152,8 +152,8 @@ export class CuartoEditarComponent implements OnInit {
   }
   formImgInit() {
     this.formImgCuarto = this.fb.group({
-      imgPrincipalCuarto: ['', RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })],
-      imgsCuarto: ['', RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })]
+      imgPrincipal: ['', RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })],
+      imgsCuarto: ['']
     })
   }
   formOfertaInit(){
@@ -173,7 +173,7 @@ export class CuartoEditarComponent implements OnInit {
   }
 
   get validacionTamImgPCuarto() {
-    return this.formImgCuarto.get('imgPrincipalCuarto').invalid && this.formImgCuarto.get('imgPrincipal').dirty
+    return this.formImgCuarto.get('imgPrincipal').invalid && this.formImgCuarto.get('imgPrincipal').dirty
   }
 
   get validacionTamImgsCuarto() {
@@ -191,6 +191,10 @@ export class CuartoEditarComponent implements OnInit {
   refresh(){
     this.activatedRoute.params.subscribe( params => {
       this.cuartosService.getCuarto(params['id']).subscribe( resultado => this.cuarto = resultado[0]);
+      this.cuartosService.getImgs(params['id']).subscribe(resultado => {
+        this.imgs = resultado
+        console.log(this.imgs)
+      });
     });
   }
 
@@ -210,12 +214,12 @@ export class CuartoEditarComponent implements OnInit {
         })
   }
 
-  getSemestres(){
-    this.cuartosService.getSemestres().subscribe( resultado => {
-      this.semestres = resultado
-      console.log(this.semestres );
-    });
-  }
+  // getSemestres(){
+  //   this.cuartosService.getSemestres().subscribe( resultado => {
+  //     this.semestres = resultado
+  //     console.log(this.semestres );
+  //   });
+  // }
 
   guardarOferta() {
     this.infoOferta.precio = this.formOferta.get('precio').value;
@@ -255,7 +259,7 @@ export class CuartoEditarComponent implements OnInit {
 
   imgPrincipalCuarto(event) {
     this.imgPrincipalSeleccionadaCuarto = <File>event.target.files[0];
-    this.formImgCuarto.controls['imgPrincipalCuarto'].patchValue(this.imgPrincipalSeleccionadaCuarto);
+    this.formImgCuarto.controls['imgPrincipal'].patchValue(this.imgPrincipalSeleccionadaCuarto);
 
     if (event.target.files && event.target.files[0]) {
       var reader = new FileReader();
@@ -282,32 +286,50 @@ export class CuartoEditarComponent implements OnInit {
 
     console.log(this.formImgE);
   }
-  multiImgCuarto(event) {
 
-    if (event.target.files && event.target.files[0]) {
+  multiImg(event) {
+    if(event.target.files && event.target.files.length) {
       for (let i = 0; i < event.target.files.length; i++) {
+
         var reader = new FileReader();
+        let file = event.target.files[i];
+        let img = new Image();
+
+        img.src = window.URL.createObjectURL(file);
 
         reader.readAsDataURL(event.target.files[i]);
         reader.onload = (event: any) => {
-          if (!this.validacionTamImgsCuarto) {
-            this.urlsCuarto.push(event.target.result);
+
+          const alto = img.naturalHeight;
+          const ancho = img.naturalWidth;
+
+          window.URL.revokeObjectURL(file);
+
+          if(alto < 690 || alto > 2160 || ancho < 950 ||ancho > 4096){
+            this.errorTamImgs = true;
+            this.badUrls.push(file.name)
           }
-        }
+          else{
+            this.urlsCuarto.push(event.target.result);
+            this.imgsSeleccionadasCuarto.push(file);
+            this.listaImgCuarto.push(file.name);
+            this.formImgCuarto.controls['imgsCuarto'].setValue(this.imgsSeleccionadasCuarto);
+          }
+        };
 
-        var selectedFile = event.target.files[i];
-
-        if (!this.validacionTamImgsCuarto) {
-          this.imgsSeleccionadasCuarto.push(selectedFile);
-        }
+        this.sinImagen = false;
       }
     }
-    console.log(this.imgsSeleccionadasCuarto);
-    // this.formImgE.controls['imgsCasa'].setValue(this.imgsSeleccionadas);
+    else{
+      this.sinImagen = true;
+      return
+    }
+    console.log(this.formImgCuarto.get('imgsCuarto').value);
   }
+
   borrarImgPrincipalCuarto() {
     this.urlPrincipalCuarto = null;
-    this.formImgCuarto.controls['imgPrincipalCuarto'].setValue("");
+    this.formImgCuarto.controls['imgPrincipal'].setValue("");
     this.imgInputPriCua.nativeElement.value = null;
   }
   guardarImg() {

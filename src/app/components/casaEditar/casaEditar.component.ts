@@ -16,8 +16,8 @@ import { environment } from 'src/environments/environment'
 
 export class CasaEditarComponent implements OnInit {
   imgUrl = environment.imgUrl
-  formInfoE: FormGroup;
-  formImgE: FormGroup;
+  formInfoCasa: FormGroup;
+  formImgCasa: FormGroup;
   formCuartos: FormGroup;
 
 
@@ -117,7 +117,6 @@ export class CasaEditarComponent implements OnInit {
     nav: true
   }
 
-  @ViewChild('imgInputP') imgInputP: ElementRef;
   @ViewChild('imgInputC') imgInputC: ElementRef;
   @ViewChild('imgsInput') imgsInput: ElementRef;
   @ViewChild('imgInputPriCua') imgInputPriCua: ElementRef;
@@ -142,7 +141,7 @@ export class CasaEditarComponent implements OnInit {
         console.log(resultado)
         this.casa = resultado[0];
 
-        this.formInfoE.setValue({
+        this.formInfoCasa.setValue({
           nombre_casa: this.casa.nombre_casa,
           ambiente: this.casa.ambiente,
           descripcion_casa: this.casa.descripcion_casa,
@@ -220,7 +219,7 @@ export class CasaEditarComponent implements OnInit {
 
 
   formInfoInit() {
-    this.formInfoE = this.fb.group({
+    this.formInfoCasa = this.fb.group({
       nombre_casa: ['', [Validators.required]],
       ambiente: ['', [Validators.required]],
       descripcion_casa: ['', [Validators.required]],
@@ -230,10 +229,10 @@ export class CasaEditarComponent implements OnInit {
   }
 
   formImgInit() {
-    this.formImgE = this.fb.group({
+    this.formImgCasa = this.fb.group({
       imgPrincipal: ['', RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })],
       imgCarousel: ['', RxwebValidators.image({ minWidth: 1250, maxWidth: 4096, minHeight: 690, maxHeight: 2160 })],
-      imgsCasa: ['', RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })]
+      imgsCasa: ['']
     })
   }
 
@@ -242,41 +241,41 @@ export class CasaEditarComponent implements OnInit {
       nombre_cuarto: ['', [Validators.required]],
       descripcion_cuarto: ['', [Validators.required]],
       imgPrincipalCuarto: ['', [Validators.required, RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })]],
-      imgsCuarto: ['', [Validators.required, RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })]]
+      imgsCuarto: ['', Validators.required]
     })
   }
 
   get validacionNombre() {
-    return this.formInfoE.get('nombre_casa').invalid && this.formInfoE.get('nombre_casa').touched;
+    return this.formInfoCasa.get('nombre_casa').invalid && this.formInfoCasa.get('nombre_casa').touched;
   }
 
   get nombreExistente() {
-    return this.formInfoE.get('nombre_casa').invalid && this.formInfoE.get('nombre_casa').value != '' && !this.formInfoE.get('nombre_casa').pristine;
+    return this.formInfoCasa.get('nombre_casa').invalid && this.formInfoCasa.get('nombre_casa').value != '' && !this.formInfoCasa.get('nombre_casa').pristine;
   }
 
   get validacionAmbiente() {
-    return this.formInfoE.get('ambiente').invalid && this.formInfoE.get('ambiente').touched;
+    return this.formInfoCasa.get('ambiente').invalid && this.formInfoCasa.get('ambiente').touched;
   }
 
 
   get validacionDesc() {
-    return this.formInfoE.get('descripcion_casa').invalid && this.formInfoE.get('descripcion_casa').touched;
+    return this.formInfoCasa.get('descripcion_casa').invalid && this.formInfoCasa.get('descripcion_casa').touched;
   }
 
   get validacionOrden() {
-    return this.formInfoE.get('orden_anuncio').invalid && this.formInfoE.get('orden_anuncio').touched;
+    return this.formInfoCasa.get('orden_anuncio').invalid && this.formInfoCasa.get('orden_anuncio').touched;
   }
 
   get validacionTamImg() {
-    return this.formImgE.get('imgPrincipal').invalid && this.formImgE.get('imgPrincipal').dirty
+    return this.formImgCasa.get('imgPrincipal').invalid && this.formImgCasa.get('imgPrincipal').dirty
   }
 
   get validacionTamImgs() {
-    return this.formImgE.get('imgsCasa').invalid
+    return this.formImgCasa.get('imgsCasa').invalid
   }
 
   get validacionTamImgCarousel() {
-    return this.formImgE.get('imgCarousel').invalid && this.formImgE.get('imgCarousel').dirty
+    return this.formImgCasa.get('imgCarousel').invalid && this.formImgCasa.get('imgCarousel').dirty
   }
 
   get validacionImgCuarto() {
@@ -315,16 +314,16 @@ export class CasaEditarComponent implements OnInit {
   }
 
   guardarInfo() {
-    this.casasService.consultaNombre(this.formInfoE.get('nombre_casa').value, this.casa.id_casa).subscribe(datos => {
+    this.casasService.consultaNombre(this.formInfoCasa.get('nombre_casa').value, this.casa.id_casa).subscribe(datos => {
       if (datos['estado'] == 0) {
         this.errorNombre = datos['mensaje'];
         window.confirm(this.errorNombre);
       }
       else if (datos['estado'] == 1) {
 
-        this.casasService.buscarLugar(this.formInfoE.get('orden_anuncio').value).subscribe(datos => {
+        this.casasService.buscarLugar(this.formInfoCasa.get('orden_anuncio').value).subscribe(datos => {
           if (datos['estado'] == 0) {
-            if (this.formInfoE.get('orden_anuncio').value == this.casa.orden_anuncio) {
+            if (this.formInfoCasa.get('orden_anuncio').value == this.casa.orden_anuncio) {
               datos['estado'] = 1
             } else {
               this.errorOrden = datos['mensaje'];
@@ -332,8 +331,8 @@ export class CasaEditarComponent implements OnInit {
             }
           }
           if (datos['estado'] == 1) {
-            this.formInfoE.addControl('id_casa', this.fb.control(this.casa.id_casa))
-            this.casasService.modificarInfoCasa(this.formInfoE.value).subscribe(datos => {
+            this.formInfoCasa.addControl('id_casa', this.fb.control(this.casa.id_casa))
+            this.casasService.modificarInfoCasa(this.formInfoCasa.value).subscribe(datos => {
               if (datos['resultado'] == "ERROR") {
                 console.log("ERROR");
                 return
@@ -349,7 +348,7 @@ export class CasaEditarComponent implements OnInit {
   }
 
   liberarLugar() {
-    this.casasService.liberarLugar(this.formInfoE.get('orden').value, this.infoCasa.id).subscribe(datos => {
+    this.casasService.liberarLugar(this.formInfoCasa.get('orden').value, this.infoCasa.id).subscribe(datos => {
       if (datos['resultado'] == "ERROR") {
         console.log("ERROR");
         return
@@ -375,7 +374,7 @@ export class CasaEditarComponent implements OnInit {
 
   imgPrincipal(event) {
     this.imgSeleccionada = <File>event.target.files[0];
-    this.formImgE.controls['imgPrincipal'].setValue(this.imgSeleccionada);
+    this.formImgCasa.controls['imgPrincipalCuarto'].setValue(this.imgSeleccionada);
 
     if (event.target.files && event.target.files[0]) {
       var reader = new FileReader();
@@ -390,7 +389,7 @@ export class CasaEditarComponent implements OnInit {
 
   imgCarousel(event) {
     this.imgCarouselSeleccionada = <File>event.target.files[0];
-    this.formImgE.controls['imgCarousel'].setValue(this.imgCarouselSeleccionada);
+    this.formImgCasa.controls['imgCarousel'].setValue(this.imgCarouselSeleccionada);
 
     if (event.target.files && event.target.files[0]) {
       var reader = new FileReader();
@@ -404,27 +403,45 @@ export class CasaEditarComponent implements OnInit {
   }
 
   multiImg(event) {
-
-    if (event.target.files && event.target.files[0]) {
+    if(event.target.files && event.target.files.length) {
       for (let i = 0; i < event.target.files.length; i++) {
+
         var reader = new FileReader();
+        let file = event.target.files[i];
+        let img = new Image();
+
+        img.src = window.URL.createObjectURL(file);
 
         reader.readAsDataURL(event.target.files[i]);
         reader.onload = (event: any) => {
-          if (!this.validacionTamImgs) {
-            this.urls.push(event.target.result);
+
+          const alto = img.naturalHeight;
+          const ancho = img.naturalWidth;
+
+          window.URL.revokeObjectURL(file);
+
+          if(alto < 690 || alto > 2160 || ancho < 950 ||ancho > 4096){
+            this.errorTamImgs = true;
+            this.badUrls.push(file.name)
           }
-        }
+          else{
+            this.urls.push(event.target.result);
+            this.imgsSeleccionadas.push(file);
+            this.listaImg.push(file.name);
+            this.formImgCasa.controls['imgsCasa'].setValue(this.imgsSeleccionadas);
+          }
+        };
 
-        var selectedFile = event.target.files[i];
-
-        if (!this.validacionTamImgs) {
-          this.imgsSeleccionadas.push(selectedFile);
-        }
+        this.sinImagen = false;
       }
     }
-    console.log(this.imgsSeleccionadas);
-    // this.formImgE.controls['imgsCasa'].setValue(this.imgsSeleccionadas);
+    else{
+      this.sinImagen = true;
+      return
+    }
+    console.log(this.formImgCasa.get('imgsCasa').value);
+    console.log(this.formImgCasa);
+
   }
 
   borrarImgPrincipal() {
@@ -435,7 +452,7 @@ export class CasaEditarComponent implements OnInit {
 
   borrarImgCarousel() {
     this.urlCarousel = null;
-    this.formImgE.controls['imgCarousel'].setValue("");
+    this.formImgCasa.controls['imgCarousel'].setValue("");
     this.imgInputC.nativeElement.value = null;
   }
 
@@ -444,15 +461,15 @@ export class CasaEditarComponent implements OnInit {
     this.listaImg.splice(index, 1);
     this.imgsSeleccionadas.splice(index, 1);
 
-    this.formImgE.controls['imgsCasa'].reset();
+    this.formImgCasa.controls['imgsCasa'].reset();
 
-    console.log(this.formImgE.get('imgsCasa').value);
+    console.log(this.formImgCasa.get('imgsCasa').value);
     if (this.imgsSeleccionadas.length == 0) {
-      this.formImgE.controls['imgsCasa'].setValue("");
+      this.formImgCasa.controls['imgsCasa'].setValue("");
       this.imgsInput.nativeElement.value = null;
     }
 
-    console.log(this.formImgE);
+    console.log(this.formImgCasa);
   }
   guardarImg() {
     this.imgsCasa.imgPrincipal = this.imgSeleccionada;
@@ -492,28 +509,43 @@ export class CasaEditarComponent implements OnInit {
   }
 
   multiImgCuarto(event) {
-
-    if (event.target.files && event.target.files[0]) {
+    if(event.target.files && event.target.files.length) {
       for (let i = 0; i < event.target.files.length; i++) {
+
         var reader = new FileReader();
+        let file = event.target.files[i];
+        let img = new Image();
+
+        img.src = window.URL.createObjectURL(file);
 
         reader.readAsDataURL(event.target.files[i]);
         reader.onload = (event: any) => {
-          if (!this.validacionTamImgsCuarto) {
-            this.urlsCuarto.push(event.target.result);
+
+          const alto = img.naturalHeight;
+          const ancho = img.naturalWidth;
+
+          window.URL.revokeObjectURL(file);
+
+          if(alto < 690 || alto > 2160 || ancho < 950 ||ancho > 4096){
+            this.errorTamImgs = true;
+            this.badUrls.push(file.name)
           }
-        }
+          else{
+            this.urlsCuarto.push(event.target.result);
+            this.imgsSeleccionadasCuarto.push(file);
+            this.listaImgCuarto.push(file.name);
+            this.formCuartos.controls['imgsCuarto'].setValue(this.imgsSeleccionadasCuarto);
+          }
+        };
 
-        var selectedFile = event.target.files[i];
-
-        if (!this.validacionTamImgsCuarto) {
-          this.imgsSeleccionadasCuarto.push(selectedFile);
-        }
+        this.sinImagen = false;
       }
     }
-    console.log(this.imgsSeleccionadasCuarto);
-    // this.formImgE.controls['imgsCasa'].setValue(this.imgsSeleccionadas);
-
+    else{
+      this.sinImagen = true;
+      return
+    }
+    console.log(this.formCuartos.get('imgsCuarto').value);
   }
 
   borrarImgPrincipalCuarto() {
@@ -539,6 +571,7 @@ export class CasaEditarComponent implements OnInit {
   }
 
   guardarCuarto() {
+    console.log(this.formCuartos.value);
     this.cuartosService.crearCuarto(this.formCuartos.value, this.casa.id_casa.toString()).subscribe(datos => {
       if (datos['resultado'] == 'OK') {
         this.activatedRoute.params.subscribe(params => {
@@ -553,7 +586,7 @@ export class CasaEditarComponent implements OnInit {
         this.urlsCuarto = [];
         this.urlPrincipalCuarto = [];
         this.imgsInputCua.nativeElement.value = null;
-        this.cerrar.nativeElement.click();
+        // this.cerrar.nativeElement.click();
       }
     });
 

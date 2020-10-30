@@ -196,7 +196,7 @@
                                 <div class="input-group form-row mb-3">
                                     <div class="col-md-12">
                                         <label for="evento">Evento:</label>
-                                        <select (change)="getBoletos($event)" id="evento" class="form-control">
+                                        <select id="evento" class="form-control">
                                           <option value="" selected>Elija un Evento</option>
                                           <option *ngFor="let evento of eventos; let i=i ndex" [value]="evento.id_evento"> {{evento.nombre_evento}} </option>
                                         </select>

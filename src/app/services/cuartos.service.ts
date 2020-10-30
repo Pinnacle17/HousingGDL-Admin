@@ -54,7 +54,7 @@ export class CuartosService{
     return this.http.get(`${this.url}verImagenesCuarto.php?id_cuarto=${id_cuarto}`)//.pipe(retry(3))
   }
   getSemestres(){
-    return this.http.get(`${this.url}VerSemestres.php`)
+    return this.http.get(`${this.url}verSemestres.php`)
   }
   getOferta(){
     return this.http.get(`${this.url}oferta_semestre.php`)

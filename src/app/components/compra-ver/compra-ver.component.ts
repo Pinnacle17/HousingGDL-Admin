@@ -17,10 +17,10 @@ export class CompraVerComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
       this.id_evento = params['id']
-      this.usuariosService.elementosVenta(params['id']).subscribe(resultado => {
-        this.elementosVenta = resultado;
-        console.log(this.elementosVenta);
-      });
+      // this.usuariosService.elementosVenta(params['id']).subscribe(resultado => {
+      //   this.elementosVenta = resultado;
+      //   console.log(this.elementosVenta);
+      // });
     });
   }
 
