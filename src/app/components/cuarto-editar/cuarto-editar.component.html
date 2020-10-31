@@ -34,7 +34,7 @@
         </div>
     </div>
 
-    <div class="card mb-3 border-primary">
+    <div class="card mb-3 border-primary " >
         <div class="card-header border-primary">
             <h4>Opciones de edición</h4>
         </div>
@@ -149,4 +149,87 @@
             </div>
         </div>
     </div>
+
+    <div class="card mb-3 border-primary">
+      <div class="card-header border-primary">
+          <h4>Oferta</h4>
+      </div>
+    <div class="input-group form-row mb-3">
+      <div class="col-md-12">
+          <label for="semestre">Semestre:</label>
+          <select id="semestre" class="form-control">
+            <option value="" selected>Elija un Semestre</option>
+            <option *ngFor="let semestre of semestres; let i=i ndex" [value]="semestre.id_semestre"> {{semestre.nombre_semestre}} </option>
+          </select>
+      </div>
+  </div>
+  <br>
+  <div class="card-body" *ngIf="oferta.tipo==0">
+    <form [formGroup]="formOferta" (ngSubmit)="guardarOferta()">
+            <div class="col-md-3">
+              <label for="precio">Precio: <small class="text-danger">*</small></label>
+              <input type="number" class="form-control" id="precio" formControlName="precio" [class.is-invalid]="validacionPrecio">
+              <small *ngIf="validacionPrecio" class="form-text text-danger">Obligatorio.</small>
+            </div>
+            <br>
+            <div class="col-md-6">
+              <label for="grupo">Grupo: <small class="text-danger">*</small></label>
+              <input type="text" id="grupo" class="form-control" placeholder="Ingrese el grupo" formControlName="grupo" [class.is-invalid]="validacionGrupo">
+              <small *ngIf="validacionGrupo" class="form-text text-danger">Obligatorio.</small>
+            </div>
+            <div class="col-md-12 text-center">
+              <button [disabled]="formOferta.invalid" class="btn btn-success" type="submit">Crear oferta</button>
+            </div>
+    </form>
+  </div>
+  <div class="card-body" *ngIf="oferta.tipo==1">
+        <div class="form-row mb-6">
+            <div class="col-md-12">
+                <label for="Grupo">Grupo: {{oferta.grupo}}</label>
+            </div>
+        </div>
+        <br>
+        <div class="input-group form-row mb-6">
+            <div class="col-md-12">
+                <label for="descCasa">Precio: ${{oferta.precio}}</label>
+            </div>
+        </div>
+        <hr>
+        <div class="input-group form-row mb-3">
+            <div class="col-md-12 text-center">
+              <button class="btn btn-danger ml-lg-2" type="button" (click)="eliminarOferta( oferta.fk_oferta )">Eliminar Oferta</button>
+            </div>
+        </div>
+  </div>
+  <div class="card-body" *ngIf="oferta.tipo==2">
+        <div class="form-row mb-12">
+            <div class="col-md-4">
+                <label for="nombreusuario">Nombre Usuario: {{oferta.nombre_usuario}}</label>
+            </div>
+            <div class="col-md-4">
+              <label for="celular">celular: {{oferta.celular}}</label>
+          </div>
+          <div class="col-md-4">
+            <label for="celular_ext">celular ext: {{oferta.celular_ext}}<small class="text-danger">*</small></label>
+        </div>
+        </div>
+        <div class="input-group form-row mb-12">
+            <div class="col-md-4">
+                <label for="descCasa">Grupo: {{oferta.grupo}}</label>
+            </div>
+            <div class="col-md-3">
+              <label for="descCasa">Precio: {{oferta.precio}}</label>
+            </div>
+            <div class="col-md-3">
+              <label for="descCasa">Fecha pago: {{oferta.fecha_compra}}</label>
+            </div>
+            <div class="col-md-2">
+              <label for="pago">Estado: {{oferta.pago}}</label>
+            </div>
+        </div>
+  </div>
+
+
+    </div>
+
 </div>

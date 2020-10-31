@@ -22,6 +22,7 @@ export class CuartoEditarComponent implements OnInit {
   //
   //
   cuarto:any = {};
+  oferta:any = {};
   //
   //
   formInfoCuarto: FormGroup;
@@ -44,24 +45,10 @@ export class CuartoEditarComponent implements OnInit {
   //
   semestres:any = null;
   //
-  eventos:any = null;
-  boletos:any = null;
-  promosCodigo:any = null;
-  promosFechas:any = null;
-  promosReferencia:any = null;
+  id_cuarto:number = null;
+  id_semestre:number = null;
+  //
 
-  errorCodigo:string = "";
-  id_evento:number = null;
-  //
-  id_casa:number = null;
-  //
-  infoBoleto:any = {
-    id:null,
-    nombre:null,
-    desc:null,
-    inventario:null,
-    precio:null
-  }
   //
   infoCuarto:any = {
     id_cuarto:null,
@@ -135,11 +122,14 @@ export class CuartoEditarComponent implements OnInit {
         this.imgs = resultado
         console.log(this.imgs)
       });
-
+      this.cuartosService.getSemestres().subscribe(resultado => {
+        this.semestres = resultado
+      });
       this.infoCuarto.id = params['id'];
       this.infoCuarto.id_cuarto = params['id'];
       this.infoOferta.id_cuarto = params['id'];
       this.imgsCuarto.id_cuarto = params['id'];
+      this.id_cuarto = params['id'];
     });
 
   }
@@ -221,30 +211,7 @@ export class CuartoEditarComponent implements OnInit {
   //   });
   // }
 
-  guardarOferta() {
-    this.infoOferta.precio = this.formOferta.get('precio').value;
-    this.infoOferta.grupo = this.formOferta.get('grupo').value;
-    this.infoOferta.id_semestre = this.formOferta.get('id_semestre').value;
-    this.cuartosService.crearOferta(this.infoOferta).subscribe(datos => {
-      if (datos['resultado'] == 'OK') {
-        this.formOferta.reset();
-      }
-    });
-  }
 
-  eliminarOferta( id_oferta:number ){
-    if(window.confirm("Seguro que quiere eliminar ésta oferta?")){
-      this.cuartosService.eliminarOferta(id_oferta).subscribe( datos => {
-        if(datos['resultado'] == "ERROR"){
-          console.log("ERROR");
-          return
-        }
-        else if(datos['resultado'] == "OK"){
-          this.refresh();
-        }
-      })
-    }
-  }
   eliminarImgCuarto(id: number) {
     console.log(id)
     if (confirm("Está seguro de querer eliminar esta imagen?")) {
@@ -352,6 +319,39 @@ export class CuartoEditarComponent implements OnInit {
       }
     });
   }
+  getOferta( event:any ){
+    this.id_semestre = event.target.value
+    if(this.id_semestre != null){
+      this.cuartosService.getOferta(this.id_semestre, this.id_cuarto).subscribe( resultado => this.oferta = resultado)
+    }
+    else{
+      return
+    }
+  }
 
+  guardarOferta() {
+    this.infoOferta.precio = this.formOferta.get('precio').value;
+    this.infoOferta.grupo = this.formOferta.get('grupo').value;
+    this.infoOferta.id_semestre = this.id_semestre;
+    this.cuartosService.crearOferta(this.infoOferta).subscribe(datos => {
+      if (datos['resultado'] == 'OK') {
+        this.formOferta.reset();
+      }
+    });
+  }
+
+  eliminarOferta( id_oferta:number ){
+    if(window.confirm("Seguro que quiere eliminar ésta oferta?")){
+      this.cuartosService.eliminarOferta(id_oferta).subscribe( datos => {
+        if(datos['resultado'] == "ERROR"){
+          console.log("ERROR");
+          return
+        }
+        else if(datos['resultado'] == "OK"){
+          this.refresh();
+        }
+      })
+    }
+  }
 
 }

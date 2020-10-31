@@ -56,7 +56,7 @@ export class CuartosService{
   getSemestres(){
     return this.http.get(`${this.url}verSemestres.php`)
   }
-  getOferta(){
-    return this.http.get(`${this.url}oferta_semestre.php`)
+  getOferta(id_semestre:number, id_cuarto:number ){
+    return this.http.get(`${this.url}oferta_semestre?id_semestre =${id_semestre}& id_cuarto =${id_cuarto}.php`)
   }
 }
