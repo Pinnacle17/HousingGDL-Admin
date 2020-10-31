@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { RepartidoresService } from '../../services/repartidores.service';
+import { RepartidoresService } from '../../services/chats.service';
 import { CuartosService } from 'src/app/services/cuartos.service';
 import { CasasService } from 'src/app/services/casas.service';
 
@@ -156,15 +156,15 @@ export class RepartidorEditarComponent implements OnInit {
     });
   }
 
-  /*getBoletos( event:any ){
-    this.id_evento = event.target.value
-    if(this.id_evento != null){
-      this.boletosService.getBoletos(this.id_evento).subscribe( resultado => this.boletos = resultado)
-    }
-    else{
-      return
-    }
-  }*/
+  // getBoletos( event:any ){
+  //   this.id_evento = event.target.value
+  //   if(this.id_evento != null){
+  //     this.boletosService.getBoletos(this.id_evento).subscribe( resultado => this.boletos = resultado)
+  //   }
+  //   else{
+  //     return
+  //   }
+  // }
 
   refresh(){
     //this.getBoletosTodos();

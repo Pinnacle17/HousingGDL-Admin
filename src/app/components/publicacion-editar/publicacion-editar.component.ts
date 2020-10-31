@@ -14,6 +14,7 @@ export class PublicacionEditarComponent implements OnInit {
   formInfoP:FormGroup;
   formImgP:FormGroup;
 
+  urlimagen = "http://localhost/casas-php/admin/assets/img/publicaciones/";
   urls = [];
   urlPrincipal = null;
 

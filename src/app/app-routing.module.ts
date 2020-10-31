@@ -8,7 +8,7 @@ import { UsuariosComponent } from './components/usuarios/usuarios.component';
 import { CasaEditarComponent } from './components/casaEditar/casaEditar.component';
 import { PublicacionEditarComponent } from './components/publicacion-editar/publicacion-editar.component';
 import { PerfilComponent } from './components/perfil/perfil.component';
-import { BoletoEditarComponent } from './components/boleto-editar/boleto-editar.component';
+import { CuartoEditarComponent } from './components/cuarto-editar/cuarto-editar.component';
 import { RepartidorEditarComponent } from './components/repartidor-editar/repartidor-editar.component';
 import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './login/login.component';
@@ -29,7 +29,7 @@ const routes: Routes = [
     { path: 'repartidores', component: RepartidoresComponent },
     { path: 'editar-casa/:id', component: CasaEditarComponent },
     { path: 'editar-publicacion/:id', component: PublicacionEditarComponent },
-    { path: 'editar-boleto/:id', component: BoletoEditarComponent },
+    { path: 'editar-cuarto/:id', component: CuartoEditarComponent },
     { path: 'editar-repartidor/:id', component: RepartidorEditarComponent },
     { path: 'perfil', component: PerfilComponent },
     { path: 'chat-list', component: ChatListComponent},

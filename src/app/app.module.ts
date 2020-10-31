@@ -26,10 +26,10 @@ import { CasasService } from './services/casas.service';
 import { PublicacionesService } from './services/publicaciones.service';
 import es from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
-import { BoletoEditarComponent } from './components/boleto-editar/boleto-editar.component';
+import { CuartoEditarComponent } from './components/cuarto-editar/cuarto-editar.component';
 import { RepartidorEditarComponent } from './components/repartidor-editar/repartidor-editar.component';
 import { CuartosService } from './services/cuartos.service';
-import { RepartidoresService } from './services/repartidores.service';
+import { ChatsService } from './services/chats.service';
 import { LoginComponent } from './login/login.component';
 import { LayoutComponent } from './layout/layout.component';
 import { UsuarioVerComponent } from './components/usuario-ver/usuario-ver.component';
@@ -50,7 +50,7 @@ registerLocaleData(es)
     CasaEditarComponent,
     PublicacionEditarComponent,
     PerfilComponent,
-    BoletoEditarComponent,
+    CuartoEditarComponent,
     RepartidorEditarComponent,
     LayoutComponent,
     LoginComponent,
@@ -75,7 +75,7 @@ registerLocaleData(es)
     CasasService,
     PublicacionesService,
     CuartosService,
-    RepartidoresService,
+    ChatsService,
     { provide: LOCALE_ID, useValue: 'es-Mx' },
     {provide: LocationStrategy, useClass: HashLocationStrategy}
   ],

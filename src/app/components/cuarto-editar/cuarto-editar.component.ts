@@ -2,15 +2,16 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CuartosService } from '../../services/cuartos.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { OwlOptions } from 'ngx-owl-carousel-o';
 import { CasasService } from '../../services/casas.service';
 import { environment } from 'src/environments/environment'
-import { async, RxwebValidators } from '@rxweb/reactive-form-validators';
+import { RxwebValidators } from '@rxweb/reactive-form-validators';
 
 @Component({
-  selector: 'app-boleto-editar',
-  templateUrl: './boleto-editar.component.html'
+  selector: 'app-cuarto-editar',
+  templateUrl: './cuarto-editar.component.html'
 })
-export class BoletoEditarComponent implements OnInit {
+export class CuartoEditarComponent implements OnInit {
   imgUrl = environment.imgUrl
 
   @ViewChild('cerrarCodigo') cerrarCodigo;
@@ -33,7 +34,11 @@ export class BoletoEditarComponent implements OnInit {
   listaImgCuarto: any[] = [];
   //
   urlsCuarto = [];
+  badUrls = [];
   urlPrincipalCuarto = null;
+  //
+  sinImagen: boolean = false;
+  errorTamImgs: boolean = false;
   //
   mensajeError:string = null;
   //
@@ -77,18 +82,40 @@ export class BoletoEditarComponent implements OnInit {
     descripcion_cuarto:null,
   }
 
-  imgs:any={
-    id:null,
-    imgRuta:null
+  imgs:any = null;
+
+  public customOptions: OwlOptions = {
+    loop: true,
+    mouseDrag: true,
+    touchDrag: true,
+    pullDrag: false,
+    dots: true,
+    navSpeed: 700,
+    navText: ['Anterior', 'Siguietne'],
+    responsive: {
+      0: {
+        items: 1
+      },
+      400: {
+        items: 2
+      },
+      740: {
+        items: 3
+      },
+      940: {
+        items: 3
+      }
+    },
+    nav: true
   }
 
   constructor(private activatedRoute:ActivatedRoute,
               private cuartosService:CuartosService,
               private fb:FormBuilder,
-              private eventosService:CasasService) { }
+              private casasService:CasasService) { }
 
   ngOnInit() {
-    this.getSemestres();
+    // this.getSemestres();
     this.formInfoCuartoInit();
     this.formImgInit();
     this.activatedRoute.params.subscribe( params => {
@@ -107,7 +134,6 @@ export class BoletoEditarComponent implements OnInit {
       this.cuartosService.getImgs(params['id']).subscribe(resultado => {
         this.imgs = resultado
         console.log(this.imgs)
-
       });
 
       this.infoCuarto.id = params['id'];
@@ -126,8 +152,8 @@ export class BoletoEditarComponent implements OnInit {
   }
   formImgInit() {
     this.formImgCuarto = this.fb.group({
-      imgPrincipalCuarto: ['', RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })],
-      imgsCuarto: ['', RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })]
+      imgPrincipal: ['', RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })],
+      imgsCuarto: ['']
     })
   }
   formOfertaInit(){
@@ -147,7 +173,7 @@ export class BoletoEditarComponent implements OnInit {
   }
 
   get validacionTamImgPCuarto() {
-    return this.formImgCuarto.get('imgPrincipalCuarto').invalid && this.formImgCuarto.get('imgPrincipal').dirty
+    return this.formImgCuarto.get('imgPrincipal').invalid && this.formImgCuarto.get('imgPrincipal').dirty
   }
 
   get validacionTamImgsCuarto() {
@@ -161,9 +187,14 @@ export class BoletoEditarComponent implements OnInit {
     return this.formOferta.get('grupo').invalid && this.formOferta.get('grupo').touched;
   }
 
+
   refresh(){
     this.activatedRoute.params.subscribe( params => {
       this.cuartosService.getCuarto(params['id']).subscribe( resultado => this.cuarto = resultado[0]);
+      this.cuartosService.getImgs(params['id']).subscribe(resultado => {
+        this.imgs = resultado
+        console.log(this.imgs)
+      });
     });
   }
 
@@ -183,12 +214,12 @@ export class BoletoEditarComponent implements OnInit {
         })
   }
 
-  getSemestres(){
-    this.cuartosService.getSemestres().subscribe( resultado => {
-      this.semestres = resultado
-      console.log(this.semestres );
-    });
-  }
+  // getSemestres(){
+  //   this.cuartosService.getSemestres().subscribe( resultado => {
+  //     this.semestres = resultado
+  //     console.log(this.semestres );
+  //   });
+  // }
 
   guardarOferta() {
     this.infoOferta.precio = this.formOferta.get('precio').value;
@@ -228,7 +259,7 @@ export class BoletoEditarComponent implements OnInit {
 
   imgPrincipalCuarto(event) {
     this.imgPrincipalSeleccionadaCuarto = <File>event.target.files[0];
-    this.formImgCuarto.controls['imgPrincipalCuarto'].patchValue(this.imgPrincipalSeleccionadaCuarto);
+    this.formImgCuarto.controls['imgPrincipal'].patchValue(this.imgPrincipalSeleccionadaCuarto);
 
     if (event.target.files && event.target.files[0]) {
       var reader = new FileReader();
@@ -240,33 +271,65 @@ export class BoletoEditarComponent implements OnInit {
       }
     }
   }
+  borrarImgs(url: any, index: number) {
+    this.urlsCuarto = this.urlsCuarto.filter((a) => a !== url);
+    this.listaImgCuarto.splice(index, 1);
+    this.imgsSeleccionadasCuarto.splice(index, 1);
 
-  multiImgCuarto(event) {
+    this.formImgE.controls['imgsCasa'].reset();
 
-    if (event.target.files && event.target.files[0]) {
+    console.log(this.formImgE.get('imgsCasa').value);
+    if (this.imgsSeleccionadasCuarto.length == 0) {
+      this.formImgE.controls['imgsCasa'].setValue("");
+      this.imgsInputCua.nativeElement.value = null;
+    }
+
+    console.log(this.formImgE);
+  }
+
+  multiImg(event) {
+    if(event.target.files && event.target.files.length) {
       for (let i = 0; i < event.target.files.length; i++) {
+
         var reader = new FileReader();
+        let file = event.target.files[i];
+        let img = new Image();
+
+        img.src = window.URL.createObjectURL(file);
 
         reader.readAsDataURL(event.target.files[i]);
         reader.onload = (event: any) => {
-          if (!this.validacionTamImgsCuarto) {
-            this.urlsCuarto.push(event.target.result);
+
+          const alto = img.naturalHeight;
+          const ancho = img.naturalWidth;
+
+          window.URL.revokeObjectURL(file);
+
+          if(alto < 690 || alto > 2160 || ancho < 950 ||ancho > 4096){
+            this.errorTamImgs = true;
+            this.badUrls.push(file.name)
           }
-        }
+          else{
+            this.urlsCuarto.push(event.target.result);
+            this.imgsSeleccionadasCuarto.push(file);
+            this.listaImgCuarto.push(file.name);
+            this.formImgCuarto.controls['imgsCuarto'].setValue(this.imgsSeleccionadasCuarto);
+          }
+        };
 
-        var selectedFile = event.target.files[i];
-
-        if (!this.validacionTamImgsCuarto) {
-          this.imgsSeleccionadasCuarto.push(selectedFile);
-        }
+        this.sinImagen = false;
       }
     }
-    console.log(this.imgsSeleccionadasCuarto);
-    // this.formImgE.controls['imgsCasa'].setValue(this.imgsSeleccionadas);
+    else{
+      this.sinImagen = true;
+      return
+    }
+    console.log(this.formImgCuarto.get('imgsCuarto').value);
   }
+
   borrarImgPrincipalCuarto() {
     this.urlPrincipalCuarto = null;
-    this.formImgCuarto.controls['imgPrincipalCuarto'].setValue("");
+    this.formImgCuarto.controls['imgPrincipal'].setValue("");
     this.imgInputPriCua.nativeElement.value = null;
   }
   guardarImg() {
@@ -289,5 +352,6 @@ export class BoletoEditarComponent implements OnInit {
       }
     });
   }
+
 
 }
