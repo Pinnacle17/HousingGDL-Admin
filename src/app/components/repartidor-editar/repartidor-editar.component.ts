@@ -156,15 +156,15 @@ export class RepartidorEditarComponent implements OnInit {
     });
   }
 
-  /*getBoletos( event:any ){
-    this.id_evento = event.target.value
-    if(this.id_evento != null){
-      this.boletosService.getBoletos(this.id_evento).subscribe( resultado => this.boletos = resultado)
-    }
-    else{
-      return
-    }
-  }*/
+  // getBoletos( event:any ){
+  //   this.id_evento = event.target.value
+  //   if(this.id_evento != null){
+  //     this.boletosService.getBoletos(this.id_evento).subscribe( resultado => this.boletos = resultado)
+  //   }
+  //   else{
+  //     return
+  //   }
+  // }
 
   refresh(){
     //this.getBoletosTodos();

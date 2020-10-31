@@ -57,10 +57,8 @@
                                 <h4> {{cuarto.nombre_cuarto}} </h4>
                             </div>
                             <div class="col-md-6">
-                              <button class="btn btn-success ml-lg-2" type="button" (click)="activarCuarto( cuarto.id_cuarto )"
-                              *ngIf="cuarto.estado_cuarto==0">Activar</button>
-                          <button class="btn btn-danger ml-lg-2" type="button" (click)="desactivarCuarto( cuarto.id_cuarto )"
-                              *ngIf="cuarto.estado_cuarto==1">Desactivar</button>
+                                <button class="btn btn-success ml-lg-2" type="button" (click)="activarCuarto( cuarto.id_cuarto )" *ngIf="cuarto.estado_cuarto==0">Activar</button>
+                                <button class="btn btn-danger ml-lg-2" type="button" (click)="desactivarCuarto( cuarto.id_cuarto )" *ngIf="cuarto.estado_cuarto==1">Desactivar</button>
                                 <button class="btn btn-success float-right m-1" (click)="editarCuarto( cuarto.id_cuarto )">Editar</button>
                             </div>
                         </div>
@@ -123,7 +121,7 @@
 
                     <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                         <div class="card-body">
-                            <form [formGroup]="formInfoE" (ngSubmit)="guardarInfo()">
+                            <form [formGroup]="formInfoCasa" (ngSubmit)="guardarInfo()">
                                 <div class="form-row mb-3">
                                     <div class="col-md-12">
                                         <label for="nombreCasa">Nombre: <small class="text-danger">*</small></label>
@@ -163,7 +161,7 @@
                                 <hr>
                                 <div class="input-group form-row mb-3">
                                     <div class="col-md-12 text-center">
-                                        <button [disabled]="formInfoE.invalid" class="btn btn-success" type="submit">Guardar</button>
+                                        <button [disabled]="formInfoCasa.invalid" class="btn btn-success" type="submit">Guardar</button>
                                     </div>
                                     <button #modalError type="button" class="invisible" data-toggle="modal" data-target="#modalError"></button>
                                 </div>
@@ -182,7 +180,7 @@
                     </div>
                     <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                         <div class="card-body">
-                            <form [formGroup]="formImgE" (ngSubmit)="guardarImg()">
+                            <form [formGroup]="formImgCasa" (ngSubmit)="guardarImg()">
                                 <div class="input-group form-row mb-3">
                                     <div class="col-md-6">
                                         <label for="imgPrincipal">Imagen Principal del Casa:</label><br>
@@ -199,19 +197,22 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="imgCasa">Imagenes de la Casa:</label><br>
-                                        <input #imgsInput type='file' id="imgCasa" accept=".jpg" (change)="multiImg($event)" multiple formControlName="imgsCasa">
-                                        <small *ngIf="validacionTamImgs" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
-                                        <ng-container *ngIf="(urls != null) && (!validacionTamImgs)">
-                                            <div class="row border" *ngFor='let url of urls; let i = index'>
-                                                <div class="col-md-12">
-                                                    <img [src]="url " height="300" width="400">
-                                                    <button type="button" aria-label="Close" class="btn btn-danger" (click)="borrarImgs(url, i)">
-                                                      <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
+                                        <label for="imgsCasa">Imagenes de la Casa: <small class="text-danger">*</small></label>
+                                        <input #imgsInput type='file' id="imgsCasa" accept=".jpg" (change)="multiImg($event)" multiple formControlName="imgsCasa">
+                                        <div class="row mb-3 mt-3" *ngFor='let url of urls; let i = index'>
+                                            <div class="col-md-9">
+                                                <h6 class="text-center">{{ listaImg[i] }}</h6>
+                                                <img [src]="url" height="200" class="float-right" style="max-width: 300px; max-height: 150;"><br>
                                             </div>
-                                        </ng-container>
+                                            <div class="col-md-3">
+                                                <button type="button" aria-label="Close" class="btn btn-danger float-left" (click)="borrarImgs(url, i)">
+                                                  <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3 mt-3" *ngFor='let url of badUrls; let i = index'>
+                                            <small *ngIf="errorTamImgs && sinImagen == false" class="form-text text-danger ml-4">La imagen {{ badUrls[i] }} no puede ser ingresada. Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
+                                        </div>
                                         <div class="mt-4 text-center">
                                             <h5>Imágenes Actuales.</h5>
                                         </div>
@@ -242,7 +243,7 @@
 
                                 <div class="input-group form-row mb-3">
                                     <div class="col-md-12 text-center">
-                                        <button class="btn btn-success" type="submit" [disabled]="formImgE.invalid">Guardar cambios</button>
+                                        <button class="btn btn-success" type="submit" [disabled]="formImgCasa.invalid">Guardar cambios</button>
                                     </div>
                                 </div>
 
@@ -265,7 +266,7 @@
                                     <div class="col-md-6">
                                         <label for="nombre_cuarto">Nombre del  Cuarto: <small class="text-danger">*</small></label>
                                         <input type="text" id="nombre_cuarto" class="form-control" placeholder="Ingrese el Nombre del Cuarto" formControlName="nombre_cuarto">
-                                      </div>
+                                    </div>
                                 </div>
 
                                 <div class="input-group form-row mb-2">
@@ -275,49 +276,48 @@
                                     </div>
                                 </div>
                                 <div class="input-group form-row mb-3">
-                                  <div class="col-md-12">
-                                          <label for="imgPrincipalCuarto">Imagen Principal de el cuarto: <small
+                                    <div class="col-md-12">
+                                        <label for="imgPrincipalCuarto">Imagen Principal del cuarto: <small
                                               class="text-danger">*</small></label>
-                                          <input #imgInputPriCua [writeFile]="true" type="file" id="imgPrincipalCuarto" accept=".jpg"
-                                          (change)="imgPrincipalCuarto($event)" formControlName="imgPrincipalCuarto">
-                                          <small *ngIf="validacionImgCuarto" class="form-text text-danger">Imagen Principal
+                                        <input #imgInputPriCua [writeFile]="true" type="file" id="imgPrincipalCuarto" accept=".jpg" (change)="imgPrincipalCuarto($event)" formControlName="imgPrincipalCuarto">
+                                        <small *ngIf="validacionImgCuarto" class="form-text text-danger">Imagen Principal
                                           Obligatoria.</small>
-                                          <small *ngIf="validacionTamImgPCuarto" class="form-text text-danger">Error: Tamaño Mínimo: 950x690.
+                                        <small *ngIf="validacionTamImgPCuarto" class="form-text text-danger">Error: Tamaño Mínimo: 950x690.
                                           Tamaño Máximo: 4096x2160</small>
-                                            <div class="row" *ngIf="(urlPrincipalCuarto != null) && (!validacionTamImgPCuarto)">
-                                              <div class="col-md-9">
+                                        <div class="row" *ngIf="(urlPrincipalCuarto != null) && (!validacionTamImgPCuarto)">
+                                            <div class="col-md-9">
                                                 <img [src]="urlPrincipalCuarto" height="200" class="float-right"><br>
-                                              </div>
-                                              <div class="col-md-3">
-                                                <button type="button" aria-label="Close" class="btn btn-danger float-left"
-                                                  (click)="borrarImgPrincipalCuarto()">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button type="button" aria-label="Close" class="btn btn-danger float-left" (click)="borrarImgPrincipalCuarto()">
                                                   <span aria-hidden="true">&times;</span>
                                                 </button>
-                                              </div>
-                                            </div>
-                                          </div>
-                                      </div>
-
-                                      <div class="input-group form-row mb-3">
-                                        <div class="col-md-12">
-                                            <label for="imgsCuarto">Imagenes de el cuarto: <small class="text-danger">*</small></label>
-                                            <input #imgsInputCua [writeFile]="true" type='file' id="imgsCuarto" accept=".jpg"
-                                                (change)="multiImgCuarto($event)" multiple formControlName="imgsCuarto">
-                                            <div class="row" *ngFor='let url of urlsCuarto; let i = index'>
-                                                <div class="col-md-9">
-
-                                                    <img [src]="url" height="200" class="float-right"><br>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <button type="button" aria-label="Close" class="btn btn-danger float-left"
-                                                        (click)="borrarImgsCuarto(url, i)">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="input-group form-row mb-3">
+                                    <div class="col-md-12">
+                                        <label for="imgsCuarto">Imagenes del Cuarto: <small class="text-danger">*</small></label>
+                                        <input #imgsInputCua type='file' id="imgsCuarto" accept=".jpg" (change)="multiImgCuarto($event)" multiple formControlName="imgsCuarto">
+                                        <small *ngIf="validacionImgsCuarto" class="form-text text-danger">Mínimo una imágen.</small>
+                                        <div class="row mb-3 mt-3" *ngFor='let url of urlsCuarto; let i = index'>
+                                            <div class="col-md-9">
+                                                <h6 class="text-center">{{ listaImgCuarto[i] }}</h6>
+                                                <img [src]="url" height="200" class="float-right" style="max-width: 300px; max-height: 150;"><br>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button type="button" aria-label="Close" class="btn btn-danger float-left" (click)="borrarImgs(url, i)">
+                                                  <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3 mt-3" *ngFor='let url of badUrls; let i = index'>
+                                            <small *ngIf="errorTamImgs && sinImagen == false" class="form-text text-danger ml-4">La imagen {{ badUrls[i] }} no puede ser ingresada. Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
+                                        </div>
+                                    </div>
+                                </div>
 
 
                                 <button class="btn btn-success btn-block mx-auto" style="width: 25%; display: block;" type="submit">Crear Cuarto</button>

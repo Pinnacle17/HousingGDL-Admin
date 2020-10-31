@@ -107,23 +107,26 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="imgCasa">Imagenes del Cuarto:</label><br>
-                                        <input #imgsInputCua type='file' id="imgCasa" accept=".jpg" (change)="multiImgCuarto($event)" multiple formControlName="imgsCuarto">
-                                        <small *ngIf="validacionTamImgsCuarto" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
-                                        <ng-container *ngIf="(urlsCuarto != null) && (!validacionTamImgsCuarto)">
-                                            <div class="row border" *ngFor='let url of urlsCuarto; let i = index'>
-                                                <div class="col-md-12">
-                                                    <img [src]="url " height="300" width="400">
-                                                    <button type="button" aria-label="Close" class="btn btn-danger" (click)="borrarImgs(url, i)">
+                                        <label for="imgsCuarto">Imagenes del Cuarto: <small class="text-danger">*</small></label><br>
+                                        <input #imgsInputCua type='file' id="imgsCuarto" accept=".jpg" (change)="multiImg($event)" multiple formControlName="imgsCuarto">
+                                        <div class="row mb-3 mt-3" *ngFor='let url of urlsCuarto; let i = index'>
+                                            <div class="col-md-9">
+                                                <h6 class="text-center">{{ listaImgCuarto[i] }}</h6>
+                                                <img [src]="url" height="200" class="float-right" style="max-width: 300px; max-height: 150;"><br>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button type="button" aria-label="Close" class="btn btn-danger float-left" (click)="borrarImgs(url, i)">
                                                       <span aria-hidden="true">&times;</span>
                                                     </button>
-                                                </div>
                                             </div>
-                                        </ng-container>
+                                        </div>
+                                        <div class="row mb-3 mt-3" *ngFor='let url of badUrls; let i = index'>
+                                            <small *ngIf="errorTamImgs && sinImagen == false" class="form-text text-danger ml-4">La imagen {{ badUrls[i] }} no puede ser ingresada. Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
+                                        </div>
                                         <div class="mt-4 text-center">
                                             <h5>Imágenes Actuales.</h5>
                                         </div>
-                                        <div class="row mt-3 border" *ngFor='let img of imgs'>
+                                        <div class="row mt-3" *ngFor='let img of imgs'>
                                             <div class="col-md-12 text-center">
                                                 <img [src]="imgUrl+img.ruta_imagen_cuarto " height="300" width="400"><br>
                                                 <button type="button" class="btn btn-danger" (click)="eliminarImgCuarto( img.id_imagen_cuarto )">Eliminar</button>
@@ -134,7 +137,7 @@
 
                                 <div class="input-group form-row mb-3">
                                     <div class="col-md-12 text-center">
-                                        <button class="btn btn-success" type="submit" >Guardar cambios</button>
+                                        <button class="btn btn-success" type="submit" [disabled]="formImgCuarto.invalid">Guardar cambios</button>
                                     </div>
                                 </div>
 
@@ -147,4 +150,3 @@
         </div>
     </div>
 </div>
-
