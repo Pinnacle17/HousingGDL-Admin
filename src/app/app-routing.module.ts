@@ -14,6 +14,8 @@ import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './login/login.component';
 import { UsuarioVerComponent } from './components/usuario-ver/usuario-ver.component';
 import { CompraVerComponent } from './components/compra-ver/compra-ver.component';
+import { ChatComponent } from './components/chat/chat.component';
+import { ChatListComponent } from './components/chat-list/chat-list.component';
 
 const routes: Routes = [
   { path: '', component: LayoutComponent, children: [
@@ -30,6 +32,8 @@ const routes: Routes = [
     { path: 'editar-boleto/:id', component: BoletoEditarComponent },
     { path: 'editar-repartidor/:id', component: RepartidorEditarComponent },
     { path: 'perfil', component: PerfilComponent },
+    { path: 'chat-list', component: ChatListComponent},
+    { path: 'chat/:id', component: ChatComponent },
   ]},
   { path: 'login', component: LoginComponent },
   { path: '**', pathMatch: 'full', redirectTo: 'login' }

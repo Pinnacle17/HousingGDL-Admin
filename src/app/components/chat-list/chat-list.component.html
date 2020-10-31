@@ -1,0 +1,16 @@
+<div class=chat-container>
+    <div class="chat-list">
+        <div *ngFor="let user of users">
+            <a (click)="chat(user.id_chat)" class="chat-div">
+                <img src="{{user.img}}" alt="" class="profile-pic">
+                <div>
+                    <p>{{user.name}}</p>
+                    <p>{{user.msg}}</p>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="chat">
+        <app-chat [id]="chatId"></app-chat>
+    </div>
+</div>
