@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { RepartidoresService } from '../../services/repartidores.service';
+import { RepartidoresService } from '../../services/chats.service';
 import { CuartosService } from 'src/app/services/cuartos.service';
 import { CasasService } from 'src/app/services/casas.service';
 

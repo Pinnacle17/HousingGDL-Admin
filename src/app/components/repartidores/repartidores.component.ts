@@ -1,6 +1,6 @@
 import {Component, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
-import {RepartidoresService} from '../../services/repartidores.service';//
+import {RepartidoresService} from '../../services/chats.service';//
 import {Router} from '@angular/router';
 
 declare var webkitSpeechRecognition;
