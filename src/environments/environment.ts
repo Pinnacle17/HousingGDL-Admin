@@ -4,12 +4,14 @@
 
 export const environment = {
   production: false,
-  // apiUrl:'http://localhost/casas-php/PT-API-P/admin/',
-  apiUrl:'http://localhost:8080/C-API/admin/',
-  // imgUrl:'http://localhost/casas-php/admin/assets/img/casas/',
+  apiUrl:'http://localhost/casas-php/PT-API-P/admin/',
+  //apiUrl:'http://localhost:8080/C-API/admin/',
+  apiUrlUsuario:'http://localhost/C-API/',
+  //imgUrl:'http://localhost/casas-php/admin/assets/img/casas/',
   imgUrl:'http://localhost:8080/C-API/admin/assets/img/casas/',
-  // imgUrlPublicacion:'http://localhost/casas-php/admin/assets/img/publicaciones/'
+  //imgUrlPublicacion:'http://localhost/casas-php/admin/assets/img/publicaciones/'
   imgUrlPublicacion:'http://localhost:8080/C-API/admin/assets/img/publicaciones/'
+  //imgUrlPublicacion:'http://localhost/C-API/admin/assets/img/publicaciones/'
 };
 
 /*
