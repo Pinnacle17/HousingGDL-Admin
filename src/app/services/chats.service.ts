@@ -14,8 +14,8 @@ export class ChatsService {
 
   constructor(private http:HttpClient) { }
 
-  bloquearChat( id_chat:number, id_usuario:number){
-    return this.http.get(`${this.url}chats/bloquearChat.php?id_chat=${id_chat}&id_usuario=${id_usuario}`)//.pipe(retry(3))
+  bloquearChat( id_chat:number){
+    return this.http.get(`${this.url}chats/bloquearChat.php?id_chat=${id_chat}`)//.pipe(retry(3))
   }
 
   cambiarEstadoNotificacion( id_chat:number){
@@ -26,9 +26,8 @@ export class ChatsService {
     return this.http.get(`${this.url}chats/cancelarChat.php?id_chat=${id_chat}&mensaje=${mensaje}`)//.pipe(retry(3))
   }
 
-  confirmarCompra(chat:any){
-    const CHAT = serialize(chat);
-    return this.http.post(`${this.url}chats/confirmarCompra.php`, CHAT)//.pipe(retry(3))
+  confirmarCompra(id_chat:any){
+    return this.http.get(`${this.url}chats/confirmarCompra.php?id_chat=${id_chat}`)//.pipe(retry(3))
   }
 
   enviarMensaje(id_chat:number, mensaje:string){
