@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ɵConsole } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CuartosService } from '../../services/cuartos.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -105,6 +105,7 @@ export class CuartoEditarComponent implements OnInit {
     // this.getSemestres();
     this.formInfoCuartoInit();
     this.formImgInit();
+    this.formOfertaInit();
     this.activatedRoute.params.subscribe( params => {
       this.cuartosService.getCuarto(params['id']).subscribe( resultado => {
 
@@ -148,7 +149,6 @@ export class CuartoEditarComponent implements OnInit {
   }
   formOfertaInit(){
     this.formOferta = this.fb.group({
-      id_semestre:[null],
       grupo:['', [Validators.required]],
       precio:['', [Validators.required]],
     })
@@ -320,7 +320,7 @@ export class CuartoEditarComponent implements OnInit {
     });
   }
   getOferta( event:any ){
-    this.id_semestre = event.target.value
+    this.id_semestre = event
     if(this.id_semestre != null){
       this.cuartosService.getOferta(this.id_semestre, this.id_cuarto).subscribe( resultado => this.oferta = resultado)
     }
@@ -330,6 +330,7 @@ export class CuartoEditarComponent implements OnInit {
   }
 
   guardarOferta() {
+    console.log(this.formOferta.get('precio').value)
     this.infoOferta.precio = this.formOferta.get('precio').value;
     this.infoOferta.grupo = this.formOferta.get('grupo').value;
     this.infoOferta.id_semestre = this.id_semestre;

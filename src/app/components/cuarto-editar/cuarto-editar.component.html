@@ -157,15 +157,15 @@
     <div class="input-group form-row mb-3">
       <div class="col-md-12">
           <label for="semestre">Semestre:</label>
-          <select id="semestre" class="form-control">
+          <select id="semestre" class="form-control" (change)="getOferta($event.target.value)">
             <option value="" selected>Elija un Semestre</option>
-            <option *ngFor="let semestre of semestres; let i=i ndex" [value]="semestre.id_semestre"> {{semestre.nombre_semestre}} </option>
+            <option *ngFor="let semestre of semestres; let i=i ndex" [value]="semestre.id_semestre"> {{semestre.nombre}} </option>
           </select>
       </div>
   </div>
   <br>
-  <div class="card-body" *ngIf="oferta.tipo==0">
-    <form [formGroup]="formOferta" (ngSubmit)="guardarOferta()">
+  <!-- <div class="card-body" > -->
+    <form [formGroup]="formOferta" (ngSubmit)="guardarOferta()" *ngIf="oferta.tipo==0">
             <div class="col-md-3">
               <label for="precio">Precio: <small class="text-danger">*</small></label>
               <input type="number" class="form-control" id="precio" formControlName="precio" [class.is-invalid]="validacionPrecio">
@@ -181,7 +181,7 @@
               <button [disabled]="formOferta.invalid" class="btn btn-success" type="submit">Crear oferta</button>
             </div>
     </form>
-  </div>
+  <!-- </div> -->
   <div class="card-body" *ngIf="oferta.tipo==1">
         <div class="form-row mb-6">
             <div class="col-md-12">

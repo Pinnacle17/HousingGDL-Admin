@@ -14,7 +14,6 @@ import { InicioComponent } from './components/inicio/inicio.component';
 import { CasasComponent } from './components/casas/casas.component';
 import { PublicacionesComponent } from './components/publicaciones/publicaciones.component';
 import { UsuariosComponent } from './components/usuarios/usuarios.component';
-import { RepartidoresComponent } from './components/repartidores/repartidores.component';
 
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { CasaEditarComponent } from './components/casaEditar/casaEditar.component';
@@ -27,7 +26,6 @@ import { PublicacionesService } from './services/publicaciones.service';
 import es from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
 import { CuartoEditarComponent } from './components/cuarto-editar/cuarto-editar.component';
-import { RepartidorEditarComponent } from './components/repartidor-editar/repartidor-editar.component';
 import { CuartosService } from './services/cuartos.service';
 import { ChatsService } from './services/chats.service';
 import { LoginComponent } from './login/login.component';
@@ -46,12 +44,10 @@ registerLocaleData(es)
     CasasComponent,
     PublicacionesComponent,
     UsuariosComponent,
-    RepartidoresComponent,
     CasaEditarComponent,
     PublicacionEditarComponent,
     PerfilComponent,
     CuartoEditarComponent,
-    RepartidorEditarComponent,
     LayoutComponent,
     LoginComponent,
     UsuarioVerComponent,
