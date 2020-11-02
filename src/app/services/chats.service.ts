@@ -39,7 +39,7 @@ export class ChatsService {
   }
 
   verChatsNotificacion(){
-    return this.http.get(`${this.url}chats/verDatosChat.php`)//.pipe(retry(3))
+    return this.http.get(`${this.url}chats/verChatsNotificacion.php`)//.pipe(retry(3))
   }
 
   verDatosChat(id_chat:number){
