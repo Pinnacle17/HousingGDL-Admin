@@ -337,6 +337,9 @@ export class CuartoEditarComponent implements OnInit {
     this.cuartosService.crearOferta(this.infoOferta).subscribe(datos => {
       if (datos['resultado'] == 'OK') {
         this.formOferta.reset();
+        this.oferta['precio'] = this.infoOferta.precio;
+        this.oferta['grupo'] = this.infoOferta.grupo;
+        this.oferta['tipo'] = 1;
       }
     });
   }
@@ -349,7 +352,8 @@ export class CuartoEditarComponent implements OnInit {
           return
         }
         else if(datos['resultado'] == "OK"){
-          this.refresh();
+          this.oferta['tipo'] = 0;
+
         }
       })
     }
