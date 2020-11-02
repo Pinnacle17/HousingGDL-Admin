@@ -1,8 +1,31 @@
 <div class="chatContainer">
+    <div class="card" style="width: 100%">
+        <div class="card-body">
+          <h5 class="card-title">{{datos.nombre_usuario}}</h5>
+          <p class="card-text">{{datos.nombre_casa}}</p>
+          <p class="card-text">{{datos.nombre_cuarto}}</p>
+          <p class="card-text">Precio: {{datos.precio}}</p>
+          <p class="card-text">Semestre: {{datos.nombre_semestre}}</p>
+          <p class="card-text">Estado {{datos.estado_chat}}</p>
+        </div>
+    </div>
+    <div class="card" style="width: 100%" *ngIf="datos.estado_chat=='Activo'">
+        <div style="display: flex; justify-content: space-evenly;" class="card-body">
+            <button (click)="bloquear()" type="button" class="btn btn-danger">
+                Bloquear 
+            </button>
+            <button (click)="cancelar()" type="button" class="btn btn-warning">
+                Cancelar   
+            </button>
+            <button (click)="confirmarCompra()" type="button" class="btn btn-info">
+                Confirmar compra    
+            </button>
+        </div>
+    </div>
     <div class="chat">
         <div *ngFor="let msg of msgs" style="display:flex" [ngClass]="{
-            'chatSend':msg.usuario === 1,
-            'chatRecieved':msg.usuario === 0
+            'chatSend':msg.usuario === '1',
+            'chatRecieved':msg.usuario === '0'
           }" >
             <p class="chatStyle " >
                 {{msg.mensaje}}
@@ -10,9 +33,12 @@
         </div>
     </div>
 </div>
-<div class="input-group mb-3">
-    <input type="text" class="form-control" placeholder="Escriba algo..." aria-label="Username" aria-describedby="basic-addon1">
-    <button type="button" class="btn btn-primary">
-        <i class="fas fa-paper-plane"></i>    
-            </button>
+<div class="input-group mb-3" *ngIf="datos.estado_chat=='Activo'">
+    <form style="width: 100%;display: flex;" [formGroup]="enviarForm" (ngSubmit)="enviarMensaje()">
+        <input type="text" class="form-control" placeholder="Escriba algo..." aria-label="Username" formControlName="enviarInput" aria-describedby="basic-addon1">
+        <button type="submit" class="btn btn-primary" >
+            <i class="fas fa-paper-plane"></i>    
+        </button>
+    </form>
+    
 </div>

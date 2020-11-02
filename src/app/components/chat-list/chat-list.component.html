@@ -2,15 +2,12 @@
     <div class="chat-list">
         <div *ngFor="let user of users">
             <a (click)="chat(user.id_chat)" class="chat-div">
-                <img src="{{user.img}}" alt="" class="profile-pic">
+                <img src="https://vignette.wikia.nocookie.net/roblox-characters/images/4/4d/68cba9a75191d53c8994fd8950763f20.png/revision/latest/scale-to-width-down/340?cb=20170507155708&path-prefix=es" alt="" class="profile-pic">
                 <div>
-                    <p>{{user.name}}</p>
-                    <p>{{user.msg}}</p>
+                    <p>{{user.nombre_usuario}}</p>
+                    <p>Estado: {{user.notificacion}}</p>
                 </div>
             </a>
         </div>
-    </div>
-    <div class="chat">
-        <app-chat [id]="chatId"></app-chat>
     </div>
 </div>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ChatsService } from 'src/app/services/chats.service';
 
 @Component({
   selector: 'app-chat-list',
@@ -8,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class ChatListComponent implements OnInit {
 
-  users:any=[
+  /*users:any=[
     {
       id_chat:1,
       msg:'Mensaje 1',
@@ -35,11 +36,17 @@ export class ChatListComponent implements OnInit {
       name:'Perengano',
       img:'https://vignette.wikia.nocookie.net/roblox-characters/images/4/4d/68cba9a75191d53c8994fd8950763f20.png/revision/latest/scale-to-width-down/340?cb=20170507155708&path-prefix=es'
     },
-  ]
+  ]*/
 
-  constructor(private router: Router,) { }
+  users:any=[];
+
+  constructor(private router: Router, private chatService:ChatsService) { }
 
   ngOnInit(): void {
+    this.chatService.verChatsNotificacion().subscribe( resultado => {
+      console.log(resultado)
+      this.users=resultado
+    });
   }
 
   chatId=null;
@@ -48,6 +55,7 @@ export class ChatListComponent implements OnInit {
     //this.router.navigate(['chat-list/chat', id]);
     console.log(id)
     this.chatId=id
+    this.router.navigate(['chat', id])
   }
 
   receiveMessage($event) {
