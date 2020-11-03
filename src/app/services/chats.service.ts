@@ -49,6 +49,10 @@ export class ChatsService {
   verMensajesChat(id_chat:number){
     return this.http.get(`${this.url}chats/verMensajesChat.php?id_chat=${id_chat}`)//.pipe(retry(3))
   }
+  filtrarChat(filtro:any){
+    const FILTRO_FD = serialize(filtro);
+    return this.http.post(`${this.url}chats/filtrarChat.php`, FILTRO_FD)//.pipe(retry(3))
+  }
 
 
 }

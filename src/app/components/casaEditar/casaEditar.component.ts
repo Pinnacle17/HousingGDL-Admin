@@ -376,7 +376,7 @@ export class CasaEditarComponent implements OnInit {
 
   imgPrincipal(event) {
     this.imgSeleccionada = <File>event.target.files[0];
-    this.formImgCasa.controls['imgPrincipalCuarto'].setValue(this.imgSeleccionada);
+    this.formImgCasa.controls['imgPrincipal'].setValue(this.imgSeleccionada);
 
     if (event.target.files && event.target.files[0]) {
       var reader = new FileReader();
@@ -562,10 +562,11 @@ export class CasaEditarComponent implements OnInit {
     this.imgsSeleccionadasCuarto.splice(index, 1);
 
     this.formCuartos.controls['imgsCuarto'].reset();
+    this.formCuartos.controls['imgsCuarto'].setErrors(null);
 
     console.log(this.formCuartos.get('imgsCuarto').value);
     if (this.imgsSeleccionadasCuarto.length == 0) {
-      this.formCuartos.controls['imgsCuarto'].setValue("");
+      this.formCuartos.controls['imgsCuarto'].setValue(null);
       this.imgsInputCua.nativeElement.value = null;
     }
 

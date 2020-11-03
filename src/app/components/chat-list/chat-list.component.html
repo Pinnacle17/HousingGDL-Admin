@@ -1,8 +1,34 @@
 <div class=chat-container>
-    <div class="chat-list">
+  <form [formGroup]="formFiltros" (ngSubmit)="filtrar()">
+    <div class="form-row align-items-center justify-content-center">
+        <div class="col-md-6 p-2 text-center">
+            <label>Estado Chat:</label>
+            <div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="estado1" value="4" formControlName="estado">
+                    <label for="estado1" class="form-check-label"> Bloqueado</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="estado2" value="3" formControlName="estado">
+                    <label for="estado2" class="form-check-label"> Terminado por nosotros</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="estado2" value="2" formControlName="estado">
+                  <label for="estado2" class="form-check-label">Terminado por el usuario</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="estado2" value="1" formControlName="estado">
+                  <label for="estado2" class="form-check-label">Activo</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-primary mx-auto d-block" type="submit" [disabled]="formFiltros.invalid"> Filtrar </button>
+    </form>
+    <div class="chat-list" *ngIf="haychat==true">
         <div *ngFor="let user of users">
             <a (click)="chat(user.id_chat)" class="chat-div">
-                <img src="https://vignette.wikia.nocookie.net/roblox-characters/images/4/4d/68cba9a75191d53c8994fd8950763f20.png/revision/latest/scale-to-width-down/340?cb=20170507155708&path-prefix=es" alt="" class="profile-pic">
+                <img [src]="user.foto " class="rounded-circle" alt="" width="100" height="100">
                 <div>
                     <p>{{user.nombre_usuario}}</p>
                     <p>Estado: {{user.notificacion}}</p>
@@ -10,4 +36,9 @@
             </a>
         </div>
     </div>
+    <div class="chat-list" *ngIf="haychat==false">
+      <div *ngFor="let user of users">
+          <label class="form-text text-danger">No hay chats con estas caracteristicas</label>
+      </div>
+  </div>
 </div>

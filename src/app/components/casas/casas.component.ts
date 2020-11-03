@@ -289,25 +289,24 @@ export class CasasComponent implements OnInit, OnDestroy {
 
   multiImg(event) {
     if(event.target.files && event.target.files.length) {
-      for (let i = 0; i < event.target.files.length; i++) {
 
+      for (let i = 0; i < event.target.files.length; i++) {
+        let img = new Image();
         var reader = new FileReader();
         let file = event.target.files[i];
-        let img = new Image();
 
         img.src = window.URL.createObjectURL(file);
-
         reader.readAsDataURL(event.target.files[i]);
-        reader.onload = (event: any) => {
 
+        reader.onload = (event) => {
           const alto = img.naturalHeight;
           const ancho = img.naturalWidth;
-
+          console.log(ancho);
+          console.log(alto);
           window.URL.revokeObjectURL(file);
-
           if(alto < 690 || alto > 2160 || ancho < 950 ||ancho > 4096){
             this.errorTamImgs = true;
-            this.badUrls.push(file.name)
+            this.badUrls.push(file.name);
           }
           else{
             this.urls.push(event.target.result);
@@ -317,8 +316,8 @@ export class CasasComponent implements OnInit, OnDestroy {
           }
         };
 
-        this.sinImagen = false;
       }
+      this.sinImagen = false;
     }
     else{
       this.sinImagen = true;

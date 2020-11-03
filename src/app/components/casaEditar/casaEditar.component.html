@@ -188,7 +188,7 @@
                                         <small *ngIf="validacionTamImg" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
                                         <div class="row border" *ngIf="(urlPrincipal != null) && (!validacionTamImg)">
                                             <div class="col-md-12">
-                                                <img [src]="urlPrincipal" height="300" width="400">
+                                                <img [src]="urlPrincipal" height="200" width="300">
                                                 <button type="button" aria-label="Close" class="btn btn-danger" (click)="borrarImgPrincipal()">
                                                 <span aria-hidden="true">&times;</span>
                                               </button>
@@ -308,7 +308,7 @@
                                                 <img [src]="url" height="200" class="float-right" style="max-width: 300px; max-height: 150;"><br>
                                             </div>
                                             <div class="col-md-3">
-                                                <button type="button" aria-label="Close" class="btn btn-danger float-left" (click)="borrarImgs(url, i)">
+                                                <button type="button" aria-label="Close" class="btn btn-danger float-left" (click)="borrarImgsCuarto(url, i)">
                                                   <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>

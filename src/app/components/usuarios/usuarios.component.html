@@ -71,8 +71,8 @@
                         <td class="align-middle">{{ usuario.correo }}</td>
                         <td class="align-middle" *ngIf="usuario.estado == 1"> Activo </td>
                         <td class="align-middle" *ngIf="usuario.estado == 0"> Registro</td>
-                        <td class="align-middle" *ngIf="usuario.estado == 2"> Pago </td>
-                        <td class="align-middle" *ngIf="usuario.estado == 3"> Bloqueado</td>
+                        <td class="align-middle" *ngIf="usuario.estado == 2"> Bloqueado </td>
+                        <td class="align-middle" *ngIf="usuario.estado == 3"> Pago</td>
                         <td class="align-middle">
                             <!--<button class="btn btn-danger" type="button" (click)="eliminarUsuario(usuario.id_usuario)">Eliminar</button>-->
                             <button class="btn btn-primary ml-3" type="button" (click)="verUsuario(usuario.id_usuario)">Ver Usuario</button>
