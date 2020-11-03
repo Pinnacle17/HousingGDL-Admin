@@ -192,8 +192,8 @@
 
                     <div class="input-group form-row mb-3">
                         <div class="col-md-12">
-                            <label for="imgsEvento">Imagenes de la Casa: <small class="text-danger">*</small></label>
-                            <input #imgsInput type='file' id="imgsEvento" accept=".jpg" (change)="multiImg($event)" multiple formControlName="imgsCasa">
+                            <label for="imgsCasa">Imagenes de la Casa: <small class="text-danger">*</small></label>
+                            <input #imgsInput type='file' id="imgsCasa" accept=".jpg" (change)="multiImg($event)" multiple formControlName="imgsCasa">
                             <small *ngIf="validacionImgs" class="form-text text-danger">Mínimo una imágen.</small>
                             <div class="row mb-3 mt-3" *ngFor='let url of urls; let i = index'>
                                 <div class="col-md-9">

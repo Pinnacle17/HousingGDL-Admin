@@ -106,34 +106,37 @@
                                     </div>
 
                                     <div class="col-md-6 text-center">
-                                        <label for="imgsPublicacion ">Imagenes Generales:</label><br>
-                                        <input #imgsInput type='file' id="imgsPublicacion " accept=".jpg " (change)="multiImg($event) " multiple formControlName="imgsPublicacion"> <br>
-                                        <small *ngIf="validacionTamImgs" class="form-text text-danger">Error: Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
-                                        <div class="row" *ngFor='let url of urls; let i = index'>
+                                        <label for="imgsPublicacion">Imagenes de la Publicacion: <small class="text-danger">*</small></label>
+                                        <input #imgsInput type='file' id="imgsPublicacion" accept=".jpg" (change)="multiImg($event)" multiple formControlName="imgsPublicacion">
+                                        <div class="row mb-3 mt-3" *ngFor='let url of urls; let i = index'>
                                             <div class="col-md-9">
-                                                <img [src]="url " height="200 " class="d-block mx-auto float-right"><br>
+                                                <h6 class="text-center">{{ listaImg[i] }}</h6>
+                                                <img [src]="url" height="200" class="float-right" style="max-width: 300px; max-height: 150;"><br>
                                             </div>
                                             <div class="col-md-3">
                                                 <button type="button" aria-label="Close" class="btn btn-danger float-left" (click)="borrarImgs(url, i)">
-                                                      <span aria-hidden="true">&times;</span>
-                                                    </button>
+                                              <span aria-hidden="true">&times;</span>
+                                            </button>
                                             </div>
+                                        </div>
+                                        <div class="row mb-3 mt-3" *ngFor='let url of badUrls; let i = index'>
+                                            <small *ngIf="errorTamImgs && sinImagen == false" class="form-text text-danger ml-4">La imagen {{ badUrls[i] }} no puede ser ingresada. Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
                                         </div>
                                         <div class="mt-4 text-center">
                                             <h5>Imágenes Actuales.</h5>
                                         </div>
-                                        <div class="row mt-3 border" *ngFor='let img of imgs'>
+                                        <div class="row mt-3" *ngFor='let img of imgs'>
                                             <div class="col-md-12 text-center">
-                                                <img [src]="'assets/img/publicaciones/'+img.ruta_imagen_pub " height="300" width="400"><br>
+                                                <img [src]="urlimagen+img.ruta_imagen_pub" height="300" width="400"><br>
                                                 <button type="button" class="btn btn-danger" (click)="eliminarImg( img.id_imagen_pub )">Eliminar</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="input-group form-row mb-3 ">
-                                    <div class="col-md-12 text-center ">
-                                        <button class="btn btn-success " type="submit ">Guardar cambios</button>
+                                <div class="input-group form-row mb-3">
+                                    <div class="col-md-12 text-center">
+                                        <button class="btn btn-success" type="submit" [disabled]="formImgP.invalid">Guardar cambios</button>
                                     </div>
                                 </div>
 

@@ -19,14 +19,16 @@ export class LayoutComponent implements OnInit {
     if(this.id == null  || this.usuario == {}){
       this.cerrarSesion();
     }
-    // this.getAdmin();
+    else{
+      this.getAdmin();
+    }
   }
 
-  // getAdmin(){
-  //   this.usuariosService.getAdmin(Number(this.id)).subscribe( resultado => {
-  //       this.usuario = resultado[0];
-  //   })
-  // }
+  getAdmin(){
+    this.usuariosService.getAdmin(Number(this.id)).subscribe( resultado => {
+        this.usuario = resultado[0];
+    })
+  }
 
   cerrarSesion(){
     localStorage.removeItem("id_admin");

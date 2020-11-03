@@ -34,7 +34,8 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-      /* FAKE_LOGINthis.loginService.login(this.formLogin.value).subscribe(datos => {
+    console.log(this.formLogin.value);
+      this.loginService.login(this.formLogin.value).subscribe(datos => {
         if (datos['estado'] == 0) {
           console.log(datos);
           window.confirm(datos['mensaje']);
@@ -49,13 +50,10 @@ export class LoginComponent implements OnInit {
         }
       })
 
-      FAKE_LOGIN*/
-      localStorage.setItem("id_admin", "1")
-      this.router.navigate(['/inicio']);
-      return
-
-
-
+      /* FAKE_LOGIN*/
+      // localStorage.setItem("id_admin", "1")
+      // this.router.navigate(['/inicio']);
+      // return
   }
 
 }

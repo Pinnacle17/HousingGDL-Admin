@@ -18,6 +18,7 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
   formPublicaciones: FormGroup;
 
   urls = [];
+  badUrls = [];
   urlPrincipal = null;
 
   publicaciones = null;
@@ -34,6 +35,8 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
   imgSeleccionada: File;
   imgsSeleccionadas: File[] = [];
   listaImg: any[] = [];
+  sinImagen: boolean = false;
+  errorTamImgs: boolean = false;
 
   errorNombre: string = '';
 
@@ -163,7 +166,7 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
       titulo: ['', [Validators.required]],
       articulo: ['', [Validators.required]],
       imgPrincipal: ['', [Validators.required, RxwebValidators.image({minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096})]],
-      imgsPublicacion: ['', [Validators.required, RxwebValidators.image({minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096})]]
+      imgsPublicacion: ['', Validators.required]
     });
   }
 
@@ -216,23 +219,45 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
   }
 
   multiImg(event) {
-    if (event.target.files && event.target.files[0]) {
+    if(event.target.files && event.target.files.length) {
       for (let i = 0; i < event.target.files.length; i++) {
 
         var reader = new FileReader();
+        let file = event.target.files[i];
+        let img = new Image();
 
-        reader.onload = (event: any) => {
-          this.urls.push(event.target.result);
-        };
+        img.src = window.URL.createObjectURL(file);
+
         reader.readAsDataURL(event.target.files[i]);
+        reader.onload = (event: any) => {
 
-        var selectedFile = event.target.files[i];
-        this.imgsSeleccionadas.push(selectedFile);
-        this.listaImg.push(selectedFile.name);
+          const alto = img.naturalHeight;
+          const ancho = img.naturalWidth;
+
+          window.URL.revokeObjectURL(file);
+
+          if(alto < 690 || alto > 2160 || ancho < 950 ||ancho > 4096){
+            this.errorTamImgs = true;
+            this.badUrls.push(file.name)
+          }
+          else{
+            this.urls.push(event.target.result);
+            this.imgsSeleccionadas.push(file);
+            this.listaImg.push(file.name);
+            this.formPublicaciones.controls['imgsPublicacion'].setValue(this.imgsSeleccionadas);
+          }
+        };
+
+        this.sinImagen = false;
       }
     }
+    else{
+      this.sinImagen = true;
+      return
+    }
+    console.log(this.formPublicaciones.get('imgsPublicacion').value);
+    console.log(this.formPublicaciones);
 
-    this.formPublicaciones.controls['imgsPublicacion'].setValue(this.imgsSeleccionadas);
   }
 
   imgPrincipal(event) {
@@ -285,20 +310,21 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
   }
 
   guardarPublicacion() {
-          this.publicacionesService.crearPublicacion(this.formPublicaciones.value).subscribe(datos => {
-            if (datos['resultado'] == 'OK') {
-              this.getPublicaciones();
-              this.formPublicaciones.reset();
+      console.log(this.formPublicaciones.value);
+      this.publicacionesService.crearPublicacion(this.formPublicaciones.value).subscribe(datos => {
+        if (datos['resultado'] == 'OK') {
+          this.getPublicaciones();
+          this.formPublicaciones.reset();
 
-              this.borrarImgPrincipal();
+          this.borrarImgPrincipal();
 
-              this.urls = [];
-              this.imgsInput.nativeElement.value = null;
-              this.cerrar.nativeElement.click();
-            } else {
-              console.log('ERROR');
-            }
-          });
+          this.urls = [];
+          this.imgsInput.nativeElement.value = null;
+          this.cerrar.nativeElement.click();
+        } else {
+          console.log('ERROR');
+        }
+      });
 
     }
 }

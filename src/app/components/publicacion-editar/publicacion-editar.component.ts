@@ -4,6 +4,7 @@ import { OwlOptions } from 'ngx-owl-carousel-o';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { ActivatedRoute } from '@angular/router';
 import { PublicacionesService } from '../../services/publicaciones.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-publicacion-editar',
@@ -14,12 +15,15 @@ export class PublicacionEditarComponent implements OnInit {
   formInfoP:FormGroup;
   formImgP:FormGroup;
 
-  urlimagen = "http://localhost/casas-php/admin/assets/img/publicaciones/";
+  urlimagen = environment.imgUrlPublicacion;
   urls = [];
+  badUrls = [];
   urlPrincipal = null;
 
   publicacion:any = {};
   imgs:any = null;
+  sinImagen: boolean = false;
+  errorTamImgs: boolean = false;
 
   infoPub:any = {
     id:null,
@@ -101,7 +105,7 @@ export class PublicacionEditarComponent implements OnInit {
   formImgPInit(){
     this.formImgP = this.fb.group({
       imgPrincipal:['', RxwebValidators.image({minHeight:690, maxHeight:2160, minWidth:950, maxWidth:4096})],
-      imgsPublicacion:['', RxwebValidators.image({minHeight:690, maxHeight:2160, minWidth:950, maxWidth:4096})]
+      imgsPublicacion:['']
     })
   }
 
@@ -199,23 +203,45 @@ export class PublicacionEditarComponent implements OnInit {
   }
 
   multiImg(event) {
-    if (event.target.files && event.target.files[0]) {
+    if(event.target.files && event.target.files.length) {
       for (let i = 0; i < event.target.files.length; i++) {
 
         var reader = new FileReader();
+        let file = event.target.files[i];
+        let img = new Image();
 
-        reader.onload = (event:any) => {
-          this.urls.push(event.target.result);
-        }
+        img.src = window.URL.createObjectURL(file);
+
         reader.readAsDataURL(event.target.files[i]);
+        reader.onload = (event: any) => {
 
-        var selectedFile = event.target.files[i];
-        this.imgsSeleccionadas.push(selectedFile);
-        this.listaImg.push(selectedFile.name)
+          const alto = img.naturalHeight;
+          const ancho = img.naturalWidth;
+
+          window.URL.revokeObjectURL(file);
+
+          if(alto < 690 || alto > 2160 || ancho < 950 ||ancho > 4096){
+            this.errorTamImgs = true;
+            this.badUrls.push(file.name)
+          }
+          else{
+            this.urls.push(event.target.result);
+            this.imgsSeleccionadas.push(file);
+            this.listaImg.push(file.name);
+            this.formImgP.controls['imgsPublicacion'].setValue(this.imgsSeleccionadas);
+          }
+        };
+
+        this.sinImagen = false;
       }
     }
+    else{
+      this.sinImagen = true;
+      return
+    }
+    console.log(this.formImgP.get('imgsPublicacion').value);
+    console.log(this.formImgP);
 
-    this.formImgP.controls['imgsPublicacion'].setValue(this.imgsSeleccionadas);
   }
 
   imgPrincipal(event){
