@@ -348,7 +348,8 @@ export class CasaEditarComponent implements OnInit {
   }
 
   liberarLugar() {
-    this.casasService.liberarLugar(this.formInfoCasa.get('orden').value, this.infoCasa.id).subscribe(datos => {
+
+    this.casasService.liberarLugar(this.formInfoCasa.get('orden_anuncio').value, this.infoCasa.id).subscribe(datos => {
       if (datos['resultado'] == "ERROR") {
         console.log("ERROR");
         return
@@ -356,6 +357,7 @@ export class CasaEditarComponent implements OnInit {
       else if (datos['resultado'] == "OK") {
         window.confirm("Lugar liberado con exito");
         this.cerrarModalError.nativeElement.click();
+        this.guardarInfo();
       }
     })
   }
@@ -484,7 +486,7 @@ export class CasaEditarComponent implements OnInit {
 
         this.borrarImgPrincipal();
         this.borrarImgCarousel();
-
+        this.badUrls = [];
         this.urls = [];
         this.imgsSeleccionadas = [];
         this.imgsInput.nativeElement.value = null;
@@ -574,18 +576,20 @@ export class CasaEditarComponent implements OnInit {
     console.log(this.formCuartos.value);
     this.cuartosService.crearCuarto(this.formCuartos.value, this.casa.id_casa.toString()).subscribe(datos => {
       if (datos['resultado'] == 'OK') {
-        this.activatedRoute.params.subscribe(params => {
-          this.cuartosService.getCuartos(params['id']).subscribe(resultado => {
-              this.cuartos = resultado;
-          });
-        });
-        this.formCuartos.reset();
+        // this.activatedRoute.params.subscribe(params => {
+        //   this.cuartosService.getCuartos(params['id']).subscribe(resultado => {
+        //       this.cuartos = resultado;
+        //   });
+        // });
+        window.location.reload();
+        // this.formCuartos.reset();
 
-        this.borrarImgPrincipalCuarto();
+        // this.borrarImgPrincipalCuarto();
 
-        this.urlsCuarto = [];
-        this.urlPrincipalCuarto = [];
-        this.imgsInputCua.nativeElement.value = null;
+        // this.urlsCuarto = [];
+        // this.urlPrincipalCuarto = [];
+        // this.imgsInputCua.nativeElement.value = null;
+        // window.location.reload();
         // this.cerrar.nativeElement.click();
       }
     });
