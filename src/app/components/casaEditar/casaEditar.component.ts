@@ -348,7 +348,8 @@ export class CasaEditarComponent implements OnInit {
   }
 
   liberarLugar() {
-    this.casasService.liberarLugar(this.formInfoCasa.get('orden').value, this.infoCasa.id).subscribe(datos => {
+
+    this.casasService.liberarLugar(this.formInfoCasa.get('orden_anuncio').value, this.infoCasa.id).subscribe(datos => {
       if (datos['resultado'] == "ERROR") {
         console.log("ERROR");
         return
@@ -356,6 +357,7 @@ export class CasaEditarComponent implements OnInit {
       else if (datos['resultado'] == "OK") {
         window.confirm("Lugar liberado con exito");
         this.cerrarModalError.nativeElement.click();
+        this.guardarInfo();
       }
     })
   }
@@ -586,6 +588,7 @@ export class CasaEditarComponent implements OnInit {
         this.urlsCuarto = [];
         this.urlPrincipalCuarto = [];
         this.imgsInputCua.nativeElement.value = null;
+        window.location.reload();
         // this.cerrar.nativeElement.click();
       }
     });

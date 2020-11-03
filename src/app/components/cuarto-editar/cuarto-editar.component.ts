@@ -339,6 +339,7 @@ export class CuartoEditarComponent implements OnInit {
         this.formOferta.reset();
         this.oferta['precio'] = this.infoOferta.precio;
         this.oferta['grupo'] = this.infoOferta.grupo;
+        this.oferta['fk_oferta'] = datos['oferta'];
         this.oferta['tipo'] = 1;
       }
     });
@@ -347,14 +348,8 @@ export class CuartoEditarComponent implements OnInit {
   eliminarOferta( id_oferta:number ){
     if(window.confirm("Seguro que quiere eliminar ésta oferta?")){
       this.cuartosService.eliminarOferta(id_oferta).subscribe( datos => {
-        if(datos['resultado'] == "ERROR"){
-          console.log("ERROR");
-          return
-        }
-        else if(datos['resultado'] == "OK"){
+          this.formOferta.reset();
           this.oferta['tipo'] = 0;
-
-        }
       })
     }
   }
