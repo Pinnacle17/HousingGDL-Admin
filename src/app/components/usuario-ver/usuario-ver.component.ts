@@ -22,7 +22,7 @@ export class UsuarioVerComponent implements OnInit {
       console.log(params['id']);
       this.usuariosService.getUsuario(params['id']).subscribe( resultado => {
         this.usuario = resultado;
-        this.usuariosService.verVentas(this.usuario['id_usuario']).subscribe(resultado => {
+        /*this.usuariosService.verVentas(this.usuario['id_usuario']).subscribe(resultado => {
           if(resultado != null){
             this.hayCompras = true;
             this.historial = resultado;
@@ -31,7 +31,7 @@ export class UsuarioVerComponent implements OnInit {
           else{
             this.hayCompras = false;
           }
-        })
+        })*/
 
         console.log(this.usuario);
       });

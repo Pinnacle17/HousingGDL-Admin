@@ -36,13 +36,15 @@
                 <tbody class="text-center">
                     <tr *ngFor="let resultado of busqueda">
                         <th scope="row" class="align-middle">{{ resultado.id_usuario }}</th>
-                        <td class="align-middle">{{ resultado.nombre }}</td>
+                        <td class="align-middle">{{ resultado.nombre_usuario }}</td>
                         <td class="align-middle">{{ resultado.correo }}</td>
-                        <td class="align-middle" *ngIf="resultado.activo == 1"> Activo </td>
-                        <td class="align-middle" *ngIf="resultado.activo == 0"> Inactivo </td>
+                        <td class="align-middle" *ngIf="resultado.estado == 1"> Activo </td>
+                        <td class="align-middle" *ngIf="resultado.estado == 0"> Registro</td>
+                        <td class="align-middle" *ngIf="resultado.estado == 2"> Pago </td>
+                        <td class="align-middle" *ngIf="resultado.estado == 3"> Bloqueado</td>
                         <td class="align-middle">
-                            <button class="btn btn-danger" type="button" (click)="eliminarUsuario(resultado.id_usuario)">Eliminar</button>
-                            <button class="btn btn-primary" type="button">Ver Usuario</button>
+                            <!--<button class="btn btn-danger" type="button" (click)="eliminarUsuario(resultado.id_usuario)">Eliminar</button>-->
+                            <button class="btn btn-primary" type="button" (click)="verUsuario(resultado.id_usuario)">Ver Usuario</button>
                         </td>
                     </tr>
                 </tbody>
@@ -65,12 +67,14 @@
                 <tbody class="text-center">
                     <tr *ngFor="let usuario of usuarios">
                         <th scope="row" class="align-middle">{{ usuario.id_usuario }}</th>
-                        <td class="align-middle">{{ usuario.nombre }}</td>
+                        <td class="align-middle">{{ usuario.nombre_usuario }}</td>
                         <td class="align-middle">{{ usuario.correo }}</td>
-                        <td class="align-middle" *ngIf="usuario.activo == 1"> Activo </td>
-                        <td class="align-middle" *ngIf="usuario.activo == 0"> Inactivo </td>
+                        <td class="align-middle" *ngIf="usuario.estado == 1"> Activo </td>
+                        <td class="align-middle" *ngIf="usuario.estado == 0"> Registro</td>
+                        <td class="align-middle" *ngIf="usuario.estado == 2"> Pago </td>
+                        <td class="align-middle" *ngIf="usuario.estado == 3"> Bloqueado</td>
                         <td class="align-middle">
-                            <button class="btn btn-danger" type="button" (click)="eliminarUsuario(usuario.id_usuario)">Eliminar</button>
+                            <!--<button class="btn btn-danger" type="button" (click)="eliminarUsuario(usuario.id_usuario)">Eliminar</button>-->
                             <button class="btn btn-primary ml-3" type="button" (click)="verUsuario(usuario.id_usuario)">Ver Usuario</button>
                         </td>
                     </tr>

@@ -116,7 +116,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     }
   }
 
-  eliminarUsuario(id: number) {
+  /*eliminarUsuario(id: number) {
     if (confirm('Está seguro de querer eliminar a este usuario?')) {
       this.usuariosService.eliminarUsuario(id).subscribe(datos => {
         if (datos['resultado'] == 'OK') {
@@ -124,7 +124,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
         }
       });
     }
-  }
+  }*/
 
   verUsuario(id:number){
     this.router.navigate(['ver-usuario', id])
