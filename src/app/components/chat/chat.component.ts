@@ -1,7 +1,9 @@
 import { Component, OnInit,Input  } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { CasasService } from 'src/app/services/casas.service';
 import { ChatsService } from 'src/app/services/chats.service';
+import { CuartosService } from 'src/app/services/cuartos.service';
 
 @Component({
   selector: 'app-chat',
@@ -14,8 +16,21 @@ export class ChatComponent implements OnInit {
   datos:any=[];
   enviarForm: FormGroup;
   idChat:any=null;
+  casas:any=[];
+  casa_id:any=null;
+  cuartos:any=[];
+  cuarto_id:any=null;
+  ofertas:any=[];
+  oferta_id:any=null;
+  id_usuario:any=null
 
-  constructor(private chatService:ChatsService,private activatedRoute: ActivatedRoute,private fb:FormBuilder,) {
+  constructor(
+    private chatService:ChatsService,
+    private activatedRoute: ActivatedRoute,
+    private fb:FormBuilder,
+    private casasService:CasasService,
+    private cuartosService:CuartosService,
+    ) {
    }
 
   ngOnInit(): void {
@@ -25,6 +40,7 @@ export class ChatComponent implements OnInit {
       this.chatService.verDatosChat(params['id']).subscribe(resultado=>{
         console.log(resultado)
         this.datos=resultado
+        this.id_usuario=this.datos.id_usuario
       })
       this.chatService.verMensajesChat(params['id']).subscribe(resultado=>{
         this.msgs=resultado
@@ -32,10 +48,51 @@ export class ChatComponent implements OnInit {
       this.chatService.cambiarEstadoNotificacion(params['id']).subscribe(resultado=>{
         console.log(resultado);
       })
-
     });
 
+    this.casasService.getCasas().subscribe(resultado=>{
+      console.log(resultado)
+      this.casas=resultado
+    })
+
   }
+
+  getCasa(value){
+    this.casa_id=value
+    console.log(value)
+    if(value!=''){
+      this.cuartosService.getCuartos(this.casa_id).subscribe(resultado=>{
+        console.log(resultado)
+        this.cuartos=resultado
+      })
+    }else{
+      this.casa_id=null
+      this.cuartos=[]
+      this.cuarto_id=null
+      this.ofertas=[]
+    }
+  }
+
+  getCuarto(value){
+    this.cuarto_id=value
+    console.log(value)
+    if(value!=''){
+      this.chatService.verOfertas(this.cuarto_id).subscribe(resultado=>{
+        console.log(resultado)
+        this.ofertas=resultado
+      })
+    }else{
+      this.casa_id=null
+      this.cuartos=[]
+      this.cuarto_id=null
+      this.ofertas=[]
+    }
+    
+  }
+
+  // getOferta(value){
+  //   this.casa_id=value
+  // }
 
   formEnviarInit(){
     this.enviarForm = this.fb.group({
@@ -80,11 +137,11 @@ export class ChatComponent implements OnInit {
 
   confirmarCompra(){
     if (window.confirm("Está seguro de querer confirmar la compra")) {
-    this.chatService.confirmarCompra(this.idChat).subscribe(res=>{
+    this.chatService.confirmarCompra(this.id_usuario, this.oferta_id).subscribe(res=>{
       console.log(res)
       location.reload();
     })
-  }
+    }
   }
 
 }

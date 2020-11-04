@@ -53,6 +53,9 @@ export class ChatsService {
     const FILTRO_FD = serialize(filtro);
     return this.http.post(`${this.url}chats/filtrarChat.php`, FILTRO_FD)//.pipe(retry(3))
   }
+  verOfertas(id_cuarto:number){
+    return this.http.get(`${this.url}chats/verOfertaCuarto.php?id_cuarto=${id_cuarto}`)//.pipe(retry(3))
+  }
 
 
 }
