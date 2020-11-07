@@ -179,6 +179,7 @@ export class CasaEditarComponent implements OnInit {
       }
       else {
         this.sinComentarios = false;
+        console.log(this.comentarios)
       }
     })
   }
@@ -210,6 +211,7 @@ export class CasaEditarComponent implements OnInit {
       this.casasService.ActivarComentario(id_calificacion).subscribe(() => {
         this.activatedRoute.params.subscribe(() => {
           this.activatedRoute.params.subscribe(params => {
+            this.getComentarios(params['id']);
             this.getComentariosNotificacion(params['id']);
           });
         });
