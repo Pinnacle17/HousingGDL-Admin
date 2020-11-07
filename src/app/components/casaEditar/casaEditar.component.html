@@ -86,18 +86,66 @@
             <ng-container *ngIf="sinComentarios == false">
                 <div class="card" *ngFor="let comentario of comentarios">
                     <div class="card-body">
-                        <div class="row h-100">
-                            <div class="col-md-2 text-center my-auto">
-                                <h6>{{ comentario.nombre_usuario }}</h6>
-                                <h5>{{ comentario.num_calificacion }} Puntos</h5>
+                        <div class="comentario">
+                            <div class="comentarioUsuario">
+                              <img src="{{comentario.foto}}" class="imgComentario"/>
                             </div>
-                            <div class="col-md-8 text-left">
-                                <p>{{ comentario.opinion }}</p>
+                            <div style="width: 100%;">
+                              <h5 style="height:50px;align-self: center;line-height: 50px;">{{ comentario.nombre_usuario }}</h5>
+                              <h6>"{{ comentario.comentario }}"</h6>
+                              <div class="divider"></div>
+                              <div class="comentarioCalificaciones">
+                                <p>Instalaciones: {{ comentario.limpieza }} Puntos</p>
+                                <p>Ambiente: {{ comentario.ambiente }} Puntos</p>
+                                <p>Limpieza: {{ comentario.instalaciones }} Puntos</p>
+                              </div>
                             </div>
-                            <div class="col-md-2 my-auto">
-                                <button type="button" class="btn btn-danger mx-auto my-auto d-block" (click)="eliminarComentario(comentario.id_calificacion)">Eliminar</button>
+                            
+                            <div class="">
+                                <div class="col-md-2 my-auto">
+                                    <button type="button" class="btn btn-danger mx-auto my-auto d-block" (click)="eliminarComentario(comentario.id_calificacion)">Eliminar</button>
+                                </div>
                             </div>
-                        </div>
+                          </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h4>Comentarios pendientes de validación.</h4>
+        </div>
+        <div class="card-body">
+            <h5 class="text-danger" *ngIf="sinComentariosNotificacion == true"> No hay comentarios. </h5>
+            <ng-container *ngIf="sinComentariosNotificacion == false">
+                <div class="card" *ngFor="let comentario of comentariosNotificacion">
+                    <div class="card-body">
+                        <div class="comentario">
+                            <div class="comentarioUsuario">
+                              <img src="{{comentario.foto}}" class="imgComentario"/>
+                            </div>
+                            <div style="width: 100%;">
+                              <h5 style="height:50px;align-self: center;line-height: 50px;">{{ comentario.nombre_usuario }}</h5>
+                              <h6>"{{ comentario.comentario }}"</h6>
+                              <div class="divider"></div>
+                              <div class="comentarioCalificaciones">
+                                <p>Instalaciones: {{ comentario.limpieza }} Puntos</p>
+                                <p>Ambiente: {{ comentario.ambiente }} Puntos</p>
+                                <p>Limpieza: {{ comentario.instalaciones }} Puntos</p>
+                              </div>
+                            </div>
+                            
+                            <div class="">
+                                <div class="col-md-2 my-auto">
+                                    <button type="button" class="btn btn-danger mx-auto my-auto d-block" (click)="eliminarComentario(comentario.id_calificacion)">Eliminar</button>
+                                </div>
+                                <div style="margin-top: 20px;" >
+                                    <button type="button" class="btn btn-success mx-auto my-auto d-block" (click)="activarComentario(comentario.id_calificacion)">Confirmar</button>
+                                </div>
+                            </div>
+                          </div>
                     </div>
                 </div>
             </ng-container>
@@ -356,3 +404,39 @@
 <!--<div class="row mb-3 mt-3" *ngFor='let url of badUrls; let i = index'>
                                       <small *ngIf="errorTamImgs && sinImagen == false" class="form-text text-danger ml-4">La imagen {{ badUrls[i] }} no puede ser ingresada. Tamaño Mínimo: 950x690. Tamaño Máximo: 4096x2160</small>
                                   </div>-->
+
+<style>
+.comentarioUsuario{
+    display: flex;
+    margin-right: 10px;
+}
+
+.comentarioCalificaciones{
+    display: flex;
+    justify-content: space-between;
+}
+
+.imgComentario{
+    margin: 5px;
+    height: 50px;
+    width: 50px;
+    border-radius: 360px;
+}
+
+.comentario{
+    display: flex;
+}
+
+.divider{
+    margin: 15px 0 15px 0;
+    border: 1px solid #000;
+}
+
+.comentar{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+</style>
+                                  
