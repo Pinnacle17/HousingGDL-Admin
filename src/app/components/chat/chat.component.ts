@@ -21,7 +21,7 @@ export class ChatComponent implements OnInit {
   cuartos:any=[];
   cuarto_id:any=null;
   ofertas:any=[];
-  oferta_id:any=null;
+  oferta_id:number=null;
   id_usuario:any=null
 
   constructor(
@@ -44,9 +44,6 @@ export class ChatComponent implements OnInit {
       })
       this.chatService.verMensajesChat(params['id']).subscribe(resultado=>{
         this.msgs=resultado
-      })
-      this.chatService.cambiarEstadoNotificacion(params['id']).subscribe(resultado=>{
-        console.log(resultado);
       })
     });
 
@@ -87,12 +84,12 @@ export class ChatComponent implements OnInit {
       this.cuarto_id=null
       this.ofertas=[]
     }
-    
+
   }
 
-  // getOferta(value){
-  //   this.casa_id=value
-  // }
+  getOferta(value){
+     this.oferta_id=value
+  }
 
   formEnviarInit(){
     this.enviarForm = this.fb.group({
@@ -113,16 +110,6 @@ export class ChatComponent implements OnInit {
       window.alert("El mensaje debe de ser mayor a 10 caracteres")
     }
 
-  }
-
-  cancelar(){
-    if (window.confirm("Está seguro de querer cancelar la conversación")) {
-      let msg=this.enviarForm.get('enviarInput').value;
-      this.chatService.cancelarChat(this.idChat,msg).subscribe(res=>{
-        console.log(res)
-        location.reload();
-      })
-    }
   }
 
   bloquear(){

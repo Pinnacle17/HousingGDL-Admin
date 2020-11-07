@@ -18,16 +18,16 @@ export class ChatsService {
     return this.http.get(`${this.url}chats/bloquearChat.php?id_chat=${id_chat}&mensaje=${mensaje}`)//.pipe(retry(3))
   }
 
-  cambiarEstadoNotificacion( id_chat:number){
-    return this.http.get(`${this.url}chats/cambiarEstadoNotificacion.php?id_chat=${id_chat}`)//.pipe(retry(3))
-  }
+  // cambiarEstadoNotificacion( id_chat:number){
+  //   return this.http.get(`${this.url}chats/cambiarEstadoNotificacion.php?id_chat=${id_chat}`)//.pipe(retry(3))
+  // }
 
-  cancelarChat( id_chat:number, mensaje:string){
-    return this.http.get(`${this.url}chats/cancelarChat.php?id_chat=${id_chat}&mensaje=${mensaje}`)//.pipe(retry(3))
-  }
+  // cancelarChat( id_chat:number, mensaje:string){
+  //   return this.http.get(`${this.url}chats/cancelarChat.php?id_chat=${id_chat}&mensaje=${mensaje}`)//.pipe(retry(3))
+  // }
 
-  confirmarCompra(id_chat:any){
-    return this.http.get(`${this.url}chats/confirmarCompra.php?id_chat=${id_chat}`)//.pipe(retry(3))
+  confirmarCompra(id_usuario:number, id_oferta:number){
+    return this.http.get(`${this.url}chats/confirmarCompra.php?id_usuario=${id_usuario}&id_oferta=${id_oferta}`)//.pipe(retry(3))
   }
 
   enviarMensaje(id_chat:number, mensaje:string){
