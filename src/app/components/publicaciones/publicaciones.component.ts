@@ -73,7 +73,7 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
 
     speechRecognitionList.addFromString(`
       #JSGF V1.0;
-      public navigate = ver (eventos | publicaciones | usuarios | repartidores);
+      public navigate = ver (casas | publicaciones | usuarios | chats);
       public editar = editar;
       public eliminar = eliminar;
       `, 1);
@@ -95,16 +95,16 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
           case 'ver':
             this.ngZone.run(() => {
               switch (command[1]) {
-                case 'eventos':
-                  this.router.navigate(['eventos']);
+                case 'casas':
+                  this.router.navigate(['casas']);
                   navigate = true;
                   break;
                 case 'usuarios':
                   this.router.navigate(['usuarios']);
                   navigate = true;
                   break;
-                case 'repartidores':
-                  this.router.navigate(['repartidores']);
+                case 'chats':
+                  this.router.navigate(['chat-list']);
                   navigate = true;
                   break;
               }

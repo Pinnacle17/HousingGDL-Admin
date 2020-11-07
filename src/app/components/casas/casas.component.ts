@@ -74,7 +74,7 @@ export class CasasComponent implements OnInit, OnDestroy {
 
     speechRecognitionList.addFromString(`
       #JSGF V1.0;
-      public navigate = ver (casas | publicaciones | usuarios | repartidores);
+      public navigate = ver (casas | publicaciones | usuarios | chats);
       public editar = editar;
       public eliminar = eliminar;
       `, 1);
@@ -105,8 +105,8 @@ export class CasasComponent implements OnInit, OnDestroy {
                   this.router.navigate(['usuarios']);
                   navigate = true;
                   break;
-                case 'repartidores':
-                  this.router.navigate(['repartidores']);
+                case 'chats':
+                  this.router.navigate(['chat-list']);
                   navigate = true;
                   break;
               }
@@ -126,7 +126,25 @@ export class CasasComponent implements OnInit, OnDestroy {
             }
             break;
           }
+          case 'eliminar': {
+            const event = command.slice(1, command.length).join(' ');
 
+            for (const e of this.casas) {
+              if (e.id_casa == +event) {
+                navigate = true;
+                this.ngZone.run(() => {
+                  if(e.estado_casa=='Inactiva'){
+                    this.activarCasa(e.id_casa);
+                  }else{
+                    this.cancelarCasa(e.id_casa);
+                  }
+
+                });
+                break;
+              }
+            }
+            break;
+          }
         }
 
       }

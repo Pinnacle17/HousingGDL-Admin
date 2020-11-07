@@ -41,8 +41,8 @@ export class InicioComponent implements OnInit, OnDestroy {
 
         this.ngZone.run(() => {
           switch (command[1]) {
-            case 'eventos':
-              this.router.navigate(['eventos']);
+            case 'casas':
+              this.router.navigate(['casas']);
               navigate = true;
               break;
             case 'publicaciones':
@@ -53,8 +53,8 @@ export class InicioComponent implements OnInit, OnDestroy {
               this.router.navigate(['usuarios']);
               navigate = true;
               break;
-            case 'repartidores':
-              this.router.navigate(['repartidores']);
+            case 'chats':
+              this.router.navigate(['chat-list']);
               navigate = true;
               break;
           }
