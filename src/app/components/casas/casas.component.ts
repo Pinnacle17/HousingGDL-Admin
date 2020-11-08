@@ -27,6 +27,7 @@ export class CasasComponent implements OnInit, OnDestroy {
 
   busqueda = null;
   encontrado: boolean = null;
+  cantidadimagenes:number = 0;
 
   imgSeleccionada: File;
   imgCarouselSeleccionada: File;
@@ -76,7 +77,8 @@ export class CasasComponent implements OnInit, OnDestroy {
       #JSGF V1.0;
       public navigate = ver (casas | publicaciones | usuarios | chats);
       public editar = editar;
-      public eliminar = eliminar;
+      public activar = activar;
+      public desactivar = desactivar;
       `, 1);
 
     this.recognition.grammars = speechRecognitionList;
@@ -95,7 +97,6 @@ export class CasasComponent implements OnInit, OnDestroy {
         switch (command[0]) {
           case 'ver':
             this.ngZone.run(() => {
-
               switch (command[1]) {
                 case 'publicaciones':
                   this.router.navigate(['publicaciones']);
@@ -105,6 +106,7 @@ export class CasasComponent implements OnInit, OnDestroy {
                   this.router.navigate(['usuarios']);
                   navigate = true;
                   break;
+                case 'chat':
                 case 'chats':
                   this.router.navigate(['chat-list']);
                   navigate = true;
@@ -126,23 +128,21 @@ export class CasasComponent implements OnInit, OnDestroy {
             }
             break;
           }
-          case 'eliminar': {
+          case 'activar': {
             const event = command.slice(1, command.length).join(' ');
 
-            for (const e of this.casas) {
-              if (e.id_casa == +event) {
-                navigate = true;
-                this.ngZone.run(() => {
-                  if(e.estado_casa=='Inactiva'){
-                    this.activarCasa(e.id_casa);
-                  }else{
-                    this.cancelarCasa(e.id_casa);
-                  }
-
-                });
-                break;
-              }
-            }
+            this.casas.filter(c => c.estado_casa !== 'Inactiva' && c.id_casa === +event)
+              .forEach(c => {
+                this.cancelarCasa(c.id_casa);
+              });
+            break;
+          }
+          case 'desactivar': {
+            const event = command.slice(1, command.length).join(' ');
+            this.casas.filter(c => c.estado_casa === 'Inactiva' && c.id_casa === +event)
+              .forEach(c => {
+                this.cancelarCasa(c.id_casa);
+              });
             break;
           }
         }
@@ -335,6 +335,7 @@ export class CasasComponent implements OnInit, OnDestroy {
             this.imgsSeleccionadas.push(file);
             this.listaImg.push(file.name);
             this.formCasas.controls['imgsCasa'].setValue(this.imgsSeleccionadas);
+            this.cantidadimagenes = this.cantidadimagenes + 1;
           }
         };
 
@@ -373,6 +374,7 @@ export class CasasComponent implements OnInit, OnDestroy {
       this.formCasas.controls['imgsCasa'].setValue(null);
       this.imgsInput.nativeElement.value = null;
     }
+    this.cantidadimagenes = this.cantidadimagenes - 1;
 
   }
 
