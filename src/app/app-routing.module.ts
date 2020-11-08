@@ -14,6 +14,10 @@ import { UsuarioVerComponent } from './components/usuario-ver/usuario-ver.compon
 import { CompraVerComponent } from './components/compra-ver/compra-ver.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ChatListComponent } from './components/chat-list/chat-list.component';
+import { SemestresComponent } from './components/semestres/semestres.component';
+import { EstadisticasComponent } from './components/estadisticas/estadisticas.component'; 
+
+
 
 const routes: Routes = [
   { path: '', component: LayoutComponent, children: [
@@ -30,6 +34,9 @@ const routes: Routes = [
     { path: 'perfil', component: PerfilComponent },
     { path: 'chat-list', component: ChatListComponent},
     { path: 'chat/:id', component: ChatComponent },
+    { path: 'semestres', component: SemestresComponent },
+    { path: 'estadisticas', component: EstadisticasComponent },
+
   ]},
   { path: 'login', component: LoginComponent },
   { path: '**', pathMatch: 'full', redirectTo: 'login' }
