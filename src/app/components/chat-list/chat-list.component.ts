@@ -48,8 +48,7 @@ export class ChatListComponent implements OnInit, OnDestroy {
     speechRecognitionList.addFromString(`
       #JSGF V1.0;
       public navigate = ver (casas | publicaciones | usuarios | chats);
-      public editar = editar;
-      public eliminar = eliminar;
+      public mostrar = mostrar;
       `, 1);
 
     this.recognition.grammars = speechRecognitionList;
@@ -85,7 +84,7 @@ export class ChatListComponent implements OnInit, OnDestroy {
               }
             });
             break;
-          case 'editar': {
+          case 'mostrar': {
             const event = command.slice(1, command.length).join(' ');
 
             for (const e of this.users) {
@@ -99,8 +98,6 @@ export class ChatListComponent implements OnInit, OnDestroy {
             }
             break;
           }
-
-
         }
 
       }

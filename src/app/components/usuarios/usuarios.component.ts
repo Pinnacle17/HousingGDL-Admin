@@ -39,7 +39,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
 
     speechRecognitionList.addFromString(`
       #JSGF V1.0;
-      public navigate = ver (eventos | publicaciones | usuarios | repartidores);
+      public navigate = ver (casas | publicaciones | usuarios | chats);
       `, 1);
 
     this.recognition.grammars = speechRecognitionList;
@@ -49,25 +49,35 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     this.recognition.maxAlternatives = 1;
     let navigate = false;
     this.recognition.onresult = ev => {
+      if (navigate) {
+        return;
+      }
       const command = ev.results[0][0].transcript.split(' ');
       if (command.length >= 2) {
-        this.ngZone.run(() => {
-          switch (command[1]) {
-            case 'eventos':
-              this.router.navigate(['/eventos']);
-              navigate = true;
-              break;
-            case 'publicaciones':
-              this.router.navigate(['/publicaciones']);
-              navigate = true;
-              break;
-            case 'repartidores':
-              this.router.navigate(['/repartidores']);
-              navigate = true;
-              break;
-          }
-        });
+        switch (command[0]) {
+          case 'ver':
+            this.ngZone.run(() => {
+              switch (command[1]) {
+                case 'casas':
+                  this.router.navigate(['casas']);
+                  navigate = true;
+                  break;
+                case 'usuarios':
+                  this.router.navigate(['usuarios']);
+                  navigate = true;
+                  break;
+                case 'chats':
+                case 'chat':
+                  this.router.navigate(['chat-list']);
+                  navigate = true;
+                  break;
+              }
+            });
+            break;
+        }
+
       }
+
     };
     this.recognition.start();
 
