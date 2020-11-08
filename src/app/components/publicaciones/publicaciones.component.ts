@@ -104,6 +104,7 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
                   navigate = true;
                   break;
                 case 'chats':
+                case 'chat':
                   this.router.navigate(['chat-list']);
                   navigate = true;
                   break;
