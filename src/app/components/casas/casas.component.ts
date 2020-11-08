@@ -177,6 +177,10 @@ export class CasasComponent implements OnInit, OnDestroy {
     })
   }
 
+  irSemestres(){
+    this.router.navigate(['semestres'])
+  }
+
   buscarCasa(nombre: string) {
     if (nombre == null || nombre == '') {
       return null;
