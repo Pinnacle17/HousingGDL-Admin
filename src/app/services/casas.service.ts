@@ -90,7 +90,7 @@ export class CasasService {
   }
 
   ActivarComentario(id_cal:number){
-    return this.http.get(`${this.url}comentarios/activarComentario.php?id_calificacion=${id_cal}`)//.pipe(retry(3))
+    return this.http.get(`${this.url}comentarios/confirmarComentario.php?id_calificacion=${id_cal}`)//.pipe(retry(3))
   }
 
 }
