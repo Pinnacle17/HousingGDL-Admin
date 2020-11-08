@@ -61,4 +61,9 @@ export class CuartosService{
     console.log(id_cuarto)
     return this.http.get(`${this.url}oferta_semestre.php?id_semestre=${id_semestre} && id_cuarto=${id_cuarto}`)
   }
+  modificarOferta( info:any, id_oferta:string ){
+    const OFERTA_FD = serialize(info);
+    OFERTA_FD.append('id_oferta', id_oferta)
+    return this.http.post(`${this.url}modificarOferta.php`, OFERTA_FD)//.pipe(retry(3))
+  }
 }

@@ -40,8 +40,8 @@ export class CasasService {
   }
 
   crearCasa( casa:any ){
-    const EVENTO_FD = serialize(casa);
-    return this.http.post(`${this.url}crearCasa.php`, EVENTO_FD)//.pipe(retry(3))
+    const CASA_FD = serialize(casa);
+    return this.http.post(`${this.url}crearCasa.php`, CASA_FD)//.pipe(retry(3))
   }
 
   modificarInfoCasa( info:any ){
@@ -91,6 +91,13 @@ export class CasasService {
 
   ActivarComentario(id_cal:number){
     return this.http.get(`${this.url}comentarios/activarComentario.php?id_calificacion=${id_cal}`)//.pipe(retry(3))
+  }
+  eliminarSemestre(id_semestre:number){
+    return this.http.get(`${this.url}eliminarSemestre.php?id_semestre=${id_semestre}`)//.pipe(retry(3))
+  }
+  crearSemestre( semestre:any ){
+    const SEMESTRE_FD = serialize(semestre);
+    return this.http.post(`${this.url}insertaSemestre.php`, SEMESTRE_FD)//.pipe(retry(3))
   }
 
 }
