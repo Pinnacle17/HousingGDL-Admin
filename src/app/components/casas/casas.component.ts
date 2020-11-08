@@ -27,6 +27,7 @@ export class CasasComponent implements OnInit, OnDestroy {
 
   busqueda = null;
   encontrado: boolean = null;
+  cantidadimagenes:number = 0;
 
   imgSeleccionada: File;
   imgCarouselSeleccionada: File;
@@ -331,6 +332,7 @@ export class CasasComponent implements OnInit, OnDestroy {
             this.imgsSeleccionadas.push(file);
             this.listaImg.push(file.name);
             this.formCasas.controls['imgsCasa'].setValue(this.imgsSeleccionadas);
+            this.cantidadimagenes = this.cantidadimagenes + 1;
           }
         };
 
@@ -369,6 +371,7 @@ export class CasasComponent implements OnInit, OnDestroy {
       this.formCasas.controls['imgsCasa'].setValue(null);
       this.imgsInput.nativeElement.value = null;
     }
+    this.cantidadimagenes = this.cantidadimagenes - 1;
 
   }
 
