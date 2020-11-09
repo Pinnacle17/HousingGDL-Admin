@@ -1,1 +1,74 @@
-<p>estadisticas works!</p>
+<ul class="nav nav-tabs justify-content-center">
+    <li class="nav-item">
+      <a (click)="mostrarNacionalidades()" class="nav-link"  [ngClass]="{
+        'active':tabActive === 1
+      }" >Estadísticas de nacionalidades</a>
+    </li>
+    <li class="nav-item"  >
+        <a (click)="mostrarCasas()" class="nav-link active" [ngClass]="{
+            'active':tabActive === 2
+          }" >Estadísticas de casas</a>
+    </li>
+    <li class="nav-item" >
+        <a (click)="mostrarColonias()" class="nav-link active" [ngClass]="{
+            'active':tabActive === 3
+          }" >Estadísticas de colonias</a> 
+    </li>
+</ul>
+
+<div *ngIf="tabActive==1">
+    <table class="table table-striped table-bordered table-hover">
+        <thead class="thead-dark text-center">
+            <tr>
+                <th scope="col" style="width: 50%;">País</th>
+                <th scope="col" style="width: 50%;">Cantidad</th>
+            </tr>
+        </thead>
+        <tbody class="text-center">
+            <tr *ngFor="let nacionalidad of nacionalidades">
+                <th scope="row" class="align-middle">{{ nacionalidad.nacionalidad }}</th>
+                <td class="align-middle">{{ nacionalidad.cantidad }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div *ngIf="tabActive==2">
+    <table class="table table-striped table-bordered table-hover">
+        <thead class="thead-dark text-center">
+            <tr>
+                <th scope="col" style="width: 10%;">ID</th>
+                <th scope="col" style="width: 20%;">Nombre</th>
+                <th scope="col" style="width: 10%;">Dias</th>
+                <th scope="col" style="width: 10%;">Orden de anuncio</th>
+                <th scope="col" style="width: 30%;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody class="text-center">
+            <tr *ngFor="let casa of casas">
+                <th scope="row" class="align-middle">{{ casa.id_casa }}</th>
+                <td class="align-middle">{{ casa.nombre_casa }}</td>
+                <td class="align-middle">{{casa.promedio}}</td>
+                <td class="align-middle">{{ casa.orden_anuncio }}</td>
+                <td class="align-middle">
+                    <button class="btn btn-primary" type="button" (click)="editarCasa( casa.id_casa )">Editar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div *ngIf="tabActive==3">
+    <table class="table table-striped table-bordered table-hover">
+        <thead class="thead-dark text-center">
+            <tr>
+                <th scope="col" style="width: 50%;">Nombre</th>
+                <th scope="col" style="width: 50%;">Dias</th>
+            </tr>
+        </thead>
+        <tbody class="text-center">
+            <tr *ngFor="let colonia of colonias">
+                <th scope="row" class="align-middle">{{ colonia.nombre_colonia }}</th>
+                <td class="align-middle">{{ colonia.promedio }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
