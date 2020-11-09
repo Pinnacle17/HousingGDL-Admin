@@ -1,4 +1,4 @@
-import { Component, OnInit,Input  } from '@angular/core';
+import { Component, OnInit,Input, ViewChild  } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CasasService } from 'src/app/services/casas.service';
@@ -7,7 +7,9 @@ import { CuartosService } from 'src/app/services/cuartos.service';
 
 @Component({
   selector: 'app-chat',
-  templateUrl: './chat.component.html'
+  templateUrl: './chat.component.html',
+  styleUrls: ['./chat.component.css']
+
 })
 export class ChatComponent implements OnInit {
   @Input() childMessage: number;
@@ -23,6 +25,9 @@ export class ChatComponent implements OnInit {
   ofertas:any=[];
   oferta_id:number=null;
   id_usuario:any=null
+
+  @ViewChild('modalBloqueo', {static: false}) modalBloqueo;
+  @ViewChild('cerrarModalBloqueo', {static: false}) cerrarModalBloqueo;
 
   constructor(
     private chatService:ChatsService,
@@ -112,10 +117,10 @@ export class ChatComponent implements OnInit {
 
   }
 
-  bloquear(){
+  bloquear(msg){
     if (window.confirm("Está seguro de querer bloquear la conversación")) {
-    let msg=this.enviarForm.get('enviarInput').value;
-    this.chatService.bloquearChat(this.idChat,msg).subscribe(res=>{
+    let msg1=msg
+    this.chatService.bloquearChat(this.idChat,msg1).subscribe(res=>{
       console.log(res)
       location.reload();
     })

@@ -90,7 +90,7 @@ export class CasasService {
   }
 
   ActivarComentario(id_cal:number){
-    return this.http.get(`${this.url}comentarios/activarComentario.php?id_calificacion=${id_cal}`)//.pipe(retry(3))
+    return this.http.get(`${this.url}comentarios/confirmarComentario.php?id_calificacion=${id_cal}`)//.pipe(retry(3))
   }
   eliminarSemestre(id_semestre:number){
     return this.http.get(`${this.url}eliminarSemestre.php?id_semestre=${id_semestre}`)//.pipe(retry(3))
@@ -98,6 +98,16 @@ export class CasasService {
   crearSemestre( semestre:any ){
     const SEMESTRE_FD = serialize(semestre);
     return this.http.post(`${this.url}insertaSemestre.php`, SEMESTRE_FD)//.pipe(retry(3))
+  }
+
+  getEstadisticasNacionalidades(){
+    return this.http.get(`${this.url}nacionalidades.php`)//.pipe(retry(3))
+  }
+  getEstadisticasCasas(){
+    return this.http.get(`${this.url}promedioDiasCasa.php`)//.pipe(retry(3))
+  }
+  getEstadisticasColonias(){
+    return this.http.get(`${this.url}promedioDiasColonia.php`)//.pipe(retry(3))
   }
 
 }

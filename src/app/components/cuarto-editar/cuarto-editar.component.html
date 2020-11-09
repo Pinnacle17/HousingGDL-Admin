@@ -165,7 +165,7 @@
   </div>
   <br>
   <!-- <div class="card-body" > -->
-    <form [formGroup]="formOferta" (ngSubmit)="guardarOferta()" *ngIf="oferta.tipo==0">
+    <form [formGroup]="formOferta" (ngSubmit)="guardarOferta()" *ngIf="oferta.tipo==0 || editandoOferta==true">
             <div class="col-md-3">
               <label for="precio">Precio: <small class="text-danger">*</small></label>
               <input type="number" class="form-control" id="precio" formControlName="precio" [class.is-invalid]="validacionPrecio">
@@ -177,12 +177,20 @@
               <input type="text" id="grupo" class="form-control" placeholder="Ingrese el grupo" formControlName="grupo" [class.is-invalid]="validacionGrupo">
               <small *ngIf="validacionGrupo" class="form-text text-danger">Obligatorio.</small>
             </div>
+            <br>
             <div class="col-md-12 text-center">
-              <button [disabled]="formOferta.invalid" class="btn btn-success" type="submit">Crear oferta</button>
+                <div *ngIf="editandoOferta==true; then editar else crear"></div>
+                <ng-template #editar>
+                    <button [disabled]="formOferta.invalid" class="btn btn-success" type="submit">Editar oferta</button>
+                </ng-template>
+                <ng-template #crear>
+                    <button [disabled]="formOferta.invalid" class="btn btn-success" type="submit">Crear oferta</button>
+                </ng-template>
             </div>
+            <br>
     </form>
   <!-- </div> -->
-  <div class="card-body" *ngIf="oferta.tipo==1">
+  <div class="card-body" *ngIf="oferta.tipo==1 && editandoOferta==false">
         <div class="form-row mb-6">
             <div class="col-md-12">
                 <label for="Grupo">Grupo: {{oferta.grupo}}</label>
@@ -198,6 +206,7 @@
         <div class="input-group form-row mb-3">
           <br>
             <div class="col-md-12 text-center">
+                <button class="btn btn-alert ml-lg-2" type="button" (click)="editarOferta( oferta.fk_oferta )">Editar Oferta</button>
               <button class="btn btn-danger ml-lg-2" type="button" (click)="eliminarOferta( oferta.fk_oferta )">Eliminar Oferta</button>
             </div>
         </div>
@@ -205,6 +214,9 @@
   <div class="card-body" *ngIf="oferta.tipo==2">
         <div class="form-row mb-12">
             <div class="col-md-4">
+                <div class="comentarioUsuario">
+                    <img src="{{oferta.foto}}" class="imgComentario"/>
+                  </div>
                 <label for="nombreusuario">Nombre Usuario: {{oferta.nombre_usuario}}</label>
             </div>
             <div class="col-md-4">
@@ -234,3 +246,39 @@
     </div>
 
 </div>
+
+<style>
+    .comentarioUsuario{
+        display: flex;
+        margin-right: 10px;
+    }
+    
+    .comentarioCalificaciones{
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .imgComentario{
+        margin: 5px;
+        height: 50px;
+        width: 50px;
+        border-radius: 360px;
+    }
+    
+    .comentario{
+        display: flex;
+    }
+    
+    .divider{
+        margin: 15px 0 15px 0;
+        border: 1px solid #000;
+    }
+    
+    .comentar{
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    </style>
+              

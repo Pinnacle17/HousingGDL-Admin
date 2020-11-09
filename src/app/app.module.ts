@@ -34,6 +34,8 @@ import { UsuarioVerComponent } from './components/usuario-ver/usuario-ver.compon
 import { CompraVerComponent } from './components/compra-ver/compra-ver.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ChatListComponent } from './components/chat-list/chat-list.component';
+import { SemestresComponent } from './components/semestres/semestres.component';
+import { EstadisticasComponent } from './components/estadisticas/estadisticas.component'; 
 
 registerLocaleData(es)
 
@@ -54,6 +56,8 @@ registerLocaleData(es)
     CompraVerComponent,
     ChatComponent,
     ChatListComponent,
+    SemestresComponent,
+    EstadisticasComponent,
   ],
   imports: [
     BrowserModule,
