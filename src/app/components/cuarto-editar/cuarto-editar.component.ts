@@ -96,6 +96,9 @@ export class CuartoEditarComponent implements OnInit {
     nav: true
   }
 
+  editandoOferta=false;
+  id_oferta=null;
+
   constructor(private activatedRoute:ActivatedRoute,
               private cuartosService:CuartosService,
               private fb:FormBuilder,
@@ -322,7 +325,12 @@ export class CuartoEditarComponent implements OnInit {
   getOferta( event:any ){
     this.id_semestre = event
     if(this.id_semestre != null){
-      this.cuartosService.getOferta(this.id_semestre, this.id_cuarto).subscribe( resultado => this.oferta = resultado)
+      this.cuartosService.getOferta(this.id_semestre, this.id_cuarto).subscribe( resultado =>{
+        console.log(resultado)
+        this.oferta = resultado
+        console.log(this.oferta.celular)
+
+      } )
     }
     else{
       return
@@ -334,15 +342,32 @@ export class CuartoEditarComponent implements OnInit {
     this.infoOferta.precio = this.formOferta.get('precio').value;
     this.infoOferta.grupo = this.formOferta.get('grupo').value;
     this.infoOferta.id_semestre = this.id_semestre;
-    this.cuartosService.crearOferta(this.infoOferta).subscribe(datos => {
-      if (datos['resultado'] == 'OK') {
-        this.formOferta.reset();
-        this.oferta['precio'] = this.infoOferta.precio;
-        this.oferta['grupo'] = this.infoOferta.grupo;
-        this.oferta['fk_oferta'] = datos['oferta'];
-        this.oferta['tipo'] = 1;
-      }
-    });
+
+    if(this.editandoOferta==false){
+      this.cuartosService.crearOferta(this.infoOferta).subscribe(datos => {
+        if (datos['resultado'] == 'OK') {
+          this.formOferta.reset();
+          this.oferta['precio'] = this.infoOferta.precio;
+          this.oferta['grupo'] = this.infoOferta.grupo;
+          this.oferta['fk_oferta'] = datos['oferta'];
+          this.oferta['tipo'] = 1;
+        }
+      });
+    }else{
+      this.cuartosService.modificarOferta(this.formOferta.value,this.id_oferta).subscribe(resultado=>{
+        if(resultado==true){
+          this.editandoOferta=false;
+          this.oferta['precio'] = this.infoOferta.precio;
+          this.oferta['grupo'] = this.infoOferta.grupo;
+          window.alert("Oferta modificada");
+        }else{
+          this.editandoOferta=false;
+          window.alert("Ha ocurrido un error. Intentelo más tarde");
+        }
+      })
+    }
+    
+    
   }
 
   eliminarOferta( id_oferta:number ){
@@ -352,6 +377,13 @@ export class CuartoEditarComponent implements OnInit {
           this.oferta['tipo'] = 0;
       })
     }
+  }
+
+  editarOferta(id_oferta){
+    this.id_oferta=id_oferta
+    this.editandoOferta=true;
+    this.formOferta.controls['precio'].setValue(this.oferta.precio);
+    this.formOferta.controls['grupo'].setValue(this.oferta.grupo);
   }
 
 }
