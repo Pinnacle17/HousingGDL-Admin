@@ -32,7 +32,31 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>olis</p>
+                <form [formGroup]="enviarForm" (ngSubmit)="agregarSemestre()">
+                    <div class="form-row mb-3">
+                        <div class="col-md-12">
+                            <label for="nombre">Nombre de semestre: <small class="text-danger">*</small></label>
+                            <input type="text" class="form-control" placeholder="Ingrese el nombre" formControlName="nombre" >
+                            <small *ngIf="validacionNombre" class="form-text text-danger">Ingrese un nombre válido.</small>
+                        </div>
+                    </div>
+    
+                    <div class="form-row mb-3">
+                            <label for="inicio">Inicio de semestre: <small class="text-danger">*</small></label>
+                            <input type="date" class="form-control" id="inicio" placeholder="Ingrese la fecha de inicio" formControlName="inicio" >
+                            <small *ngIf="validacionInicio" class="form-text text-danger">Fecha de inicio Obligatoria.</small>
+                    </div>
+    
+                    <div class="form-row mb-3">
+                            <label for="fin">Fin de semestre: <small class="text-danger">*</small></label>
+                            <input type="date" class="form-control" id="fin" placeholder="Ingrese la fecha de fin" formControlName="fin" >
+                            <small *ngIf="validacionFin" class="form-text text-danger">Fecha de fin Obligatoria.</small>
+                    </div>
+    
+                    <div class="buttonDiv">
+                        <button class="btn btn-success botonPagar" [disabled]="enviarForm.invalid" type="submit">Crear</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
