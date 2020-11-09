@@ -1,0 +1,24 @@
+.chatContainer{
+    height: 90%;
+}
+
+.chatSend{
+    justify-content:flex-end;
+}
+
+.chatRecieved{
+    justify-content:flex-start;
+}
+
+.chat{
+    width: 100%;
+}
+
+
+.chatStyle{
+    width: max-content;
+    background-color: #dee2e6;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 2px;
+} 

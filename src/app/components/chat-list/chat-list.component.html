@@ -1,5 +1,4 @@
-<div class=chat-container>
-  <form [formGroup]="formFiltros" (ngSubmit)="filtrar()">
+<form [formGroup]="formFiltros" (ngSubmit)="filtrar()">
     <div class="form-row align-items-center justify-content-center">
         <div class="col-md-6 p-2 text-center">
             <label>Estado Chat:</label>
@@ -17,8 +16,9 @@
     </div>
     <button class="btn btn-primary mx-auto d-block" type="submit" [disabled]="formFiltros.invalid"> Filtrar </button>
     </form>
+<div class=chat-container>
     <div class="chat-list" *ngIf="haychat==true">
-        <div *ngFor="let user of users">
+        <div style="margin-bottom: 10px;" *ngFor="let user of users">
             <a (click)="chat(user.id_chat)" class="chat-div">
                 <img [src]="user.foto " class="rounded-circle" alt="" width="100" height="100">
                 <div>

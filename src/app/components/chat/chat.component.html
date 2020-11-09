@@ -3,7 +3,7 @@
     </div>
     <div class="card" style="width: 100%" *ngIf="datos.estado_chat=='Activo'">
         <div style="display: flex; justify-content: space-evenly;" class="card-body">
-            <button (click)="bloquear()" type="button" class="btn btn-danger">
+            <button data-toggle="modal" data-target="#modalBloqueo" type="button" class="btn btn-danger">
                 Bloquear
             </button>
             <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalCompra">
@@ -22,7 +22,7 @@
         </div>
     </div>
 </div>
-<div class="input-group mb-3" *ngIf="datos.estado_chat=='Activo'">
+<div class="input-group mb-3" style="position: absolute; top:95%; width: 80%;" *ngIf="datos.estado_chat=='Activo'">
     <form style="width: 100%;display: flex;" [formGroup]="enviarForm" (ngSubmit)="enviarMensaje()">
         <input type="text" class="form-control" placeholder="Escriba algo..." aria-label="Username" formControlName="enviarInput" aria-describedby="basic-addon1">
         <button type="submit" class="btn btn-primary" >
@@ -77,4 +77,24 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="modal fade" id="modalBloqueo" tabindex="-1" role="dialog" aria-labelledby="modalBloqueoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="container-fluid text-center">
+                    <h5 class="modal-title" id="modalBloqueoLabel">Bloquear Usuario</h5>
+                    <button #cerrarModalBloqueo type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="modal-body" style="display: flex;">
+                <input #msg type="text" class="form-control" placeholder="Escriba el motivo del bloqueo..." aria-label="Username" formControlName="enviarInput" aria-describedby="basic-addon1">
+                <button (click)="bloquear(msg.value)" class="btn btn-danger">
+                    Bloquear
+                </button>
+            </div>
+        </div>
+    </div>
+    <button #modalChat1 class="invisible" type="button" data-toggle="modal" data-target="#modalBloqueo">xxx</button>
 </div>
