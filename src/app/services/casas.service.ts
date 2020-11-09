@@ -100,4 +100,14 @@ export class CasasService {
     return this.http.post(`${this.url}insertaSemestre.php`, SEMESTRE_FD)//.pipe(retry(3))
   }
 
+  getEstadisticasNacionalidades(){
+    return this.http.get(`${this.url}nacionalidades.php`)//.pipe(retry(3))
+  }
+  getEstadisticasCasas(){
+    return this.http.get(`${this.url}promedioDiasCasa.php`)//.pipe(retry(3))
+  }
+  getEstadisticasColonias(){
+    return this.http.get(`${this.url}promedioDiasColonia.php`)//.pipe(retry(3))
+  }
+
 }
