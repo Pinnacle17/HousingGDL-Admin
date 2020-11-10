@@ -100,7 +100,7 @@
                                 <p>Limpieza: {{ comentario.instalaciones }} Puntos</p>
                               </div>
                             </div>
-                            
+
                             <div class="">
                                 <div class="col-md-2 my-auto">
                                     <button type="button" class="btn btn-danger mx-auto my-auto d-block" (click)="eliminarComentario(comentario.id_calificacion)">Eliminar</button>
@@ -136,7 +136,7 @@
                                 <p>Limpieza: {{ comentario.instalaciones }} Puntos</p>
                               </div>
                             </div>
-                            
+
                             <div class="">
                                 <div class="col-md-2 my-auto">
                                     <button type="button" class="btn btn-danger mx-auto my-auto d-block" (click)="eliminarComentario(comentario.id_calificacion)">Eliminar</button>
@@ -201,7 +201,7 @@
                                 <div class="input-group form-row mb-3">
                                     <div class="col-md-6">
                                         <label for="ordenImg">Orden de Casa: <small class="text-danger">*</small> <small>(Posición de imagen principal en el carousel de casas)</small></label>
-                                        <input type="number" class="form-control" id="ordenImg" min="1" max="15" step="1" value="1" formControlName="orden_anuncio" [class.is-invalid]="validacionOrden">
+                                        <input type="number" class="form-control" id="ordenImg" min="1" max="20" step="1" value="1" formControlName="orden_anuncio" [class.is-invalid]="validacionOrden">
                                         <small *ngIf="validacionOrden" class="form-text text-danger">Orden Obligatorio.</small>
                                     </div>
                                 </div>
@@ -439,4 +439,3 @@
     margin-bottom: 20px;
 }
 </style>
-                                  

@@ -15,39 +15,50 @@
             </ul>
         </div>
     </div>
-    <!--
-    <div class="row mt-3 p-3">
-        <div class="card w-100">
-            <div class="card-header text-center">
-                <h4>Historial de Compras</h4>
-            </div>
-            <div class="card-body">
-                <table class="table table-striped table-bordered table-hover" *ngIf="hayCompras">
-                    <thead class="thead-light text-center">
-                        <tr>
-                            <th scope="col" style="width: 10%;">Numero de Compra</th>
-                            <th scope="col" style="width: 20%;">Fecha de Compra</th>
-                            <th scope="col" style="width: 10%;">Subtotal</th>
-                            <th scope="col" style="width: 10%;">Estado de Pago</th>
-                            <th scope="col" style="width: 10%;">Estado de Entrega</th>
-                            <th scope="col" style="width: 10%;"></th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-center">
-                        <tr *ngFor="let compra of historial">
-                            <th scope="row" class="align-middle">{{ compra.id_venta }}</th>
-                            <td class="align-middle">{{ compra.fec_ven }}</td>
-                            <td class="align-middle">{{ compra.sub_ven | currency:'MXN':'symbol'}}</td>
-                            <td class="align-middle">{{ compra.pago }}</td>
-                            <td class="align-middle">{{ compra.entrega }}</td>
-                            <td class="align-middle"><button (click)="verCompra(compra.id_venta)" class="btn btn-outline-primary">Ver más</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <h5 class="text-danger text-center" *ngIf="!hayCompras">No hay compras aún.</h5>
-            </div>
-        </div>
-    </div>-->
+    <div class="card border-primary">
+      <div class="card-header text-center border-primary">
+          <h4>Historial de Compras</h4>
+      </div>
+      <div class="card-body">
+          <table class="table table-striped table-bordered table-hover" *ngIf="hayCompras">
+              <thead class="thead-light text-center">
+                  <tr>
+                      <th scope="col" style="width: 10%;">Numero de Compra</th>
+                      <th scope="col" style="width: 20%;">Fecha de Compra</th>
+                      <th scope="col" style="width: 10%;">Subtotal</th>
+                      <th scope="col" style="width: 10%;">Estado Pago</th>
+                      <th scope="col" style="width: 10%;">Casa</th>
+                      <th scope="col" style="width: 10%;">Cuarto</th>
+                      <th scope="col" style="width: 20%;">Semestre</th>
+                      <th scope="col" style="width: 20%;">Grupo</th>
+                  </tr>
+              </thead>
+              <tbody class="text-center">
+                  <tr *ngFor="let compra of historial">
+                      <th scope="row" class="align-middle">{{ compra.id_compra }}</th>
+                      <td class="align-middle">{{ compra.fecha_compra }}</td>
+                      <td class="align-middle">{{ compra.precio | currency:'MXN':'symbol'}}</td>
+                      <td class="align-middle">{{ compra.pago }}</td>
+                      <td class="align-middle">{{ compra.nombre_casa }}</td>
+                      <td class="align-middle">{{ compra.nombre_cuarto }}</td>
+                      <td class="align-middle">{{ compra.semestre }}</td>
+                      <td class="align-middle">
+                          <a href="{{ compra.grupo }}" target="_blank">{{ compra.grupo }}</a>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+          <!-- <h5 class="text-danger text-center" *ngIf="!hayCompras">No hay rentas aún.</h5> -->
+
+      </div>
+  </div>
+  <div class="row h-100 justify-content-center align-items-center pt-3">
+    <div class="col-md-3 text-center">
+      <button class="btn btn-primary" type="button" (click)="verChat(chat.id_chat)" *ngIf="chat != null">Ver Chat</button>
+    </div>
+  </div>
+
+
 </div>
 <br>
 <br>

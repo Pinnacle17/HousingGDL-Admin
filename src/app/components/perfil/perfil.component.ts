@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuariosService } from '../../services/usuarios.service';
 import { Router } from '@angular/router';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-perfil',
@@ -10,13 +11,18 @@ export class PerfilComponent implements OnInit {
 
   admin:any = {};
   id:string = null;
+  loggedIn:boolean = false;
 
   constructor(private usuariosService:UsuariosService,
-              private router:Router) { }
+              private router:Router, private loginService: LoginService) { }
 
   ngOnInit() {
-    // this.id = localStorage.getItem("id_admin")
-    // this.getAdmin();
+    this.loggedIn = this.loginService.getEstadoSesion();
+    if (this.loggedIn == false  && localStorage.getItem("id_admin") === null) {
+        this.router.navigate(['login'])
+    }
+    this.id = localStorage.getItem("id_admin")
+    this.getAdmin();
   }
 
   getAdmin(){
@@ -27,6 +33,7 @@ export class PerfilComponent implements OnInit {
 
   cerrarSesion(){
     localStorage.removeItem("id_admin");
+    this.loginService.setEstadoSesion(false);
     this.router.navigate(['login'])
   }
 

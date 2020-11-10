@@ -5,12 +5,16 @@ import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { ActivatedRoute } from '@angular/router';
 import { PublicacionesService } from '../../services/publicaciones.service';
 import { environment } from '../../../environments/environment';
+import { LoginService } from '../../services/login.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-publicacion-editar',
   templateUrl: './publicacion-editar.component.html'
 })
 export class PublicacionEditarComponent implements OnInit {
+
+  loggedIn:boolean = false;
 
   formInfoP:FormGroup;
   formImgP:FormGroup;
@@ -23,6 +27,7 @@ export class PublicacionEditarComponent implements OnInit {
   publicacion:any = {};
   imgs:any = null;
   sinImagen: boolean = false;
+  id_publicacion: number = 0;
   errorTamImgs: boolean = false;
 
   infoPub:any = {
@@ -42,6 +47,7 @@ export class PublicacionEditarComponent implements OnInit {
   listaImg:any[] = [];
 
   errorNombre:string = "";
+
 
   customOptions: OwlOptions = {
     loop: true,
@@ -73,9 +79,15 @@ export class PublicacionEditarComponent implements OnInit {
 
   constructor( private fb:FormBuilder,
                private activatedRoute:ActivatedRoute,
-               private publicacionesService:PublicacionesService ) {}
+               private publicacionesService:PublicacionesService,
+               private loginService: LoginService,
+               private router:Router ) {}
 
   ngOnInit() {
+    this.loggedIn = this.loginService.getEstadoSesion();
+    if (this.loggedIn == false  && localStorage.getItem("id_admin") === null) {
+        this.router.navigate(['login'])
+    }
     this.formInfoPInit();
     this.formImgPInit();
     this.activatedRoute.params.subscribe( params => {
@@ -89,7 +101,7 @@ export class PublicacionEditarComponent implements OnInit {
 
       });
       this.publicacionesService.getImgs(params['id']).subscribe( resultado => this.imgs = resultado);
-
+      this.id_publicacion = params['id'];
       this.infoPub.id = params['id'];
       this.imgsPub.id = params['id'];
     })
@@ -173,32 +185,40 @@ export class PublicacionEditarComponent implements OnInit {
   guardarImg(){
     this.imgsPub.imgPrincipal = this.imgSeleccionada;
     this.imgsPub.imgsPublicacion = this.imgsSeleccionadas;
+    console.log(this.imgsSeleccionadas.length + this.imgs.length);
+    if((this.imgsSeleccionadas.length + this.imgs.length) > 20){
+      window.confirm("La publicacion puede tener como maximo 20 imagenes");
+    }else{
+      this.publicacionesService.modificarImgsPub(this.imgsPub).subscribe( datos => {
+        if(datos['resultado'] == "ERROR"){
+          console.log("ERROR");
+          return
+        }
+        else if(datos['resultado'] == "OK"){
+          this.refresh();
 
-    this.publicacionesService.modificarImgsPub(this.imgsPub).subscribe( datos => {
-      if(datos['resultado'] == "ERROR"){
-        console.log("ERROR");
-        return
-      }
-      else if(datos['resultado'] == "OK"){
-        this.refresh();
+          this.borrarImgPrincipal();
 
-        this.borrarImgPrincipal();
-
-        this.urls = [];
-        this.imgsSeleccionadas = [];
-        this.imgsInput.nativeElement.value = null;
-        window.confirm("Imagen(es) modificada(s) con éxito");
-      }
-    })
+          this.urls = [];
+          this.imgsSeleccionadas = [];
+          this.imgsInput.nativeElement.value = null;
+          window.confirm("Imagen(es) modificada(s) con éxito");
+        }
+      })
+    }
   }
 
   eliminarImg( id_img:number ){
     if(confirm("Está seguro de querer eliminar esta imagen?")){
-      this.publicacionesService.eliminarImgs(id_img).subscribe( datos => {
-        if(datos['resultado'] == "OK"){
-          this.refresh();
-        }
-      })
+      if(this.imgs.length >= 2){
+        this.publicacionesService.eliminarImgs(id_img).subscribe( datos => {
+          if(datos['resultado'] == "OK"){
+            this.refresh();
+          }
+        })
+      }else{
+        window.confirm("La publicacion debe de tener como minimo 1 imagen");
+      }
     }
   }
 

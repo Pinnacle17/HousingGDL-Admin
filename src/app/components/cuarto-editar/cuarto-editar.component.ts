@@ -6,6 +6,8 @@ import { OwlOptions } from 'ngx-owl-carousel-o';
 import { CasasService } from '../../services/casas.service';
 import { environment } from 'src/environments/environment'
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
+import { LoginService } from '../../services/login.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cuarto-editar',
@@ -21,6 +23,10 @@ export class CuartoEditarComponent implements OnInit {
   @ViewChild('imgsInputCua') imgsInputCua: ElementRef;
   //
   //
+
+  loggedIn:boolean = false;
+
+
   cuarto:any = {};
   oferta:any = {};
   //
@@ -102,9 +108,15 @@ export class CuartoEditarComponent implements OnInit {
   constructor(private activatedRoute:ActivatedRoute,
               private cuartosService:CuartosService,
               private fb:FormBuilder,
-              private casasService:CasasService) { }
+              private casasService:CasasService,
+              private loginService: LoginService,
+              private router:Router) { }
 
   ngOnInit() {
+    this.loggedIn = this.loginService.getEstadoSesion();
+    if (this.loggedIn == false  && localStorage.getItem("id_admin") === null) {
+        this.router.navigate(['login'])
+    }
     // this.getSemestres();
     this.formInfoCuartoInit();
     this.formImgInit();
@@ -216,15 +228,19 @@ export class CuartoEditarComponent implements OnInit {
 
 
   eliminarImgCuarto(id: number) {
-    console.log(id)
-    if (confirm("Está seguro de querer eliminar esta imagen?")) {
-      this.cuartosService.eliminarImgCuarto(id).subscribe(datos => {
-		    if (datos['resultado'] == "OK") {
-          this.refresh();
-		      window.confirm("Imagen eliminada con éxito");
-        }
-      })
+    if(this.imgs.length < 2){
+      window.confirm("No se puede eliminar, debe de haber minimo una imagen")
+    }else{
+      if (confirm("Está seguro de querer eliminar esta imagen?")) {
+        this.cuartosService.eliminarImgCuarto(id).subscribe(datos => {
+          if (datos['resultado'] == "OK") {
+            this.refresh();
+            window.confirm("Imagen eliminada con éxito");
+          }
+        })
+      }
     }
+
   }
 
   imgPrincipalCuarto(event) {
@@ -307,20 +323,25 @@ export class CuartoEditarComponent implements OnInit {
     this.imgsCuarto.imgs = this.imgsSeleccionadasCuarto;
     this.imgsCuarto.id_cuarto=this.cuarto.id_cuarto;
     console.log(this.imgsCuarto)
-    this.cuartosService.modificarImgsCuarto(this.imgsCuarto).subscribe(datos => {
-      if (datos['resultado'] == "ERROR") {
-        console.log("ERROR");
-        return
-      } else if (datos['resultado'] == "OK") {
-        this.refresh();
+    if((this.imgs.length + this.imgsSeleccionadasCuarto.length) < 10){
+      this.cuartosService.modificarImgsCuarto(this.imgsCuarto).subscribe(datos => {
+        if (datos['resultado'] == "ERROR") {
+          console.log("ERROR");
+          return
+        } else if (datos['resultado'] == "OK") {
+          this.refresh();
 
-        this.borrarImgPrincipalCuarto();
-        this.urlsCuarto = [];
-        this.imgsSeleccionadasCuarto = [];
-        this.imgsInputCua.nativeElement.value = null;
-        window.confirm("Imagen(es) modificada(s) con éxito");
-      }
-    });
+          this.borrarImgPrincipalCuarto();
+          this.urlsCuarto = [];
+          this.imgsSeleccionadasCuarto = [];
+          this.imgsInputCua.nativeElement.value = null;
+          window.confirm("Imagen(es) modificada(s) con éxito");
+        }
+      });
+    }else{
+      window.confirm("El cuarto no puede tener mas de 10 imagenes");
+    }
+
   }
   getOferta( event:any ){
     this.id_semestre = event
@@ -366,8 +387,8 @@ export class CuartoEditarComponent implements OnInit {
         }
       })
     }
-    
-    
+
+
   }
 
   eliminarOferta( id_oferta:number ){

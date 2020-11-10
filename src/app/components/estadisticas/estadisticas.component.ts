@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CasasService } from 'src/app/services/casas.service';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-estadisticas',
@@ -13,10 +14,15 @@ export class EstadisticasComponent implements OnInit {
   nacionalidades:any=[];
   casas:any=[];
   colonias:any=[];
+  loggedIn:boolean = false;
 
-  constructor(private casasService:CasasService, private router:Router ) { }
+  constructor(private casasService:CasasService, private router:Router, private loginService: LoginService ) { }
 
   ngOnInit(): void {
+    this.loggedIn = this.loginService.getEstadoSesion();
+    if (this.loggedIn == false  && localStorage.getItem("id_admin") === null) {
+        this.router.navigate(['login'])
+    }
     this.casasService.getEstadisticasNacionalidades().subscribe(resultado=>{
       console.log(resultado)
       this.nacionalidades=resultado
@@ -35,7 +41,7 @@ export class EstadisticasComponent implements OnInit {
   mostrarNacionalidades(){
     this.tabActive=1;
   }
-  
+
   mostrarCasas(){
     this.tabActive=2;
   }

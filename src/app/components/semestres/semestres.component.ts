@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CasasService } from 'src/app/services/casas.service';
 import { CuartosService } from 'src/app/services/cuartos.service';
+import { LoginService } from '../../services/login.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-semestres',
@@ -15,10 +17,17 @@ export class SemestresComponent implements OnInit {
 
   semestres:any=[];
   enviarForm: FormGroup;
-  
-  constructor(private cuartosService:CuartosService, private casasService:CasasService,private fb: FormBuilder) { }
+
+  loggedIn:boolean = false;
+
+
+  constructor(private router:Router, private cuartosService:CuartosService, private casasService:CasasService,private fb: FormBuilder, private loginService: LoginService) { }
 
   ngOnInit(): void {
+    this.loggedIn = this.loginService.getEstadoSesion();
+    if (this.loggedIn == false && localStorage.getItem("id_admin") === null) {
+        this.router.navigate(['login'])
+    }
     this.formEnviarInit();
     this.getSemestres();
     let now=new Date();
@@ -32,7 +41,7 @@ export class SemestresComponent implements OnInit {
   get validacionInicio() {
     return this.enviarForm.get('inicio').invalid && this.enviarForm.get('inicio').touched
   }
-  
+
   get validacionFin() {
     return this.enviarForm.get('fin').invalid && this.enviarForm.get('fin').touched
   }

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, NgZone  } from '@angular/core';
 import { Router } from '@angular/router';
 import { ChatsService } from 'src/app/services/chats.service';
 import { FormBuilder, FormGroup, Validators} from "@angular/forms";
+import { LoginService } from '../../services/login.service';
 
 declare var webkitSpeechRecognition;
 declare var webkitSpeechGrammarList;
@@ -22,7 +23,12 @@ export class ChatListComponent implements OnInit, OnDestroy {
   haychat:boolean = false;
   recognition: SpeechRecognition;
 
-  constructor(private router: Router, private chatService:ChatsService,  private fb:FormBuilder, private ngZone: NgZone) {}
+  loggedIn:boolean = false;
+
+
+
+  constructor(private router: Router, private chatService:ChatsService,  private fb:FormBuilder, private ngZone: NgZone,
+    private loginService: LoginService) {}
   formFiltrosInit(){
     this.formFiltros = this.fb.group({
       estado:['', [Validators.required]]
@@ -119,6 +125,10 @@ export class ChatListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.loggedIn = this.loginService.getEstadoSesion();
+    if (this.loggedIn == false && localStorage.getItem("id_admin") === null) {
+        this.router.navigate(['login'])
+    }
     this.chatService.verChatsNotificacion().subscribe( resultado => {
       console.log(resultado)
       if(resultado == null){

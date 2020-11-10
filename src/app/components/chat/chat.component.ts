@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { CasasService } from 'src/app/services/casas.service';
 import { ChatsService } from 'src/app/services/chats.service';
 import { CuartosService } from 'src/app/services/cuartos.service';
+import { LoginService } from '../../services/login.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat',
@@ -25,20 +27,29 @@ export class ChatComponent implements OnInit {
   ofertas:any=[];
   oferta_id:number=null;
   id_usuario:any=null
+  loggedIn:boolean = false;
+
 
   @ViewChild('modalBloqueo', {static: false}) modalBloqueo;
   @ViewChild('cerrarModalBloqueo', {static: false}) cerrarModalBloqueo;
 
   constructor(
+    private loginService: LoginService,
     private chatService:ChatsService,
     private activatedRoute: ActivatedRoute,
     private fb:FormBuilder,
     private casasService:CasasService,
     private cuartosService:CuartosService,
+    private router:Router
     ) {
    }
 
   ngOnInit(): void {
+
+    this.loggedIn = this.loginService.getEstadoSesion();
+    if (this.loggedIn == false && localStorage.getItem("id_admin") === null) {
+        this.router.navigate(['login'])
+    }
     this.formEnviarInit()
     this.activatedRoute.params.subscribe(params => {
       this.idChat=params['id']

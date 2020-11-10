@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CasasService } from '../../services/casas.service';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { ViewChild, ElementRef } from '@angular/core';
+import { LoginService } from '../../services/login.service';
 
 declare var webkitSpeechRecognition;
 declare var webkitSpeechGrammarList;
@@ -39,6 +40,9 @@ export class CasasComponent implements OnInit, OnDestroy {
   errorNombre: string = '';
   sinImagen: boolean = false;
   errorTamImgs: boolean = false;
+  loggedIn:boolean = false;
+
+
 
   recognition: SpeechRecognition;
 
@@ -52,7 +56,8 @@ export class CasasComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
     private router: Router,
     private casasService: CasasService,
-    private ngZone: NgZone) {
+    private ngZone: NgZone,
+    private loginService: LoginService) {
   }
 
   ngOnDestroy() {
@@ -164,6 +169,10 @@ export class CasasComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.loggedIn = this.loginService.getEstadoSesion();
+    if (this.loggedIn == false  && localStorage.getItem("id_admin") === null) {
+        this.router.navigate(['login'])
+    }
     this.initSpeech();
     this.getCasas();
     this.formInit();
@@ -404,7 +413,7 @@ export class CasasComponent implements OnInit, OnDestroy {
             this.borrarImgPrincipal();
 
             this.borrarImgCarousel();
-
+            this.cantidadimagenes = 0;
             this.urls = [];
             this.imgsInput.nativeElement.value = null;
             this.cerrar.nativeElement.click();

@@ -1,5 +1,6 @@
 import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
+import { LoginService } from '../../services/login.service';
 
 declare var webkitSpeechRecognition;
 declare var webkitSpeechGrammarList;
@@ -12,8 +13,11 @@ declare var webkitSpeechRecognitionEvent;
 export class InicioComponent implements OnInit, OnDestroy {
 
   recognition: SpeechRecognition;
+  loggedIn:boolean = true;
 
-  constructor(private router: Router, private ngZone: NgZone) {
+
+
+  constructor(private router: Router, private ngZone: NgZone, private loginService: LoginService) {
   }
 
   initSpeech() {
@@ -82,6 +86,11 @@ export class InicioComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.loggedIn = this.loginService.getEstadoSesion();
+    console.log(this.loggedIn);
+    if (this.loggedIn == false  && localStorage.getItem("id_admin") === null) {
+        this.router.navigate(['login'])
+    }
     this.initSpeech();
   }
 

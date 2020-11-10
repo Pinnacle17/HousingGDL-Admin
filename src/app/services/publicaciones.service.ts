@@ -56,4 +56,5 @@ export class PublicacionesService {
   buscarNombre( nombre:string, id:number = null ){
     return this.http.get(`${this.url}consultaNombre.php?titulo=${nombre}`).pipe(retry(3))
   }
+
 }

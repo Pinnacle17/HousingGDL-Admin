@@ -1,6 +1,7 @@
 import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {UsuariosService} from '../../services/usuarios.service';
 import {Router} from '@angular/router';
+import { LoginService } from '../../services/login.service';
 
 declare var webkitSpeechRecognition;
 declare var webkitSpeechGrammarList;
@@ -16,6 +17,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   busqueda = null;
 
   encontrado: boolean = null;
+  loggedIn:boolean = false;
 
   recognition: SpeechRecognition;
 
@@ -25,7 +27,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     correo: null
   };
 
-  constructor(private usuariosService: UsuariosService, private router: Router, private ngZone: NgZone) {
+  constructor(private usuariosService: UsuariosService, private router: Router, private ngZone: NgZone, private loginService: LoginService) {
   }
 
 
@@ -102,6 +104,10 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.loggedIn = this.loginService.getEstadoSesion();
+    if (this.loggedIn == false && localStorage.getItem("id_admin") === null) {
+        this.router.navigate(['login'])
+    }
     this.initSpeech();
     this.getUsuarios();
   }

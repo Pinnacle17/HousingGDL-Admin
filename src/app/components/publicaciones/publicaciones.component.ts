@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {RxwebValidators} from '@rxweb/reactive-form-validators';
 import {PublicacionesService} from '../../services/publicaciones.service';
 import { environment } from 'src/environments/environment'
+import { LoginService } from '../../services/login.service';
 
 declare var webkitSpeechRecognition;
 declare var webkitSpeechGrammarList;
@@ -16,6 +17,8 @@ declare var webkitSpeechRecognitionEvent;
 export class PublicacionesComponent implements OnInit, OnDestroy {
   imgUrlPublicacion = environment.imgUrlPublicacion
   formPublicaciones: FormGroup;
+  loggedIn:boolean = false;
+  cantidadimagenes:number = 0;
 
   urls = [];
   badUrls = [];
@@ -49,7 +52,8 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
   constructor(private router: Router,
               private fb: FormBuilder,
               private publicacionesService: PublicacionesService,
-              private ngZone: NgZone
+              private ngZone: NgZone,
+              private loginService: LoginService
   ) {
   }
 
@@ -157,9 +161,14 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.loggedIn = this.loginService.getEstadoSesion();
+    if (this.loggedIn == false  && localStorage.getItem("id_admin") === null) {
+        this.router.navigate(['login'])
+    }
     this.initSpeech();
     this.getPublicaciones();
     this.formPublicacionesInit();
+
   }
 
   formPublicacionesInit() {
@@ -242,6 +251,7 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
             this.badUrls.push(file.name)
           }
           else{
+            this.cantidadimagenes = this.cantidadimagenes + 1;
             this.urls.push(event.target.result);
             this.imgsSeleccionadas.push(file);
             this.listaImg.push(file.name);
@@ -294,6 +304,7 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
       this.formPublicaciones.controls['imgsPublicacion'].setValue('');
       this.imgsInput.nativeElement.value = null;
     }
+    this.cantidadimagenes = this.cantidadimagenes - 1;
   }
 
   editarPublicacion(id: number) {
@@ -318,7 +329,7 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
           this.formPublicaciones.reset();
 
           this.borrarImgPrincipal();
-
+          this.cantidadimagenes = 0;
           this.urls = [];
           this.imgsInput.nativeElement.value = null;
           this.cerrar.nativeElement.click();

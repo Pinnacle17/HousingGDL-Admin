@@ -34,7 +34,6 @@ export class CasasService {
     data.append('id_imagen_casa',id.toString())
     return this.http.post(`${this.url}eliminarImgCasa.php`,data)//.pipe(retry(3))
   }
-
   consultaNombre( nombre:string, id:number = -1 ){
     return this.http.get(`${this.url}consultaNombre.php?nombre_casa=${nombre}&id_casa=${id}`)//.pipe(retry(3))
   }
@@ -54,6 +53,7 @@ export class CasasService {
     IMGSEVENTO_FD.append('id_casa',id_casa)
     return this.http.post(`${this.url}modificarImgsCasa.php`, IMGSEVENTO_FD)//.pipe(retry(3))
   }
+
 
   buscarBoletos(id_casa:number){
     return this.http.get(`${this.url}consultaBoletos.php?id_casa=${id_casa}`)//.pipe(retry(3))
