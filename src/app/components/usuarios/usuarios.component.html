@@ -40,10 +40,10 @@
                         <td class="align-middle">{{ resultado.correo }}</td>
                         <td class="align-middle" *ngIf="resultado.estado == 1"> Activo </td>
                         <td class="align-middle" *ngIf="resultado.estado == 0"> Registro</td>
-                        <td class="align-middle" *ngIf="resultado.estado == 2"> Pago </td>
-                        <td class="align-middle" *ngIf="resultado.estado == 3"> Bloqueado</td>
+                        <td class="align-middle" *ngIf="resultado.estado == 2"> Bloqueado </td>
+                        <td class="align-middle" *ngIf="resultado.estado == 3"> Pago</td>
                         <td class="align-middle">
-                            <!--<button class="btn btn-danger" type="button" (click)="eliminarUsuario(resultado.id_usuario)">Eliminar</button>-->
+                          <button class="btn btn-danger" type="button" (click)="activarUsuario(usuario.id_usuario)" *ngIf="resultado.estado == 2" >Activar</button>
                             <button class="btn btn-primary" type="button" (click)="verUsuario(resultado.id_usuario)">Ver Usuario</button>
                         </td>
                     </tr>
@@ -74,7 +74,7 @@
                         <td class="align-middle" *ngIf="usuario.estado == 2"> Bloqueado </td>
                         <td class="align-middle" *ngIf="usuario.estado == 3"> Pago</td>
                         <td class="align-middle">
-                            <!--<button class="btn btn-danger" type="button" (click)="eliminarUsuario(usuario.id_usuario)">Eliminar</button>-->
+                            <button class="btn btn-danger" type="button" (click)="activarUsuario(usuario.id_usuario)" *ngIf="usuario.estado == 2" >Activar</button>
                             <button class="btn btn-primary ml-3" type="button" (click)="verUsuario(usuario.id_usuario)">Ver Usuario</button>
                         </td>
                     </tr>

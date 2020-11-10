@@ -21,9 +21,9 @@ export class UsuariosService {
    return this.http.get(`${this.url}login/buscarUsuario.php?nombre_usuario=${nombre}`).pipe(retry(3))
   }
 
-  // eliminarUsuario( id:number ){
-  //   return this.http.get(`${this.url}eliminarUsuario.php?id=${id}`).pipe(retry(3))
-  // }
+  activarUsuario( id:number ){
+     return this.http.get(`${this.url}login/activarUsuario.php?id_usuario=${id}`).pipe(retry(3))
+  }
 
   getAdmin(id:number){
      return this.http.get(`${this.url}login/getAdmin.php?id=${id}`).pipe(retry(3))

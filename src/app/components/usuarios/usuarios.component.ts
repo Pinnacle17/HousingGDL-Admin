@@ -126,15 +126,15 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     }
   }
 
-  /*eliminarUsuario(id: number) {
-    if (confirm('Está seguro de querer eliminar a este usuario?')) {
-      this.usuariosService.eliminarUsuario(id).subscribe(datos => {
-        if (datos['resultado'] == 'OK') {
+  activarUsuario(id: number) {
+    if (confirm('Está seguro de querer activar a este usuario?')) {
+      this.usuariosService.activarUsuario(id).subscribe(datos => {
+        if (datos == true) {
           this.getUsuarios();
         }
       });
     }
-  }*/
+  }
 
   verUsuario(id:number){
     this.router.navigate(['ver-usuario', id])
