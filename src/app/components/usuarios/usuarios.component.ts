@@ -1,7 +1,7 @@
 import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {UsuariosService} from '../../services/usuarios.service';
 import {Router} from '@angular/router';
-import { LoginService } from '../../services/login.service';
+import {LoginService} from '../../services/login.service';
 
 declare var webkitSpeechRecognition;
 declare var webkitSpeechGrammarList;
@@ -17,7 +17,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   busqueda = null;
 
   encontrado: boolean = null;
-  loggedIn:boolean = false;
+  loggedIn: boolean = false;
 
   recognition: SpeechRecognition;
 
@@ -42,6 +42,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     speechRecognitionList.addFromString(`
       #JSGF V1.0;
       public navigate = ver (casas | publicaciones | usuarios | chats);
+      public mostrar = mostrar;
       `, 1);
 
     this.recognition.grammars = speechRecognitionList;
@@ -76,6 +77,18 @@ export class UsuariosComponent implements OnInit, OnDestroy {
               }
             });
             break;
+          case 'mostrar': {
+            const event = command.slice(1, command.length).join(' ');
+            for (const e of this.usuarios) {
+              if (e.id_usuario === event) {
+                navigate = true;
+                this.ngZone.run(() => {
+                  this.verUsuario(e.id_usuario);
+                });
+                break;
+              }
+            }
+          }
         }
 
       }
@@ -106,7 +119,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loggedIn = this.loginService.getEstadoSesion();
     if (this.loggedIn == false && localStorage.getItem("id_admin") === null) {
-        this.router.navigate(['login'])
+      this.router.navigate(['login'])
     }
     this.initSpeech();
     this.getUsuarios();
@@ -142,7 +155,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     }
   }
 
-  verUsuario(id:number){
+  verUsuario(id: number) {
     this.router.navigate(['ver-usuario', id])
   }
 }
