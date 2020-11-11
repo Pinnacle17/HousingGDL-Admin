@@ -1,4 +1,6 @@
 export const environment = {
   production: true,
-  backend_url: "www.hosting"
+  apiUrl:'https://housinggdl.com/C-API-P/admin/',
+  imgUrl:'https://housinggdl.com/C-API-P/admin/assets/img/casas/',
+  imgUrlPublicacion:'https://housinggdl.com/C-API-P/admin/assets/img/publicaciones/'
 };

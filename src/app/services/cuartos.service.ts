@@ -45,10 +45,10 @@ export class CuartosService{
     return this.http.post(`${this.url}modificarInfoCuarto.php`, INFOCUARTO_FD)//.pipe(retry(3))
   }
   getCuarto( id_cuarto:number ){
-    return this.http.get(`${this.url}VerCuarto.php?id_cuarto=${id_cuarto}`)//.pipe(retry(3))
+    return this.http.get(`${this.url}verCuarto.php?id_cuarto=${id_cuarto}`)//.pipe(retry(3))
   }
   getCuartos( id_casa:number ){
-    return this.http.get(`${this.url}VerCuartos.php?id_casa=${id_casa}`)//.pipe(retry(3))
+    return this.http.get(`${this.url}verCuartos.php?id_casa=${id_casa}`)//.pipe(retry(3))
   }
   getImgs( id_cuarto:number ){
     return this.http.get(`${this.url}verImagenesCuarto.php?id_cuarto=${id_cuarto}`)//.pipe(retry(3))

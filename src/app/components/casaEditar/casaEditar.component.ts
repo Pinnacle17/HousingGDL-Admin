@@ -605,8 +605,8 @@ export class CasaEditarComponent implements OnInit {
   desactivarCuarto(id_cuarto: number) {
     if (window.confirm("Está seguro de querer desactivar este cuarto")) {
       this.cuartosService.desactivarCuarto(id_cuarto).subscribe(datos => {
-          this.refresh();
-          window.confirm("Boleto eliminado con éxito");
+          window.confirm("Cuarto desactivado con éxito");
+          window.location.reload();
       })
     }
   }
@@ -614,8 +614,8 @@ export class CasaEditarComponent implements OnInit {
   activarCuarto(id_cuarto: number) {
     if (window.confirm("Está seguro de querer activar este cuarto?")) {
       this.cuartosService.activarCuarto(id_cuarto).subscribe(datos => {
-          this.refresh();
-          window.confirm("Boleto eliminado con éxito");
+          window.confirm("Cuarto activado con éxito");
+          window.location.reload();
       })
     }
   }

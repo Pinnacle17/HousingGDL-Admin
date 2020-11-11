@@ -144,7 +144,7 @@ export class CasasComponent implements OnInit, OnDestroy {
           }
           case 'desactivar': {
             const event = command.slice(1, command.length).join(' ');
-            this.casas.filter(c => c.estado_casa === 'Inactiva' && c.id_casa === +event)
+            this.casas.filter(c => c.estado_casa === 'Activa' && c.id_casa === +event)
               .forEach(c => {
                 this.cancelarCasa(c.id_casa);
               });

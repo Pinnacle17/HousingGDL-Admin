@@ -15,14 +15,14 @@ export class CasasService {
   constructor(private http:HttpClient ) { }
 
   getColonias(){
-    return this.http.get(`${this.url}VerColonias.php`)
+    return this.http.get(`${this.url}verColonias.php`)
   }
   getCasas(){
-    return this.http.get(`${this.url}VerCasas.php`)//.pipe(retry(3))
+    return this.http.get(`${this.url}verCasas.php`)//.pipe(retry(3))
   }
 
   getCasa( id:number ){
-    return this.http.get(`${this.url}VerCasa.php?id_casa=${id}`)//.pipe(retry(3))
+    return this.http.get(`${this.url}verCasa.php?id_casa=${id}`)//.pipe(retry(3))
   }
 
   getImgs( id:number ){
@@ -83,7 +83,7 @@ export class CasasService {
     return this.http.get(`${this.url}comentarios/verComentarios.php?id_casa=${id_casa}`)//.pipe(retry(3))
   }
   getComentariosNotificacion(id_casa:Number){
-    return this.http.get(`${this.url}comentarios/VerComentariosNotificacion.php?id_casa=${id_casa}`)//.pipe(retry(3))
+    return this.http.get(`${this.url}comentarios/verComentariosNotificacion.php?id_casa=${id_casa}`)//.pipe(retry(3))
   }
   DesactivarComentario(id_cal:number){
     return this.http.get(`${this.url}comentarios/desactivarComentario.php?id_calificacion=${id_cal}`)//.pipe(retry(3))
