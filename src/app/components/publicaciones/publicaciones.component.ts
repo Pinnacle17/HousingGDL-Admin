@@ -312,7 +312,7 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
   }
 
   eliminarPublicacion(id: number) {
-    if (confirm('Está seguro de querer eliminar este evento?')) {
+    if (confirm('Está seguro de querer eliminar esta publicacion?')) {
       this.publicacionesService.eliminarPublicacion(id).subscribe(datos => {
         if (datos['resultado'] == 'OK') {
           this.getPublicaciones();

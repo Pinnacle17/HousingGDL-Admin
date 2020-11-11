@@ -136,7 +136,7 @@ export class CasasComponent implements OnInit, OnDestroy {
             const event = command.slice(1, command.length).join(' ');
 
             for (const c of this.casas) {
-              if (c.estado_casa === 'Activa' && c.id_casa === event) {
+              if (c.estado_casa !== 'Activa' && c.id_casa === event) {
                 this.ngZone.run(() => {
                   this.cancelarCasa(c.id_casa);
                 });
@@ -148,7 +148,7 @@ export class CasasComponent implements OnInit, OnDestroy {
           case 'desactivar': {
             const event = command.slice(1, command.length).join(' ');
             for (const c of this.casas) {
-              if (c.estado_casa !== 'Activa' && c.id_casa === event) {
+              if (c.estado_casa === 'Activa' && c.id_casa === event) {
                 this.ngZone.run(() => {
                   this.activarCasa(c.id_casa);
                 });
