@@ -95,7 +95,7 @@ export class PublicacionesComponent implements OnInit, OnDestroy {
       const command = ev.results[0][0].transcript.split(' ');
       if (command.length >= 2) {
 
-        switch (command[0]) {
+        switch (command[0].toLowerCase()) {
           case 'ver':
             this.ngZone.run(() => {
               switch (command[1]) {

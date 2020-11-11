@@ -76,7 +76,7 @@ export class ChatListComponent implements OnInit, OnDestroy {
           case 'ver':
             this.ngZone.run(() => {
 
-              switch (command[1]) {
+              switch (command[1].toLowerCase()) {
                 case 'publicaciones':
                   this.router.navigate(['publicaciones']);
                   navigate = true;

@@ -98,7 +98,7 @@ export class CasasComponent implements OnInit, OnDestroy {
       const command = ev.results[0][0].transcript.split(' ');
       if (command.length >= 2) {
 
-        switch (command[0]) {
+        switch (command[0].toLowerCase()) {
           case 'ver':
             this.ngZone.run(() => {
               switch (command[1]) {
@@ -138,7 +138,7 @@ export class CasasComponent implements OnInit, OnDestroy {
             for (const c of this.casas) {
               if (c.estado_casa !== 'Activa' && c.id_casa === event) {
                 this.ngZone.run(() => {
-                  this.cancelarCasa(c.id_casa);
+                  this.activarCasa(c.id_casa);
                 });
                 break;
               }
@@ -150,7 +150,7 @@ export class CasasComponent implements OnInit, OnDestroy {
             for (const c of this.casas) {
               if (c.estado_casa === 'Activa' && c.id_casa === event) {
                 this.ngZone.run(() => {
-                  this.activarCasa(c.id_casa);
+                  this.cancelarCasa(c.id_casa);
                 });
                 break;
               }
