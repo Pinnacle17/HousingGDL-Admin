@@ -31,4 +31,10 @@ export class LoginService {
   verChatUsuario(id_usuario:number){
     return this.http.get(`${this.url}login/verChatUsuario.php?id_usuario=${id_usuario}`).pipe(retry(3))
   }
+  verNotificacionCalificacion(){
+    return this.http.get(`${this.url}login/notificacionCalificacion.php`).pipe(retry(3))
+  }
+  verNotificacionChats(){
+    return this.http.get(`${this.url}login/notificacionchats.php`).pipe(retry(3))
+  }
 }
