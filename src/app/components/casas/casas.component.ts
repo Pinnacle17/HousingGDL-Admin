@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { CasasService } from '../../services/casas.service';
-import { RxwebValidators } from '@rxweb/reactive-form-validators';
-import { ViewChild, ElementRef } from '@angular/core';
-import { LoginService } from '../../services/login.service';
+import {Component, OnInit, OnDestroy, NgZone} from '@angular/core';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {CasasService} from '../../services/casas.service';
+import {RxwebValidators} from '@rxweb/reactive-form-validators';
+import {ViewChild, ElementRef} from '@angular/core';
+import {LoginService} from '../../services/login.service';
 
 declare var webkitSpeechRecognition;
 declare var webkitSpeechGrammarList;
@@ -28,7 +28,7 @@ export class CasasComponent implements OnInit, OnDestroy {
 
   busqueda = null;
   encontrado: boolean = null;
-  cantidadimagenes:number = 0;
+  cantidadimagenes: number = 0;
 
   imgSeleccionada: File;
   imgCarouselSeleccionada: File;
@@ -40,8 +40,7 @@ export class CasasComponent implements OnInit, OnDestroy {
   errorNombre: string = '';
   sinImagen: boolean = false;
   errorTamImgs: boolean = false;
-  loggedIn:boolean = false;
-
+  loggedIn: boolean = false;
 
 
   recognition: SpeechRecognition;
@@ -54,10 +53,10 @@ export class CasasComponent implements OnInit, OnDestroy {
   @ViewChild('cerrarModalError') cerrarModalError;
 
   constructor(private fb: FormBuilder,
-    private router: Router,
-    private casasService: CasasService,
-    private ngZone: NgZone,
-    private loginService: LoginService) {
+              private router: Router,
+              private casasService: CasasService,
+              private ngZone: NgZone,
+              private loginService: LoginService) {
   }
 
   ngOnDestroy() {
@@ -136,18 +135,26 @@ export class CasasComponent implements OnInit, OnDestroy {
           case 'activar': {
             const event = command.slice(1, command.length).join(' ');
 
-            this.casas.filter(c => c.estado_casa !== 'Inactiva' && c.id_casa === +event)
-              .forEach(c => {
-                this.cancelarCasa(c.id_casa);
-              });
+            for (const c of this.casas) {
+              if (c.estado_casa === 'Activa' && c.id_casa === event) {
+                this.ngZone.run(() => {
+                  this.cancelarCasa(c.id_casa);
+                });
+                break;
+              }
+            }
             break;
           }
           case 'desactivar': {
             const event = command.slice(1, command.length).join(' ');
-            this.casas.filter(c => c.estado_casa === 'Activa' && c.id_casa === +event)
-              .forEach(c => {
-                this.cancelarCasa(c.id_casa);
-              });
+            for (const c of this.casas) {
+              if (c.estado_casa !== 'Activa' && c.id_casa === event) {
+                this.ngZone.run(() => {
+                  this.activarCasa(c.id_casa);
+                });
+                break;
+              }
+            }
             break;
           }
         }
@@ -170,8 +177,8 @@ export class CasasComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loggedIn = this.loginService.getEstadoSesion();
-    if (this.loggedIn == false  && localStorage.getItem("id_admin") === null) {
-        this.router.navigate(['login'])
+    if (this.loggedIn == false && localStorage.getItem("id_admin") === null) {
+      this.router.navigate(['login'])
     }
     this.initSpeech();
     this.getCasas();
@@ -179,14 +186,16 @@ export class CasasComponent implements OnInit, OnDestroy {
   }
 
   getCasas() {
-    this.casasService.getCasas().subscribe(resultado => {this.casas = resultado});
-    this.casasService.getColonias().subscribe(r=>{
-      this.colonias=r;
+    this.casasService.getCasas().subscribe(resultado => {
+      this.casas = resultado
+    });
+    this.casasService.getColonias().subscribe(r => {
+      this.colonias = r;
       console.log(this.colonias)
     })
   }
 
-  irSemestres(){
+  irSemestres() {
     this.router.navigate(['semestres'])
   }
 
@@ -207,7 +216,7 @@ export class CasasComponent implements OnInit, OnDestroy {
 
   activarCasa(id_casa: number) {
     if (confirm('Está seguro de querer activar esta casa?')) {
-      this.casasService.activarCasa(id_casa).subscribe(()=>this.getCasas())
+      this.casasService.activarCasa(id_casa).subscribe(() => this.getCasas())
 
     }
   }
@@ -228,8 +237,18 @@ export class CasasComponent implements OnInit, OnDestroy {
       descripcion_casa: ['', [Validators.required]],
       orden_anuncio: ['', Validators.required],
       id_colonia: ['', Validators.required],
-      imgPrincipal: ['', [Validators.required, RxwebValidators.image({ minHeight: 690, maxHeight: 2160, minWidth: 950, maxWidth: 4096 })]],
-      imgCarousel: ['', [Validators.required, RxwebValidators.image({ minWidth: 1250, maxWidth: 4096, minHeight: 690, maxHeight: 2160 })]],
+      imgPrincipal: ['', [Validators.required, RxwebValidators.image({
+        minHeight: 690,
+        maxHeight: 2160,
+        minWidth: 950,
+        maxWidth: 4096
+      })]],
+      imgCarousel: ['', [Validators.required, RxwebValidators.image({
+        minWidth: 1250,
+        maxWidth: 4096,
+        minHeight: 690,
+        maxHeight: 2160
+      })]],
       imgsCasa: ['', Validators.required]
     });
   }
@@ -237,7 +256,6 @@ export class CasasComponent implements OnInit, OnDestroy {
   editarCasa(id: number) {
     this.router.navigate(['editar-casa', id]);
   }
-
 
 
   get validacionNombre() {
@@ -319,7 +337,7 @@ export class CasasComponent implements OnInit, OnDestroy {
   }
 
   multiImg(event) {
-    if(event.target.files && event.target.files.length) {
+    if (event.target.files && event.target.files.length) {
 
       for (let i = 0; i < event.target.files.length; i++) {
         let img = new Image();
@@ -335,11 +353,10 @@ export class CasasComponent implements OnInit, OnDestroy {
           console.log(ancho);
           console.log(alto);
           window.URL.revokeObjectURL(file);
-          if(alto < 690 || alto > 2160 || ancho < 950 ||ancho > 4096){
+          if (alto < 690 || alto > 2160 || ancho < 950 || ancho > 4096) {
             this.errorTamImgs = true;
             this.badUrls.push(file.name);
-          }
-          else{
+          } else {
             this.urls.push(event.target.result);
             this.imgsSeleccionadas.push(file);
             this.listaImg.push(file.name);
@@ -350,8 +367,7 @@ export class CasasComponent implements OnInit, OnDestroy {
 
       }
       this.sinImagen = false;
-    }
-    else{
+    } else {
       this.sinImagen = true;
       return
     }
