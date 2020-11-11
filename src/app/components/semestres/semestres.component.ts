@@ -19,6 +19,7 @@ export class SemestresComponent implements OnInit {
   enviarForm: FormGroup;
 
   loggedIn:boolean = false;
+  mensajeError=null;
 
 
   constructor(private router:Router, private cuartosService:CuartosService, private casasService:CasasService,private fb: FormBuilder, private loginService: LoginService) { }
@@ -38,19 +39,11 @@ export class SemestresComponent implements OnInit {
     return this.enviarForm.get('nombre').invalid && this.enviarForm.get('nombre').touched
   }
 
-  get validacionInicio() {
-    return this.enviarForm.get('inicio').invalid && this.enviarForm.get('inicio').touched
-  }
-
-  get validacionFin() {
-    return this.enviarForm.get('fin').invalid && this.enviarForm.get('fin').touched
-  }
-
   formEnviarInit(){
     this.enviarForm = this.fb.group({
       nombre: [null, Validators.required],
-      inicio: [null, Validators.required],
-      fin: [null, Validators.required],
+        inicio: ['', [Validators.required]],
+        fin: ['', [Validators.required]],
     })
   }
 
@@ -73,23 +66,52 @@ export class SemestresComponent implements OnInit {
     }
   }
 
+  get validacionFechaInicio() {
+    return this.enviarForm.get('inicio').invalid && this.enviarForm.get('inicio').touched;
+  }
+
+  get validacionFechaCierre() {
+    return this.enviarForm.get('fin').invalid && this.enviarForm.get('fin').touched;
+  }
+
+  compararFechas() {
+    let inicio = new Date(this.enviarForm.get('inicio').value);
+    inicio.setMinutes(inicio.getMinutes() + inicio.getTimezoneOffset());
+
+    let cierre = new Date(this.enviarForm.get('fin').value);
+    cierre.setMinutes(cierre.getMinutes() + cierre.getTimezoneOffset());
+
+    let hoy = new Date();
+    hoy.setSeconds(0);
+    hoy.setMinutes(0);
+    hoy.setHours(0);
+
+    if (inicio > cierre) {
+      this.mensajeError = 'El semestre no puede terminar antes de empezar.';
+      this.enviarForm.get('fin').setErrors({'incorrect': true});
+      return true;
+    } else if (hoy > cierre) {
+      this.mensajeError = 'El semestre no puede terminar hoy o antes de hoy.';
+      this.enviarForm.get('fin').setErrors({'incorrect': true});
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   agregarSemestre(){
     let now=new Date();
     let fin=new Date(this.enviarForm.get("fin").value)
-    if(this.enviarForm.get("inicio").value>=this.enviarForm.get("fin").value || fin<now){
-      window.alert("Fechas incorrectas")
-    }else{
-      this.casasService.crearSemestre(this.enviarForm.value).subscribe(resultado=>{
-        console.log(resultado)
-        if(resultado==true){
-          //window.alert("semesre")
-          this.cerrar.nativeElement.click();
-          this.getSemestres();
-        }else{
-          window.alert("Ha ocurrido un error. Intentelo más tarde")
-        }
-      })
-    }
+    this.casasService.crearSemestre(this.enviarForm.value).subscribe(resultado=>{
+      console.log(resultado)
+      if(resultado==true){
+        //window.alert("semesre")
+        this.cerrar.nativeElement.click();
+        this.getSemestres();
+      }else{
+        window.alert("Ha ocurrido un error. Intentelo más tarde")
+      }
+    })
   }
 
 }

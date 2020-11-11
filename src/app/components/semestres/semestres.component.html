@@ -18,7 +18,7 @@
 </table>
 <div class="container-fluid">
     <button type="button" class="btn btn-outline-success btn-block" data-toggle="modal" data-target="#modalSemestre">
-        + Crear una nuevo semestre
+        + Crear un nuevo semestre
     </button>
 </div>
 
@@ -40,19 +40,20 @@
                             <small *ngIf="validacionNombre" class="form-text text-danger">Ingrese un nombre válido.</small>
                         </div>
                     </div>
-    
-                    <div class="form-row mb-3">
+                    <div>
+                        <div class="form-row mb-3">
                             <label for="inicio">Inicio de semestre: <small class="text-danger">*</small></label>
-                            <input type="date" class="form-control" id="inicio" placeholder="Ingrese la fecha de inicio" formControlName="inicio" >
-                            <small *ngIf="validacionInicio" class="form-text text-danger">Fecha de inicio Obligatoria.</small>
+                            <input type="date" class="form-control" id="inicio" placeholder="Ingrese la fecha de inicio" formControlName="inicio" [class.is-invalid]="validacionFechaInicio">
+                            <small *ngIf="validacionFechaInicio" class="form-text text-danger">Fecha de inicio Obligatoria.</small>
+                        </div>
+        
+                        <div class="form-row mb-3">
+                                <label for="fin">Fin de semestre: <small class="text-danger">*</small></label>
+                                <input type="date" class="form-control" id="fin" placeholder="Ingrese la fecha de fin" formControlName="fin" [class.is-invalid]="validacionFechaCierre">
+                                <small *ngIf="validacionFechaCierre" class="form-text text-danger">Fecha de fin Obligatoria.</small>
+                        </div>
+                        <small *ngIf="compararFechas()" class="form-text text-danger text-center ml-1">Fechas no válidas. {{ mensajeError }}</small>
                     </div>
-    
-                    <div class="form-row mb-3">
-                            <label for="fin">Fin de semestre: <small class="text-danger">*</small></label>
-                            <input type="date" class="form-control" id="fin" placeholder="Ingrese la fecha de fin" formControlName="fin" >
-                            <small *ngIf="validacionFin" class="form-text text-danger">Fecha de fin Obligatoria.</small>
-                    </div>
-    
                     <div class="buttonDiv">
                         <button class="btn btn-success botonPagar" [disabled]="enviarForm.invalid" type="submit">Crear</button>
                     </div>
