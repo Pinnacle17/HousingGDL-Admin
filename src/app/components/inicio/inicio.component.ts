@@ -1,4 +1,4 @@
-import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
+import {Component, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import { LoginService } from '../../services/login.service';
 
@@ -15,7 +15,11 @@ export class InicioComponent implements OnInit, OnDestroy {
   recognition: SpeechRecognition;
   loggedIn:boolean = true;
 
+  @ViewChild('modal', {static: false}) modal;
+  @ViewChild('cerrarModalNotificacion', {static: false}) cerrarModalNotificacion;
 
+  hayChats:any=false;
+  casas:any=[];
 
   constructor(private router: Router, private ngZone: NgZone, private loginService: LoginService) {
   }
@@ -85,13 +89,35 @@ export class InicioComponent implements OnInit, OnDestroy {
     };
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loggedIn = this.loginService.getEstadoSesion();
     console.log(this.loggedIn);
     if (this.loggedIn == false  && localStorage.getItem("id_admin") === null) {
         this.router.navigate(['login'])
     }
     this.initSpeech();
+
+    await this.loginService.verNotificacionChats().subscribe(resultado=>{
+      console.log(resultado)
+      this.hayChats=resultado;
+    })
+    await this.loginService.verNotificacionCalificacion().subscribe(resultado=>{
+      console.log(resultado)
+      this.casas=resultado;
+    })
+    
+    if(this.hayChats!=false || this.casas!=null){
+      this.modal.nativeElement.click();
+    }
   }
 
+  irCasa(id: number) {
+    this.cerrarModalNotificacion.nativeElement.click();
+    this.router.navigate(['editar-casa', id]);
+  }
+  
+  irChats(){
+    this.cerrarModalNotificacion.nativeElement.click();
+    this.router.navigate(['chat-list']);
+  }
 }
