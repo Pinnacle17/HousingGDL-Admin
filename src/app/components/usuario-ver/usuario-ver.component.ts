@@ -19,6 +19,7 @@ export class UsuarioVerComponent implements OnInit {
   historial:any = [];
   hayCompras:boolean = null;
   loggedIn:boolean = false;
+  chatId=null;
 
   ngOnInit(): void {
     this.loggedIn = this.loginService.getEstadoSesion();
@@ -42,15 +43,18 @@ export class UsuarioVerComponent implements OnInit {
           this.hayCompras = false;
         }
       })
+      this.activarUsuario(params['id'])
     })
-
+    
   }
-  verChat(id: number) {
-    this.router.navigate(['chat', id])
+  verChat() {
+    this.router.navigate(['chat', this.chatId])
   }
   activarUsuario(id: number) {
       this.loginService.verChatUsuario(id).subscribe(datos => {
         this.chat = datos;
+        console.log(datos)
+        this.chatId=datos[0].id_chat
       });
 
   }
