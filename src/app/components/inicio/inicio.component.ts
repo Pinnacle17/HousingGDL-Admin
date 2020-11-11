@@ -18,8 +18,8 @@ export class InicioComponent implements OnInit, OnDestroy {
   @ViewChild('modal', {static: false}) modal;
   @ViewChild('cerrarModalNotificacion', {static: false}) cerrarModalNotificacion;
 
-  hayChats:any=false;
-  casas:any=[];
+  hayChats:any=0;
+  casas:any=null;
 
   constructor(private router: Router, private ngZone: NgZone, private loginService: LoginService) {
   }
@@ -100,15 +100,19 @@ export class InicioComponent implements OnInit, OnDestroy {
     await this.loginService.verNotificacionChats().subscribe(resultado=>{
       console.log(resultado)
       this.hayChats=resultado;
+      if(this.hayChats==1 || this.casas!=null){
+        this.modal.nativeElement.click();
+      }
     })
     await this.loginService.verNotificacionCalificacion().subscribe(resultado=>{
       console.log(resultado)
       this.casas=resultado;
+      if(this.hayChats==1 || this.casas!=null){
+        this.modal.nativeElement.click();
+      }
     })
     
-    if(this.hayChats!=false || this.casas!=null){
-      this.modal.nativeElement.click();
-    }
+    
   }
 
   irCasa(id: number) {
