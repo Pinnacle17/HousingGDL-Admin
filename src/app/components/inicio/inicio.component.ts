@@ -34,7 +34,7 @@ export class InicioComponent implements OnInit, OnDestroy {
 
     speechRecognitionList.addFromString(`
       #JSGF V1.0;
-      public navigate = ver (eventos | publicaciones | usuarios | repartidores);
+      public navigate = ver (casas | publicaciones | usuarios | chats);
       `, 1);
 
     this.recognition.grammars = speechRecognitionList;
@@ -111,15 +111,15 @@ export class InicioComponent implements OnInit, OnDestroy {
         this.modal.nativeElement.click();
       }
     })
-    
-    
+
+
   }
 
   irCasa(id: number) {
     this.cerrarModalNotificacion.nativeElement.click();
     this.router.navigate(['editar-casa', id]);
   }
-  
+
   irChats(){
     this.cerrarModalNotificacion.nativeElement.click();
     this.router.navigate(['chat-list']);
