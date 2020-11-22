@@ -4,14 +4,13 @@
 
 export const environment = {
   production: false,
-  apiUrl:'http://localhost/casas-php/PT-API-P/admin/',
-  //apiUrl:'http://localhost:8080/C-API/admin/',
-  apiUrlUsuario:'http://localhost/C-API/',
-  //imgUrl:'http://localhost/casas-php/admin/assets/img/casas/',
-  imgUrl:'http://localhost:8080/C-API/admin/assets/img/casas/',
-  //imgUrlPublicacion:'http://localhost/casas-php/admin/assets/img/publicaciones/'
-  imgUrlPublicacion:'http://localhost:8080/C-API/admin/assets/img/publicaciones/'
-  //imgUrlPublicacion:'http://localhost/C-API/admin/assets/img/publicaciones/'
+  //apiUrl:'http://localhost/C-API-P/admin/',
+  //imgUrl:'http://localhost/C-API-P/admin/assets/img/casas/',
+  //imgUrlPublicacion:'http://localhost/C-API-P/admin/assets/img/publicaciones/'
+
+  //apiUrl:'https://housinggdl.com/C-API-P/admin/',
+  //imgUrl:'https://housinggdl.com/C-API-P/admin/assets/img/casas/',
+  //imgUrlPublicacion:'https://housinggdl.com/C-API-P/admin/assets/img/publicaciones/'
 };
 
 /*
